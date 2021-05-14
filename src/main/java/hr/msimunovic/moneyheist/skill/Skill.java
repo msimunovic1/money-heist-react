@@ -1,5 +1,6 @@
 package hr.msimunovic.moneyheist.skill;
 
+import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
 import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import lombok.*;
 
@@ -23,9 +24,10 @@ public class Skill {
     private String level;
 
     @OneToMany(mappedBy = "skill")
-   /*     cascade = CascadeType.ALL,
-        orphanRemoval = true)*/
     private Set<MemberSkill> members = new HashSet<>();
+
+    @OneToMany(mappedBy = "skill")
+    private Set<HeistSkill> heists = new HashSet<>();
 
 
 }

@@ -1,7 +1,7 @@
 package hr.msimunovic.moneyheist.member;
 
 import hr.msimunovic.moneyheist.common.MemberStatusEnum;
-import hr.msimunovic.moneyheist.skill.Skill;
+import hr.msimunovic.moneyheist.heist_skill.HeistSkillDTO;
 import lombok.Data;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class MemberDTO {
     private String name;
     private String sex;
     private String email;
-    private List<Skill> skills;
+    private List<HeistSkillDTO> skills;
     private String mainSkill;
     private MemberStatusEnum status;
 

@@ -1,18 +1,19 @@
 package hr.msimunovic.moneyheist.heist;
 
 import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import hr.msimunovic.moneyheist.skill.Skill;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 public class Heist {
 
@@ -25,12 +26,23 @@ public class Heist {
 
     private String location;
 
-    private Timestamp startTime;
+    private LocalDateTime startTime;
 
-    private Timestamp endTime;
+    private LocalDateTime endTime;
 
     @OneToMany(mappedBy = "heist",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private Set<HeistSkill> skills = new HashSet<>();
+
+    public void addSkill(Skill skill, Integer members) {
+
+        HeistSkill heistSkill = new HeistSkill();
+        heistSkill.setHeist(this);
+        heistSkill.setSkill(skill);
+        heistSkill.setMembers(members);
+
+        skills.add(heistSkill);
+        skill.getHeists().add(heistSkill);
+    }
 }

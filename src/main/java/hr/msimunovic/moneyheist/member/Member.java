@@ -1,5 +1,6 @@
 package hr.msimunovic.moneyheist.member;
 
+import com.sun.istack.NotNull;
 import hr.msimunovic.moneyheist.common.MemberStatusEnum;
 import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.member_skill.MemberSkillId;
@@ -8,6 +9,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @Getter
@@ -21,12 +23,16 @@ public class Member {
     @SequenceGenerator(name = "memberSeq", sequenceName = "member_seq", allocationSize = 1)
     private Long id;
 
+    @NotNull
     private String name;
 
+    @NotNull
     private String sex;
 
+    @NotNull
     private String email;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private MemberStatusEnum status;
 
@@ -41,7 +47,7 @@ public class Member {
         memberSkill.setMember(this);
         memberSkill.setSkill(skill);
 
-        if(skill.getName().equals(mainSkill)) {
+        if(mainSkill != null && skill.getName().equals(mainSkill)) {
             memberSkill.setMainSkill("Y");
         } else {
             memberSkill.setMainSkill("N");
@@ -51,4 +57,25 @@ public class Member {
         skill.getMembers().add(memberSkill);
 
     }
+
+    public void removeSkill(String skillName) {
+
+        Skill skill = new Skill();
+        skill.setName(skillName);
+
+        for (Iterator<MemberSkill> iterator = skills.iterator();
+             iterator.hasNext(); ) {
+
+            MemberSkill memberSkill = iterator.next();
+
+            if(memberSkill.getMember().equals(this) && memberSkill.getSkill().equals(skill)) {
+                iterator.remove();
+                memberSkill.getSkill().getMembers().remove(memberSkill);
+                memberSkill.setMember(null);
+                memberSkill.setSkill(null);
+            }
+        }
+    }
+
+
 }

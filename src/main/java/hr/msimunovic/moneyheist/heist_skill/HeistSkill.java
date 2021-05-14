@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class HeistSkill {
 
     @EmbeddedId
-    private HeistSkillId id;
+    private HeistSkillId id = new HeistSkillId();
 
     @MapsId("heistId")
     @ManyToOne(fetch = FetchType.LAZY)

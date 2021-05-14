@@ -33,7 +33,7 @@ DROP TABLE IF EXISTS skill;
 CREATE TABLE skill(
     id INT PRIMARY KEY NOT NULL,
     name VARCHAR(100) NOT NULL,
-    level VARCHAR(10) NOT NULL
+    level VARCHAR(10)
 );
 
 /* MEMBER_SKILL */
