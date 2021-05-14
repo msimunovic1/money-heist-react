@@ -1,8 +1,8 @@
 package hr.msimunovic.moneyheist.member.service;
 
 import hr.msimunovic.moneyheist.member.Member;
-import hr.msimunovic.moneyheist.member.MemberDTO;
-import hr.msimunovic.moneyheist.skill.SkillDTO;
+import hr.msimunovic.moneyheist.member.dto.MemberDTO;
+import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 
 public interface MemberService {
 

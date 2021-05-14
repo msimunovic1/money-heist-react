@@ -2,9 +2,9 @@ package hr.msimunovic.moneyheist.api.controller;
 
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.member.Member;
-import hr.msimunovic.moneyheist.member.MemberDTO;
+import hr.msimunovic.moneyheist.member.dto.MemberDTO;
 import hr.msimunovic.moneyheist.member.service.MemberService;
-import hr.msimunovic.moneyheist.skill.SkillDTO;
+import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.util.HttpUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

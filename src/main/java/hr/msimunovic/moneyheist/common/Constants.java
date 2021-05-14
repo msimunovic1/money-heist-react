@@ -8,7 +8,9 @@ public class Constants {
 
     // Error Messages
     public static final String MSG_MEMBER_NOT_FOUND = "Member not found";
+    public static final String MSG_HEIST_NOT_FOUND = "Heist not found";
     public static final String MSG_MEMBER_EXISTS = "Member exists.";
     public static final String MSG_HEIST_EXISTS = "Heist exists.";
 
+    public static final String DEFAULT_SKILL_LEVEL = "*";
 }

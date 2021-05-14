@@ -4,11 +4,12 @@ import hr.msimunovic.moneyheist.api.exception.BadRequestException;
 import hr.msimunovic.moneyheist.api.exception.NotFoundException;
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.member.Member;
-import hr.msimunovic.moneyheist.member.MemberDTO;
+import hr.msimunovic.moneyheist.member.dto.MemberDTO;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
 import hr.msimunovic.moneyheist.skill.Skill;
-import hr.msimunovic.moneyheist.skill.SkillDTO;
+import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.skill.repository.SkillRepository;
+import hr.msimunovic.moneyheist.skill.service.SkillService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ import java.util.stream.Stream;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final SkillRepository skillRepository;
+    private final SkillService skillService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -91,15 +92,40 @@ public class MemberServiceImpl implements MemberService {
         member.setEmail(memberDTO.getEmail());
         member.setStatus(memberDTO.getStatus());
 
+        // If skill array is empty and main skill is provided
         if(memberDTO.getSkills() == null && !mainSkill.isEmpty()) {
-            Skill skill = new Skill();
-            skill.setName(mainSkill);
-            member.addSkill(modelMapper.map(skill, Skill.class), mainSkill);
+
+            Skill skillFromDB = skillService.checkSkillInDB(mainSkill, Constants.DEFAULT_SKILL_LEVEL);
+
+            if(skillFromDB != null) {
+                member.addSkill(skillFromDB, mainSkill);
+            } else {
+                Skill skill = new Skill();
+                skill.setName(mainSkill);
+                skill.setLevel(Constants.DEFAULT_SKILL_LEVEL);
+                member.addSkill(modelMapper.map(skill, Skill.class), mainSkill);
+            }
+
+
         } else {
+
             memberDTO.getSkills()
-                    .forEach(skill -> member.addSkill(modelMapper.map(skill, Skill.class), mainSkill));
+                    .forEach(skill -> {
+
+                        Skill skillFromDB = skillService.checkSkillInDB(skill.getName(), skill.getLevel());
+
+                        if(skillFromDB != null) {
+                            member.addSkill(modelMapper.map(skillFromDB, Skill.class), mainSkill);
+                        } else {
+                            member.addSkill(modelMapper.map(skill, Skill.class), mainSkill);
+                        }
+
+                    });
+
         }
 
         return member;
     }
+
+
 }

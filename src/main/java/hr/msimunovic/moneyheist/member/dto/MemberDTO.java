@@ -1,7 +1,7 @@
-package hr.msimunovic.moneyheist.member;
+package hr.msimunovic.moneyheist.member.dto;
 
 import hr.msimunovic.moneyheist.common.MemberStatusEnum;
-import hr.msimunovic.moneyheist.heist_skill.HeistSkillDTO;
+import hr.msimunovic.moneyheist.heist_skill.dto.HeistSkillDTO;
 import lombok.Data;
 
 import java.util.List;

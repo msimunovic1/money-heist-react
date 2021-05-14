@@ -2,9 +2,10 @@ package hr.msimunovic.moneyheist.api.controller;
 
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.heist.Heist;
-import hr.msimunovic.moneyheist.heist.HeistDTO;
+import hr.msimunovic.moneyheist.heist.dto.HeistDTO;
 import hr.msimunovic.moneyheist.heist.service.HeistService;
-import hr.msimunovic.moneyheist.heist_skill.HeistSkillDTO;
+import hr.msimunovic.moneyheist.heist_skill.dto.HeistSkillDTO;
+import hr.msimunovic.moneyheist.member_heist.dto.MembersEligibleForHeistDTO;
 import hr.msimunovic.moneyheist.util.HttpUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -61,4 +62,11 @@ public class HeistController {
         level equal or higher than the required skill level.
         ● They are not confirmed members of another heist happening in the same time window
      */
+    @GetMapping("/{heistId}/eligible_members")
+    public ResponseEntity<MembersEligibleForHeistDTO> getMembersEligibleForHeist(@PathVariable Long heistId) {
+
+        MembersEligibleForHeistDTO membersEligibleForHeist = heistService.getMembersEligibleForHeist(heistId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

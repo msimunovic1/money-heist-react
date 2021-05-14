@@ -1,5 +1,6 @@
-package hr.msimunovic.moneyheist.skill;
+package hr.msimunovic.moneyheist.skill.dto;
 
+import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Data;
 
 import java.util.List;

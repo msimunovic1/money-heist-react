@@ -3,9 +3,10 @@ package hr.msimunovic.moneyheist.member;
 import com.sun.istack.NotNull;
 import hr.msimunovic.moneyheist.common.MemberStatusEnum;
 import hr.msimunovic.moneyheist.member_skill.MemberSkill;
-import hr.msimunovic.moneyheist.member_skill.MemberSkillId;
 import hr.msimunovic.moneyheist.skill.Skill;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;

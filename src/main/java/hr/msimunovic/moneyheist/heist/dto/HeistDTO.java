@@ -1,6 +1,6 @@
-package hr.msimunovic.moneyheist.heist;
+package hr.msimunovic.moneyheist.heist.dto;
 
-import hr.msimunovic.moneyheist.heist_skill.HeistSkillDTO;
+import hr.msimunovic.moneyheist.heist_skill.dto.HeistSkillDTO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
