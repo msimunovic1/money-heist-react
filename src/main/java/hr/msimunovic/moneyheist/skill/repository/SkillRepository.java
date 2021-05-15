@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface SkillRepository extends JpaRepository<Skill, Long> {
 
     Skill findByNameAndLevel(String name, String level);
+
 }

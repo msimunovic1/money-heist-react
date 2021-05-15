@@ -3,8 +3,10 @@ package hr.msimunovic.moneyheist.api.controller;
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.heist.dto.HeistDTO;
+import hr.msimunovic.moneyheist.heist.dto.HeistStatusDTO;
 import hr.msimunovic.moneyheist.heist.service.HeistService;
-import hr.msimunovic.moneyheist.heist_skill.dto.HeistSkillDTO;
+import hr.msimunovic.moneyheist.heist.dto.HeistSkillDTO;
+import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
 import hr.msimunovic.moneyheist.member_heist.dto.MembersEligibleForHeistDTO;
 import hr.msimunovic.moneyheist.util.HttpUtil;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/heist")
@@ -67,6 +70,33 @@ public class HeistController {
 
         MembersEligibleForHeistDTO membersEligibleForHeist = heistService.getMembersEligibleForHeist(heistId);
 
+        return new ResponseEntity<>(membersEligibleForHeist, HttpStatus.OK);
+    }
+
+    @GetMapping("/{heistId}")
+    public ResponseEntity<HeistDTO> getHeistById(@PathVariable Long heistId) {
+
+        return new ResponseEntity<>(heistService.getHeistById(heistId), HttpStatus.OK);
+    }
+
+    // TODO: implement that API
+    @GetMapping("{heistId}/members")
+    public ResponseEntity<?> getHeistMembers(@PathVariable Long heistId) {
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("{heistId}/status")
+    public ResponseEntity<HeistStatusDTO> getHeistStatus(@PathVariable Long heistId) {
+
+        return new ResponseEntity<>(heistService.getHeistStatus(heistId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{heistId}/skills")
+    public ResponseEntity<List<HeistSkillDTO>> getSkillsByHeistId(@PathVariable Long heistId) {
+
+        return new ResponseEntity<>(heistService.getSkillsByHeistId(heistId), HttpStatus.OK);
+    }
+
+
 }

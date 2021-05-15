@@ -1,7 +1,7 @@
 package hr.msimunovic.moneyheist.member;
 
 import com.sun.istack.NotNull;
-import hr.msimunovic.moneyheist.common.MemberStatusEnum;
+import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
 import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Getter;
@@ -59,10 +59,7 @@ public class Member {
 
     }
 
-    public void removeSkill(String skillName) {
-
-        Skill skill = new Skill();
-        skill.setName(skillName);
+    public void removeSkill(Skill skill) {
 
         for (Iterator<MemberSkill> iterator = skills.iterator();
              iterator.hasNext(); ) {

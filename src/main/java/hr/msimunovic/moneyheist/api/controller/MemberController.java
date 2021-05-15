@@ -3,8 +3,8 @@ package hr.msimunovic.moneyheist.api.controller;
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.dto.MemberDTO;
+import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
 import hr.msimunovic.moneyheist.member.service.MemberService;
-import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.util.HttpUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,10 +40,10 @@ public class MemberController {
     @PutMapping("/{memberId}/skills")
     public ResponseEntity updateSkills(HttpServletRequest request,
                                        @PathVariable Long memberId,
-                                       @RequestBody SkillDTO skillDTO) {
+                                       @RequestBody MemberSkillDTO memberSkillDTO) {
 
         // TODO: implement skills update
-        memberService.updateSkills(memberId, skillDTO);
+        memberService.updateSkills(memberId, memberSkillDTO);
 
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_LOCATION, request.getRequestURI()),HttpStatus.NO_CONTENT);
     }
@@ -55,5 +55,17 @@ public class MemberController {
         memberService.deleteSkill(memberId, skillName);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<MemberDTO> getMemberById(@PathVariable Long memberId) {
+
+        return new ResponseEntity<>(memberService.getMemberById(memberId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{memberId}/skills")
+    public ResponseEntity<MemberSkillDTO> getSkillsByMemberId(@PathVariable Long memberId) {
+
+        return new ResponseEntity<>(memberService.getSkillsByMemberId(memberId), HttpStatus.OK);
     }
 }

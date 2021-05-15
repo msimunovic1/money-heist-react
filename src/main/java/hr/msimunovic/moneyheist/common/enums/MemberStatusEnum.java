@@ -1,4 +1,4 @@
-package hr.msimunovic.moneyheist.common;
+package hr.msimunovic.moneyheist.common.enums;
 
 public enum MemberStatusEnum {
     AVAILABLE,

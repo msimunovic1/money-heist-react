@@ -1,5 +1,7 @@
 package hr.msimunovic.moneyheist.heist;
 
+import hr.msimunovic.moneyheist.common.enums.HeistOutcomeEnum;
+import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
 import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Getter;
@@ -29,6 +31,12 @@ public class Heist {
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
+
+    @Enumerated(EnumType.STRING)
+    private HeistStatusEnum status;
+
+    @Enumerated(EnumType.STRING)
+    private HeistOutcomeEnum outcome;
 
     @OneToMany(mappedBy = "heist",
             cascade = CascadeType.ALL,

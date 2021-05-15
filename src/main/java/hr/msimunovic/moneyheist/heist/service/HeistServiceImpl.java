@@ -5,13 +5,15 @@ import hr.msimunovic.moneyheist.api.exception.NotFoundException;
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.heist.dto.HeistDTO;
+import hr.msimunovic.moneyheist.heist.dto.HeistSkillDTO;
+import hr.msimunovic.moneyheist.heist.dto.HeistStatusDTO;
+import hr.msimunovic.moneyheist.heist.mapper.HeistMapper;
 import hr.msimunovic.moneyheist.heist.repository.HeistRepository;
 import hr.msimunovic.moneyheist.member_heist.dto.MembersEligibleForHeistDTO;
-import hr.msimunovic.moneyheist.skill.Skill;
-import hr.msimunovic.moneyheist.skill.service.SkillService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +23,11 @@ import java.util.List;
 public class HeistServiceImpl implements HeistService {
 
     private final HeistRepository heistRepository;
-    private final SkillService skillService;
+    private final HeistMapper heistMapper;
     private final ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public Heist saveHeist(HeistDTO heistDTO) {
 
         Heist heistFromDB = heistRepository.findByName(heistDTO.getName());
@@ -37,10 +40,11 @@ public class HeistServiceImpl implements HeistService {
             throw new BadRequestException(Constants.MSG_HEIST_EXISTS);
         }
 
-        return heistRepository.save(mapDTOToHeist(heistDTO));
+        return heistRepository.save(heistMapper.mapDTOToHeist(heistDTO));
     }
 
     @Override
+    @Transactional
     public MembersEligibleForHeistDTO getMembersEligibleForHeist(Long heistId) {
 
         Heist heist = heistRepository.findById(heistId)
@@ -48,32 +52,56 @@ public class HeistServiceImpl implements HeistService {
 
         // TODO: return 405 when the heist members have already been confirmed
 
-        List<Skill> skills = new ArrayList<>();
+        MembersEligibleForHeistDTO membersEligibleForHeistDTO = new MembersEligibleForHeistDTO();
+        List<HeistSkillDTO> heistSkillDTOList = new ArrayList<>();
 
-        heist.getSkills().forEach(heistSkill -> skills.add(modelMapper.map(heistSkill, Skill.class)));
-        return null;
-    }
+        heist.getSkills()
+                .forEach(heistSkill -> {
 
-    private Heist mapDTOToHeist(HeistDTO heistDTO) {
+                    HeistSkillDTO heistSkillDTO = heistMapper.mapHeistSkillToDTO(heistSkill);
 
-        Heist heist = new Heist();
-        heist.setName(heistDTO.getName());
-        heist.setLocation(heistDTO.getLocation());
-        heist.setStartTime(heistDTO.getStartTime());
-        heist.setEndTime(heistDTO.getEndTime());
+                    heistSkillDTOList.add(heistSkillDTO);
 
-        heistDTO.getSkills()
-                .forEach(skill -> {
-
-                    Skill skillFromDB = skillService.checkSkillInDB(skill.getName(), skill.getLevel());
-
-                    if(skillFromDB != null) {
-                        heist.addSkill(skillFromDB, skill.getMembers());
-                    } else {
-                        heist.addSkill(modelMapper.map(skill, Skill.class), skill.getMembers());
-                    }
                 });
 
-        return heist;
+        membersEligibleForHeistDTO.setSkills(heistSkillDTOList);
+
+        // TODO: preko skill id pronaci membere
+
+
+
+        return membersEligibleForHeistDTO;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public HeistDTO getHeistById(Long heistId) {
+
+        Heist heist = heistRepository.findById(heistId)
+                .orElseThrow(() -> new NotFoundException(Constants.MSG_HEIST_NOT_FOUND));
+
+        return heistMapper.mapHeistToDTO(heist);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public HeistStatusDTO getHeistStatus(Long heistId) {
+
+        Heist heist = heistRepository.findById(heistId)
+                .orElseThrow(() -> new NotFoundException(Constants.MSG_HEIST_NOT_FOUND));
+
+        return modelMapper.map(heist, HeistStatusDTO.class);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<HeistSkillDTO> getSkillsByHeistId(Long heistId) {
+
+        Heist heist = heistRepository.findById(heistId)
+                .orElseThrow(() -> new NotFoundException(Constants.MSG_HEIST_NOT_FOUND));
+
+        return heistMapper.mapHeistSkillsToDTO(heist.getSkills());
+    }
+
+
 }

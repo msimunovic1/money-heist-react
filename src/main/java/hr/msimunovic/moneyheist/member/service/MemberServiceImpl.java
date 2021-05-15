@@ -5,29 +5,23 @@ import hr.msimunovic.moneyheist.api.exception.NotFoundException;
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.dto.MemberDTO;
+import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
+import hr.msimunovic.moneyheist.member.mapper.MemberMapper;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
 import hr.msimunovic.moneyheist.skill.Skill;
-import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
-import hr.msimunovic.moneyheist.skill.repository.SkillRepository;
-import hr.msimunovic.moneyheist.skill.service.SkillService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final SkillService skillService;
-    private final ModelMapper modelMapper;
+    private final MemberMapper memberMapper;
 
     @Override
     @Transactional
@@ -41,17 +35,17 @@ public class MemberServiceImpl implements MemberService {
             throw new BadRequestException(Constants.MSG_MEMBER_EXISTS);
         }
 
-        return memberRepository.save(mapDTOToMember(memberDTO));
+        return memberRepository.save(memberMapper.mapDTOToMember(memberDTO));
     }
 
     @Override
     @Transactional
-    public void updateSkills(Long memberId, SkillDTO skillDTO) {
+    public void updateSkills(Long memberId, MemberSkillDTO memberSkillDTO) {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
 
-        String mainSkill = skillDTO.getMainSkill();
+        String mainSkill = memberSkillDTO.getMainSkill();
 
         List<Skill> skills = new ArrayList<>();
 
@@ -62,12 +56,12 @@ public class MemberServiceImpl implements MemberService {
                     skills.add(s);
                 });
 
-        List<Skill> allSkills = Stream.of(skills, skillDTO.getSkills())
+/*        List<Skill> allSkills = Stream.of(skills, skillDTO.getSkills())
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
 
-        allSkills.forEach(skill -> member.addSkill(skill, mainSkill));
+        allSkills.forEach(skill -> member.addSkill(skill, mainSkill));*/
 
         memberRepository.save(member);
     }
@@ -79,52 +73,37 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
 
-        member.removeSkill(skillName);
+
+/*        member.getSkills().stream()
+                .map(memberSkill -> modelMapper.map(memberSkill, Skill.class))
+                .filter(skill -> skill.getName().equals(skillName))
+                .forEach(skill -> member.removeSkill(skill));*/
+
+     /*   Set<MemberSkill> memberSkills = member.getSkills().stream()
+                .filter(skill -> skill.getSkill().getName().equals(skillName))
+                .collect(Collectors.toSet());*/
+
+
     }
 
-    private Member mapDTOToMember(MemberDTO memberDTO) {
+    @Override
+    @Transactional(readOnly = true)
+    public MemberDTO getMemberById(Long memberId) {
 
-        String mainSkill = memberDTO.getMainSkill();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
 
-        Member member = new Member();
-        member.setName(memberDTO.getName());
-        member.setSex(memberDTO.getSex());
-        member.setEmail(memberDTO.getEmail());
-        member.setStatus(memberDTO.getStatus());
+        return memberMapper.mapMemberToDTO(member);
+    }
 
-        // If skill array is empty and main skill is provided
-        if(memberDTO.getSkills() == null && !mainSkill.isEmpty()) {
+    @Override
+    @Transactional(readOnly = true)
+    public MemberSkillDTO getSkillsByMemberId(Long memberId) {
 
-            Skill skillFromDB = skillService.checkSkillInDB(mainSkill, Constants.DEFAULT_SKILL_LEVEL);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
 
-            if(skillFromDB != null) {
-                member.addSkill(skillFromDB, mainSkill);
-            } else {
-                Skill skill = new Skill();
-                skill.setName(mainSkill);
-                skill.setLevel(Constants.DEFAULT_SKILL_LEVEL);
-                member.addSkill(modelMapper.map(skill, Skill.class), mainSkill);
-            }
-
-
-        } else {
-
-            memberDTO.getSkills()
-                    .forEach(skill -> {
-
-                        Skill skillFromDB = skillService.checkSkillInDB(skill.getName(), skill.getLevel());
-
-                        if(skillFromDB != null) {
-                            member.addSkill(modelMapper.map(skillFromDB, Skill.class), mainSkill);
-                        } else {
-                            member.addSkill(modelMapper.map(skill, Skill.class), mainSkill);
-                        }
-
-                    });
-
-        }
-
-        return member;
+        return memberMapper.mapMemberSkillsToDTO(member.getSkills());
     }
 
 

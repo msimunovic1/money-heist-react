@@ -65,7 +65,9 @@ CREATE TABLE heist(
     name VARCHAR(100) NOT NULL UNIQUE,
     location VARCHAR(100) NOT NULL,
     start_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP NOT NULL
+    end_time TIMESTAMP NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    outcome VARCHAR(50) NOT NULL
 );
 
 
