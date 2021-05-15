@@ -20,7 +20,6 @@ public class Skill {
     @SequenceGenerator(name = "skillSeq", sequenceName = "skill_seq", allocationSize = 1)
     private Long id;
 
-    @NotNull
     private String name;
 
     private String level;

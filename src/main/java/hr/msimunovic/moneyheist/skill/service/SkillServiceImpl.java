@@ -13,7 +13,6 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public Skill checkSkillInDB(String name, String level) {
-
         return skillRepository.findByNameAndLevel(name, level);
     }
 

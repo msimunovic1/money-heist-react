@@ -4,6 +4,7 @@ import hr.msimunovic.moneyheist.heist.dto.HeistSkillDTO;
 import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
 import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
 import hr.msimunovic.moneyheist.member_skill.MemberSkill;
+import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,24 @@ public class SkillMapper {
         skillDTO.setLevel(memberSkill.getSkill().getLevel());
 
         return skillDTO;
+    }
+
+    public Skill mapMemberSkillToSkill(MemberSkill memberSkill) {
+
+        Skill skill = new Skill();
+        skill.setName(memberSkill.getSkill().getName());
+        skill.setLevel(memberSkill.getSkill().getLevel());
+
+        return skill;
+    }
+
+    public Skill mapSkillDTOToSkill(SkillDTO skillDTO) {
+
+        Skill skill = new Skill();
+        skill.setName(skillDTO.getName());
+        skill.setLevel(skillDTO.getLevel());
+
+        return skill;
     }
 
     public MemberSkillDTO mapMemberSkillsToDTO(Set<MemberSkill> memberSkills) {

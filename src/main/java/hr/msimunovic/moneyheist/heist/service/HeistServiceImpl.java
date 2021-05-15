@@ -6,10 +6,12 @@ import hr.msimunovic.moneyheist.api.exception.NotFoundException;
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
+import hr.msimunovic.moneyheist.email.service.EmailService;
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.heist.dto.*;
 import hr.msimunovic.moneyheist.heist.mapper.HeistMapper;
 import hr.msimunovic.moneyheist.heist.repository.HeistRepository;
+import hr.msimunovic.moneyheist.heist_member.HeistMember;
 import hr.msimunovic.moneyheist.heist_member.dto.MembersEligibleForHeistDTO;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
@@ -33,6 +35,7 @@ public class HeistServiceImpl implements HeistService {
     private final HeistMapper heistMapper;
     private final SkillMapper skillMapper;
     private final ModelMapper modelMapper;
+    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -160,7 +163,12 @@ public class HeistServiceImpl implements HeistService {
 
         heist.setStatus(HeistStatusEnum.READY);
 
-        heistRepository.save(heist);
+        Heist updatedHeist = heistRepository.save(heist);
+
+        // TODO: repair this
+        /*updatedHeist.getMembers()
+                .forEach(heistMember ->
+                        emailService.sendEmail(heistMember.getMember().getEmail(), Constants.MAIL_MEMBER_ADDED_TO_HEIST_SUBJECT, Constants.MAIL_MEMBER_ADDED_TO_HEIST_TEXT));*/
 
     }
 

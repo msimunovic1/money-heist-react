@@ -17,4 +17,8 @@ public class Constants {
     public static final String MSG_HEIST_STATUS_MUST_BE_READY = "Heist status must be READY.";
 
     public static final String DEFAULT_SKILL_LEVEL = "*";
+
+    // Email Subjects and Messages
+    public static final String MAIL_MEMBER_ADDED_TO_HEIST_SUBJECT = "Heist member";
+    public static final String MAIL_MEMBER_ADDED_TO_HEIST_TEXT = "You are added to new Heist.";
 }
