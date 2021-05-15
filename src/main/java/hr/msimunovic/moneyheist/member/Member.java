@@ -43,9 +43,7 @@ public class Member {
             orphanRemoval = true)
     private Set<MemberSkill> skills = new HashSet<>();
 
-    @OneToMany(mappedBy = "member",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "member")
     private Set<HeistMember> heists = new HashSet<>();
 
     public void addSkill(Skill skill, String mainSkill) {

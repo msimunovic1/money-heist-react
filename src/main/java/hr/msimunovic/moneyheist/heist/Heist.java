@@ -1,5 +1,6 @@
 package hr.msimunovic.moneyheist.heist;
 
+import com.sun.istack.NotNull;
 import hr.msimunovic.moneyheist.common.enums.HeistOutcomeEnum;
 import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
 import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
@@ -26,12 +27,16 @@ public class Heist {
     @SequenceGenerator(name = "heistSeq", sequenceName = "heist_seq", allocationSize = 1)
     private Long id;
 
+    @NotNull
     private String name;
 
+    @NotNull
     private String location;
 
+    @NotNull
     private LocalDateTime startTime;
 
+    @NotNull
     private LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)

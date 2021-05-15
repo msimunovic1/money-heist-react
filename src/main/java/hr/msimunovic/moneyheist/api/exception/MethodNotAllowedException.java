@@ -5,11 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Slf4j
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public class BadRequestException extends RuntimeException {
+@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+public class MethodNotAllowedException extends RuntimeException {
 
-    public BadRequestException(String message) {
+    public MethodNotAllowedException(String message) {
         super(message);
         log.error("Error message: {} ", message);
     }
+
 }

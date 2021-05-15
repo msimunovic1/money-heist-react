@@ -66,6 +66,6 @@ public class MemberController {
     @GetMapping("/{memberId}/skills")
     public ResponseEntity<MemberSkillDTO> getSkillsByMemberId(@PathVariable Long memberId) {
 
-        return new ResponseEntity<>(memberService.getSkillsByMemberId(memberId), HttpStatus.OK);
+        return new ResponseEntity<>(memberService.getMemberSkills(memberId), HttpStatus.OK);
     }
 }

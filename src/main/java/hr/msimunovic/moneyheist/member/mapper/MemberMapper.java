@@ -7,6 +7,7 @@ import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
 import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
+import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
 import hr.msimunovic.moneyheist.skill.service.SkillService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,6 +22,7 @@ import java.util.Set;
 public class MemberMapper {
 
     private final SkillService skillService;
+    private final SkillMapper skillMapper;
     private final ModelMapper modelMapper;
 
     public MemberDTO mapMemberToDTO(Member member) {
@@ -39,7 +41,7 @@ public class MemberMapper {
                 if (memberSkill.getMainSkill().equals("Y")) {
                     memberDTO.setMainSkill(memberSkill.getSkill().getName());
                 }
-                skillDTOList.add(mapSkillToDTO(memberSkill));
+                skillDTOList.add(skillMapper.mapMemberSkillToDTO(memberSkill));
             });
 
         memberDTO.setSkills(skillDTOList);
@@ -48,34 +50,6 @@ public class MemberMapper {
     }
 
 
-    public MemberSkillDTO mapMemberSkillsToDTO(Set<MemberSkill> memberSkills) {
-
-        MemberSkillDTO memberSkillDTO = new MemberSkillDTO();
-
-        // TODO: ovo izdvojiti u metodu
-        List<SkillDTO> skillDTOList = new ArrayList<>();
-
-        memberSkills
-            .forEach(memberSkill -> {
-                if (memberSkill.getMainSkill().equals("Y")) {
-                    memberSkillDTO.setMainSkill(memberSkill.getSkill().getName());
-                }
-                skillDTOList.add(mapSkillToDTO(memberSkill));
-            });
-
-        memberSkillDTO.setSkills(skillDTOList);
-
-        return memberSkillDTO;
-    }
-
-    public SkillDTO mapSkillToDTO(MemberSkill memberSkill) {
-
-        SkillDTO skillDTO = new SkillDTO();
-        skillDTO.setName(memberSkill.getSkill().getName());
-        skillDTO.setLevel(memberSkill.getSkill().getLevel());
-
-        return skillDTO;
-    }
 
 
     // TODO: razmotriti ovu metodu za refactor + izbaciti modelMapper
@@ -108,6 +82,10 @@ public class MemberMapper {
 
             memberDTO.getSkills()
                     .forEach(skill -> {
+
+                        if (skill.getLevel() == null) {
+                            skill.setLevel(Constants.DEFAULT_SKILL_LEVEL);
+                        }
 
                         Skill skillFromDB = skillService.checkSkillInDB(skill.getName(), skill.getLevel());
 

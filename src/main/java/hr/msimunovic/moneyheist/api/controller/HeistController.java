@@ -45,7 +45,6 @@ public class HeistController {
                                        @PathVariable Long heistId,
                                        @RequestBody HeistSkillDTO heistSkillDTO) {
 
-
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_CONTENT_LOCATION, request.getRequestURI()), HttpStatus.NO_CONTENT);
 
     }
@@ -59,16 +58,20 @@ public class HeistController {
         return new ResponseEntity<>(membersEligibleForHeist, HttpStatus.OK);
     }
 
-    //TODO: implement
     @PutMapping("/{heistId}/members")
-    public ResponseEntity saveHeistMembers(HttpServletRequest request, @RequestBody HeistMembersDTO heistMembersDTO) {
+    public ResponseEntity saveHeistMembers(HttpServletRequest request,
+                                           @PathVariable Long heistId,
+                                           @RequestBody HeistMembersDTO heistMembersDTO) {
+
+        heistService.saveHeistMembers(heistId, heistMembersDTO);
 
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_CONTENT_LOCATION, request.getRequestURI()), HttpStatus.NO_CONTENT);
     }
 
-    // TODO: implement
     @PutMapping("{heistId}/start")
     public ResponseEntity startHeistManually(HttpServletRequest request, @PathVariable Long heistId) {
+
+        heistService.startHeistManually(heistId);
 
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_LOCATION, request.getRequestURI()), HttpStatus.OK);
     }
@@ -82,14 +85,13 @@ public class HeistController {
     @GetMapping("/{heistId}/skills")
     public ResponseEntity<List<HeistSkillDTO>> getSkillsByHeistId(@PathVariable Long heistId) {
 
-        return new ResponseEntity<>(heistService.getSkillsByHeistId(heistId), HttpStatus.OK);
+        return new ResponseEntity<>(heistService.getHeistSkills(heistId), HttpStatus.OK);
     }
 
-    // TODO: implement
     @GetMapping("{heistId}/members")
-    public ResponseEntity<?> getHeistMembers(@PathVariable Long heistId) {
+    public ResponseEntity<List<HeistMemberDTO>> getHeistMembers(@PathVariable Long heistId) {
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(heistService.getHeistMembers(heistId), HttpStatus.OK);
     }
 
     @GetMapping("{heistId}/status")

@@ -1,5 +1,6 @@
 package hr.msimunovic.moneyheist.skill;
 
+import com.sun.istack.NotNull;
 import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
 import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import lombok.*;
@@ -19,6 +20,7 @@ public class Skill {
     @SequenceGenerator(name = "skillSeq", sequenceName = "skill_seq", allocationSize = 1)
     private Long id;
 
+    @NotNull
     private String name;
 
     private String level;

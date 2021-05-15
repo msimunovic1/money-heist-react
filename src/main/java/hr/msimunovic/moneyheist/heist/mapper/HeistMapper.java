@@ -1,10 +1,16 @@
 package hr.msimunovic.moneyheist.heist.mapper;
 
+import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.heist.dto.HeistDTO;
+import hr.msimunovic.moneyheist.heist.dto.HeistMemberDTO;
 import hr.msimunovic.moneyheist.heist.dto.HeistSkillDTO;
+import hr.msimunovic.moneyheist.heist_member.HeistMember;
 import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
+import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
+import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
+import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
 import hr.msimunovic.moneyheist.skill.service.SkillService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,6 +25,7 @@ import java.util.stream.Collectors;
 public class HeistMapper {
 
     private final SkillService skillService;
+    private final SkillMapper skillMapper;
     private final ModelMapper modelMapper;
 
     public HeistDTO mapHeistToDTO(Heist heist) {
@@ -30,7 +37,7 @@ public class HeistMapper {
         heistDTO.setEndTime(heist.getEndTime());
 
         List<HeistSkillDTO> heistSkillDTOList = heist.getSkills().stream()
-                .map(heistSkill -> mapHeistSkillToDTO(heistSkill))
+                .map(heistSkill -> skillMapper.mapHeistSkillToDTO(heistSkill))
                 .collect(Collectors.toList());
 
         heistDTO.setSkills(heistSkillDTOList);
@@ -50,32 +57,43 @@ public class HeistMapper {
         heistDTO.getSkills()
                 .forEach(skill -> {
 
+                    if (skill.getLevel() == null) {
+                        skill.setLevel(Constants.DEFAULT_SKILL_LEVEL);
+                    }
+
                     Skill skillFromDB = skillService.checkSkillInDB(skill.getName(), skill.getLevel());
+                    Integer members = skill.getMembers();
 
                     if(skillFromDB != null) {
-                        heist.addSkill(skillFromDB, skill.getMembers());
+                        heist.addSkill(skillFromDB, members);
                     } else {
-                        heist.addSkill(modelMapper.map(skill, Skill.class), skill.getMembers());
+                        heist.addSkill(modelMapper.map(skill, Skill.class), members);
                     }
+
                 });
 
         return heist;
     }
 
-    public List<HeistSkillDTO> mapHeistSkillsToDTO(Set<HeistSkill> heistSkills) {
-
-        return heistSkills.stream()
-                .map(heistSkill -> mapHeistSkillToDTO(heistSkill))
+    public List<HeistMemberDTO> mapHeistMembersToDTO(Set<HeistMember> heistMembers) {
+        return heistMembers.stream()
+                .map(heistMember -> mapHeistMemberToDTO(heistMember))
                 .collect(Collectors.toList());
     }
 
-    public HeistSkillDTO mapHeistSkillToDTO(HeistSkill heistSkill) {
+    public HeistMemberDTO mapHeistMemberToDTO(HeistMember heistMember) {
 
-        HeistSkillDTO heistSkillDTO = new HeistSkillDTO();
-        heistSkillDTO.setName(heistSkill.getSkill().getName());
-        heistSkillDTO.setLevel(heistSkill.getSkill().getLevel());
-        heistSkillDTO.setMembers(heistSkill.getMembers());
+        HeistMemberDTO heistMemberDTO = new HeistMemberDTO();
+        heistMemberDTO.setName(heistMember.getMember().getName());
 
-        return heistSkillDTO;
+        List<SkillDTO> skillDTOList = heistMember.getMember().getSkills().stream()
+                .map(memberSkill -> skillMapper.mapMemberSkillToDTO(memberSkill))
+                .collect(Collectors.toList());
+
+        heistMemberDTO.setSkills(skillDTOList);
+
+        return heistMemberDTO;
     }
+
+
 }

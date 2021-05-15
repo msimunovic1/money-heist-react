@@ -9,6 +9,7 @@ import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
 import hr.msimunovic.moneyheist.member.mapper.MemberMapper;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
 import hr.msimunovic.moneyheist.skill.Skill;
+import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
+    private final SkillMapper skillMapper;
 
     @Override
     @Transactional
@@ -42,8 +44,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void updateSkills(Long memberId, MemberSkillDTO memberSkillDTO) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
+        Member member = findMemberById(memberId);
 
         String mainSkill = memberSkillDTO.getMainSkill();
 
@@ -70,8 +71,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void deleteSkill(Long memberId, String skillName) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
+        Member member = findMemberById(memberId);
 
 
 /*        member.getSkills().stream()
@@ -90,21 +90,20 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public MemberDTO getMemberById(Long memberId) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
-
-        return memberMapper.mapMemberToDTO(member);
+        return memberMapper.mapMemberToDTO(findMemberById(memberId));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public MemberSkillDTO getSkillsByMemberId(Long memberId) {
+    public MemberSkillDTO getMemberSkills(Long memberId) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
-
-        return memberMapper.mapMemberSkillsToDTO(member.getSkills());
+        return skillMapper.mapMemberSkillsToDTO(findMemberById(memberId).getSkills());
     }
 
+    private Member findMemberById(Long memberId){
+
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
+    }
 
 }

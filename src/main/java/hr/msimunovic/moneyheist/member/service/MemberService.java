@@ -14,5 +14,5 @@ public interface MemberService {
 
     MemberDTO getMemberById(Long memberId);
 
-    MemberSkillDTO getSkillsByMemberId(Long memberId);
+    MemberSkillDTO getMemberSkills(Long memberId);
 }
