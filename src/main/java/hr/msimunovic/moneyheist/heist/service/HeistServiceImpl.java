@@ -5,11 +5,12 @@ import hr.msimunovic.moneyheist.api.exception.NotFoundException;
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.heist.dto.HeistDTO;
+import hr.msimunovic.moneyheist.heist.dto.HeistOutcomeDTO;
 import hr.msimunovic.moneyheist.heist.dto.HeistSkillDTO;
 import hr.msimunovic.moneyheist.heist.dto.HeistStatusDTO;
 import hr.msimunovic.moneyheist.heist.mapper.HeistMapper;
 import hr.msimunovic.moneyheist.heist.repository.HeistRepository;
-import hr.msimunovic.moneyheist.member_heist.dto.MembersEligibleForHeistDTO;
+import hr.msimunovic.moneyheist.heist_member.dto.MembersEligibleForHeistDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -101,6 +102,15 @@ public class HeistServiceImpl implements HeistService {
                 .orElseThrow(() -> new NotFoundException(Constants.MSG_HEIST_NOT_FOUND));
 
         return heistMapper.mapHeistSkillsToDTO(heist.getSkills());
+    }
+
+    @Override
+    public HeistOutcomeDTO getHeistOutcome(Long heistId) {
+
+        Heist heist = heistRepository.findById(heistId)
+                .orElseThrow(() -> new NotFoundException(Constants.MSG_HEIST_NOT_FOUND));
+
+        return modelMapper.map(heist, HeistOutcomeDTO.class);
     }
 
 

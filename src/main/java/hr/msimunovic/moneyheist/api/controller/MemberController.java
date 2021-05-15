@@ -37,21 +37,21 @@ public class MemberController {
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_LOCATION, locationHeader), HttpStatus.CREATED);
     }
 
+    // TODO: implement
     @PutMapping("/{memberId}/skills")
     public ResponseEntity updateSkills(HttpServletRequest request,
                                        @PathVariable Long memberId,
                                        @RequestBody MemberSkillDTO memberSkillDTO) {
 
-        // TODO: implement skills update
         memberService.updateSkills(memberId, memberSkillDTO);
 
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_LOCATION, request.getRequestURI()),HttpStatus.NO_CONTENT);
     }
 
+    // TODO: implement
     @DeleteMapping("/{memberId}/skills")
     public ResponseEntity deleteSkill(@PathVariable Long memberId, @RequestParam String skillName) {
 
-        // TODO: implement skill delete
         memberService.deleteSkill(memberId, skillName);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

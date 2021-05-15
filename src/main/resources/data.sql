@@ -1,5 +1,6 @@
 INSERT INTO MEMBER(id, name, sex, email, status) VALUES
-    (100, 'Tokyo', 'F', 'tokyo@ag04.com', 'AVAILABLE');
+    (100, 'Tokyo', 'F', 'tokyo@ag04.com', 'AVAILABLE'),
+    (101, 'Berlin', 'M', 'berlin@ag04.com', 'AVAILABLE');
 
 INSERT INTO SKILL(id, name, level) VALUES
     (100, 'driving', '****'),
@@ -15,3 +16,7 @@ INSERT INTO HEIST(id, name, location, start_time, end_time, status, outcome) VAL
 INSERT INTO HEIST_SKILL(heist_id, skill_id, members) VALUES
     (100, 100, 3),
     (100, 101, 1);
+
+INSERT INTO HEIST_MEMBER(heist_id, member_id) VALUES
+    (100, 100),
+    (100, 101);

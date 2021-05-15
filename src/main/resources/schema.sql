@@ -89,8 +89,8 @@ CREATE TABLE heist_skill(
 DROP TABLE IF EXISTS heist_member;
 
 CREATE TABLE heist_member(
-    member_id INT NOT NULL,
     heist_id INT NOT NULL,
-    FOREIGN KEY(member_id) REFERENCES member(id),
-    FOREIGN KEY(heist_id) REFERENCES heist(id)
+    member_id INT NOT NULL,
+    FOREIGN KEY(heist_id) REFERENCES heist(id),
+    FOREIGN KEY(member_id) REFERENCES member(id)
 );

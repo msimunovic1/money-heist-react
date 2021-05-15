@@ -3,6 +3,8 @@ package hr.msimunovic.moneyheist.heist;
 import hr.msimunovic.moneyheist.common.enums.HeistOutcomeEnum;
 import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
 import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
+import hr.msimunovic.moneyheist.heist_member.HeistMember;
+import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,11 @@ public class Heist {
             orphanRemoval = true)
     private Set<HeistSkill> skills = new HashSet<>();
 
+    @OneToMany(mappedBy = "heist",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private Set<HeistMember> members = new HashSet<>();
+
     public void addSkill(Skill skill, Integer members) {
 
         HeistSkill heistSkill = new HeistSkill();
@@ -52,5 +59,15 @@ public class Heist {
 
         skills.add(heistSkill);
         skill.getHeists().add(heistSkill);
+    }
+
+    public void addMember(Member member) {
+
+        HeistMember heistMember = new HeistMember();
+        heistMember.setHeist(this);
+        heistMember.setMember(member);
+
+        members.add(heistMember);
+        member.getHeists().add(heistMember);
     }
 }

@@ -2,6 +2,7 @@ package hr.msimunovic.moneyheist.member;
 
 import com.sun.istack.NotNull;
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
+import hr.msimunovic.moneyheist.heist_member.HeistMember;
 import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Getter;
@@ -41,6 +42,11 @@ public class Member {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private Set<MemberSkill> skills = new HashSet<>();
+
+    @OneToMany(mappedBy = "member",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private Set<HeistMember> heists = new HashSet<>();
 
     public void addSkill(Skill skill, String mainSkill) {
 

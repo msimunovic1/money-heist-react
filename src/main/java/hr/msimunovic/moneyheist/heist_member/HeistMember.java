@@ -1,4 +1,4 @@
-package hr.msimunovic.moneyheist.member_heist;
+package hr.msimunovic.moneyheist.heist_member;
 
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.member.Member;
@@ -12,10 +12,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class MemberHeist {
+public class HeistMember {
 
     @EmbeddedId
-    private MemberHeistId id;
+    private HeistMemberId id = new HeistMemberId();
 
     @MapsId("memberId")
     @ManyToOne(fetch = FetchType.LAZY)

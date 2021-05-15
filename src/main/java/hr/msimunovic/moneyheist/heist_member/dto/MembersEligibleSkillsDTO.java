@@ -1,4 +1,4 @@
-package hr.msimunovic.moneyheist.member_heist.dto;
+package hr.msimunovic.moneyheist.heist_member.dto;
 
 import lombok.Data;
 

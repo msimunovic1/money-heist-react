@@ -1,4 +1,4 @@
-package hr.msimunovic.moneyheist.member_heist;
+package hr.msimunovic.moneyheist.heist_member;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @Embeddable
-public class MemberHeistId implements Serializable {
+public class HeistMemberId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

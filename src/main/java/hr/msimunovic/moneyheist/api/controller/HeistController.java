@@ -2,12 +2,9 @@ package hr.msimunovic.moneyheist.api.controller;
 
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.heist.Heist;
-import hr.msimunovic.moneyheist.heist.dto.HeistDTO;
-import hr.msimunovic.moneyheist.heist.dto.HeistStatusDTO;
+import hr.msimunovic.moneyheist.heist.dto.*;
 import hr.msimunovic.moneyheist.heist.service.HeistService;
-import hr.msimunovic.moneyheist.heist.dto.HeistSkillDTO;
-import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
-import hr.msimunovic.moneyheist.member_heist.dto.MembersEligibleForHeistDTO;
+import hr.msimunovic.moneyheist.heist_member.dto.MembersEligibleForHeistDTO;
 import hr.msimunovic.moneyheist.util.HttpUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,29 +39,18 @@ public class HeistController {
 
     }
 
+    // TODO: implement
     @PatchMapping("/{heistId}/skills)")
     public ResponseEntity updateSkills(HttpServletRequest request,
                                        @PathVariable Long heistId,
                                        @RequestBody HeistSkillDTO heistSkillDTO) {
 
-        // TODO: implement skills update
 
-        String locationHeader = request.getRequestURI();
-
-        return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_CONTENT_LOCATION, locationHeader), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_CONTENT_LOCATION, request.getRequestURI()), HttpStatus.NO_CONTENT);
 
     }
 
-    /*
-    SBSS-06: As a heist organiser, I want to view members eligible to participate in a heist.
-    The purpose of this story is to enable the heist organiser to view members eligible to participate in a heist.
-
-    Members returned as part of this response should conform to the following rules:
-        ● Their status field should be either AVAILABLE or RETIRED .
-        ● At least one of their skills should match the required skill of the heist and should have a
-        level equal or higher than the required skill level.
-        ● They are not confirmed members of another heist happening in the same time window
-     */
+    // TODO: implement
     @GetMapping("/{heistId}/eligible_members")
     public ResponseEntity<MembersEligibleForHeistDTO> getMembersEligibleForHeist(@PathVariable Long heistId) {
 
@@ -73,13 +59,33 @@ public class HeistController {
         return new ResponseEntity<>(membersEligibleForHeist, HttpStatus.OK);
     }
 
+    //TODO: implement
+    @PutMapping("/{heistId}/members")
+    public ResponseEntity saveHeistMembers(HttpServletRequest request, @RequestBody HeistMembersDTO heistMembersDTO) {
+
+        return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_CONTENT_LOCATION, request.getRequestURI()), HttpStatus.NO_CONTENT);
+    }
+
+    // TODO: implement
+    @PutMapping("{heistId}/start")
+    public ResponseEntity startHeistManually(HttpServletRequest request, @PathVariable Long heistId) {
+
+        return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_LOCATION, request.getRequestURI()), HttpStatus.OK);
+    }
+
     @GetMapping("/{heistId}")
     public ResponseEntity<HeistDTO> getHeistById(@PathVariable Long heistId) {
 
         return new ResponseEntity<>(heistService.getHeistById(heistId), HttpStatus.OK);
     }
 
-    // TODO: implement that API
+    @GetMapping("/{heistId}/skills")
+    public ResponseEntity<List<HeistSkillDTO>> getSkillsByHeistId(@PathVariable Long heistId) {
+
+        return new ResponseEntity<>(heistService.getSkillsByHeistId(heistId), HttpStatus.OK);
+    }
+
+    // TODO: implement
     @GetMapping("{heistId}/members")
     public ResponseEntity<?> getHeistMembers(@PathVariable Long heistId) {
 
@@ -92,11 +98,10 @@ public class HeistController {
         return new ResponseEntity<>(heistService.getHeistStatus(heistId), HttpStatus.OK);
     }
 
-    @GetMapping("/{heistId}/skills")
-    public ResponseEntity<List<HeistSkillDTO>> getSkillsByHeistId(@PathVariable Long heistId) {
+    @GetMapping("/{heistId}/outcome")
+    public ResponseEntity<HeistOutcomeDTO> getHeistOutcome(@PathVariable Long heistId) {
 
-        return new ResponseEntity<>(heistService.getSkillsByHeistId(heistId), HttpStatus.OK);
+        return new ResponseEntity<>(heistService.getHeistOutcome(heistId), HttpStatus.OK);
     }
-
 
 }
