@@ -4,6 +4,7 @@ import hr.msimunovic.moneyheist.api.exception.BadRequestException;
 import hr.msimunovic.moneyheist.api.exception.MethodNotAllowedException;
 import hr.msimunovic.moneyheist.api.exception.NotFoundException;
 import hr.msimunovic.moneyheist.common.Constants;
+import hr.msimunovic.moneyheist.common.enums.HeistOutcomeEnum;
 import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
 import hr.msimunovic.moneyheist.email.service.EmailService;
@@ -13,18 +14,21 @@ import hr.msimunovic.moneyheist.heist.mapper.HeistMapper;
 import hr.msimunovic.moneyheist.heist.repository.HeistRepository;
 import hr.msimunovic.moneyheist.heist_member.HeistMember;
 import hr.msimunovic.moneyheist.heist_member.dto.MembersEligibleForHeistDTO;
+import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
+import hr.msimunovic.moneyheist.member.service.MemberService;
 import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
+import hr.msimunovic.moneyheist.util.HeistUtil;
+import hr.msimunovic.moneyheist.util.MemberUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +36,7 @@ public class HeistServiceImpl implements HeistService {
 
     private final HeistRepository heistRepository;
     private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final HeistMapper heistMapper;
     private final SkillMapper skillMapper;
     private final ModelMapper modelMapper;
@@ -142,7 +147,14 @@ public class HeistServiceImpl implements HeistService {
     @Override
     @Transactional(readOnly = true)
     public HeistOutcomeDTO getHeistOutcome(Long heistId) {
-        return modelMapper.map(findHeistById(heistId), HeistOutcomeDTO.class);
+
+        Heist heist = findHeistById(heistId);
+
+        if(!heist.getStatus().equals(HeistStatusEnum.FINISHED)) {
+            throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_BE_FINISHED);
+        }
+
+        return modelMapper.map(heist, HeistOutcomeDTO.class);
     }
 
     @Override
@@ -182,17 +194,103 @@ public class HeistServiceImpl implements HeistService {
             throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_BE_READY);
         }
 
-        heist.setStatus(HeistStatusEnum.IN_PROGRESS);
-        heistRepository.save(heist);
+        startHeist(heist);
 
     }
 
-    private Heist findHeistById(Long heistId) {
+    public Heist findHeistById(Long heistId) {
         return heistRepository.findById(heistId)
                 .orElseThrow(() -> new NotFoundException(Constants.MSG_HEIST_NOT_FOUND));
     }
 
-    private void validateHeist(Heist heist) {
+    public void startHeist(Heist heist) {
+
+        // set new status to heist
+        heist.setStatus(HeistStatusEnum.IN_PROGRESS);
+
+        // save heist with new status
+        heistRepository.save(heist);
+
+    }
+
+    public void endHeist(Heist heist) {
+
+        // set new status to heist
+        heist.setStatus(HeistStatusEnum.FINISHED);
+
+        Set<HeistMember> heistMembers = heist.getMembers();
+
+        long requiredMembers = heist.getSkills().stream()
+                .mapToLong(HeistSkill::getMembers)
+                .sum();
+
+        long participatedMembers = heistMembers.stream()
+                .map(HeistMember::getMember)
+                .count();
+
+        long outcomeResult = HeistUtil.determineOutcomeInPercents(requiredMembers, participatedMembers);
+
+        HeistOutcomeEnum heistOutcome = HeistOutcomeEnum.FAILED;
+
+        if(outcomeResult < 50) {
+
+            heistOutcome = HeistOutcomeEnum.FAILED;
+
+            updateMembersStatus(heistMembers, List.of(MemberStatusEnum.EXPIRED, MemberStatusEnum.INCARCERATED), heistMembers.size());
+
+        } else if(outcomeResult >= 50 && outcomeResult < 75) {
+
+            List<MemberStatusEnum> memberStatuses = updateMembersStatus(heistMembers, List.of(MemberStatusEnum.values()), heistMembers.size());
+
+            long repercussionResult = HeistUtil.determinateHeistRepercussion(memberStatuses);
+
+            if(repercussionResult < 70) {
+                // 2/3 of the members EXPIRED or INCARCERATED
+                heistOutcome = HeistOutcomeEnum.SUCCEEDED;
+            } else {
+                // 1/3 of the members EXPIRED or INCARCERATED
+                heistOutcome = HeistOutcomeEnum.FAILED;
+            }
+
+        } else if(outcomeResult >= 75 && outcomeResult < 100) {
+
+            heistOutcome = HeistOutcomeEnum.SUCCEEDED;
+
+            // 1/3 of the members INCARCERATED
+            long oneThirdOfMembers = Math.round((heistMembers.size() * 0.33));
+
+            updateMembersStatus(heistMembers, List.of(MemberStatusEnum.INCARCERATED), oneThirdOfMembers);
+
+        } else if(outcomeResult == 100) {
+            heistOutcome = HeistOutcomeEnum.SUCCEEDED;
+        }
+
+        // set outcome to heist
+        heist.setOutcome(heistOutcome);
+
+        // save heist with new status and outcome result
+        heistRepository.save(heist);
+
+    }
+
+    private List<MemberStatusEnum> updateMembersStatus(Set<HeistMember> members, List<MemberStatusEnum> possibleStatuses, long limit) {
+
+       return members.stream()
+            .map(heistMember -> memberRepository.findById(heistMember.getMember().getId())
+                    .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND)))
+            .limit(limit)
+            .map(member -> {
+                // update random generated member status
+                member.setStatus(MemberUtil.determineMemberStatus(possibleStatuses));
+                Member updatedMember = memberRepository.save(member);
+                return updatedMember.getStatus();
+            })
+           .collect(Collectors.toList());
+
+    }
+
+    // TODO: prebaciti ovo u neku drugu klasu
+    public void validateHeist(Heist heist) {
         // TODO: 400 (Bad Request) When one of member skills does not match at least one of the required skills of the heist
         // TODO: 400 when is already a confirmed member of another heist happening at the same time.
         if(!heist.getStatus().equals(HeistStatusEnum.PLANNING)) {
@@ -200,7 +298,7 @@ public class HeistServiceImpl implements HeistService {
         }
     }
 
-    private void validateMember(Member member) {
+    public void validateMember(Member member) {
         if(!member.getStatus().equals(MemberStatusEnum.AVAILABLE) && !member.getStatus().equals(MemberStatusEnum.RETIRED)) {
             throw new BadRequestException(Constants.MSG_MEMBER_STATUS_NOT_MATCH_TO_HEIST);
         }

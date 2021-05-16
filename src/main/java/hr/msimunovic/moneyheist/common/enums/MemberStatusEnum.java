@@ -4,5 +4,5 @@ public enum MemberStatusEnum {
     AVAILABLE,
     EXPIRED,
     INCARCERATED,
-    RETIRED
+    RETIRED;
 }

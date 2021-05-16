@@ -43,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = memberMapper.mapDTOToMember(memberDTO);
 
-        emailService.sendEmail(member.getEmail(), Constants.MAIL_MEMBER_ADDED_TO_HEIST_SUBJECT, Constants.MAIL_MEMBER_ADDED_TO_HEIST_TEXT);
+    //    emailService.sendEmail(member.getEmail(), Constants.MAIL_MEMBER_ADDED_TO_HEIST_SUBJECT, Constants.MAIL_MEMBER_ADDED_TO_HEIST_TEXT);
 
         return memberRepository.save(member);
     }
@@ -109,7 +109,7 @@ public class MemberServiceImpl implements MemberService {
         return skillMapper.mapMemberSkillsToDTO(findMemberById(memberId).getSkills());
     }
 
-    private Member findMemberById(Long memberId){
+    public Member findMemberById(Long memberId){
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
     }
