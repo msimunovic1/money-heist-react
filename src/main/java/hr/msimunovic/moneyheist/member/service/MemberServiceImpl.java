@@ -11,6 +11,7 @@ import hr.msimunovic.moneyheist.member.mapper.MemberMapper;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
 import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
+import hr.msimunovic.moneyheist.skill.repository.SkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
+    private final SkillRepository skillRepository;
     private final SkillMapper skillMapper;
     private final ModelMapper modelMapper;
     private final EmailService emailService;
@@ -84,15 +86,12 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = findMemberById(memberId);
 
-
-/*        member.getSkills().stream()
-                .map(memberSkill -> modelMapper.map(memberSkill, Skill.class))
+        member.getSkills().stream()
+                .map(memberSkill -> skillRepository.findByNameAndLevel(memberSkill.getSkill().getName(), memberSkill.getSkill().getLevel()))
                 .filter(skill -> skill.getName().equals(skillName))
-                .forEach(skill -> member.removeSkill(skill));*/
+                .forEach(skill -> member.removeSkill(skill));
 
-     /*   Set<MemberSkill> memberSkills = member.getSkills().stream()
-                .filter(skill -> skill.getSkill().getName().equals(skillName))
-                .collect(Collectors.toSet());*/
+        memberRepository.save(member);
 
 
     }

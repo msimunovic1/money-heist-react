@@ -22,14 +22,20 @@ import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
 import hr.msimunovic.moneyheist.util.HeistUtil;
 import hr.msimunovic.moneyheist.util.MemberUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class HeistServiceImpl implements HeistService {
@@ -46,15 +52,24 @@ public class HeistServiceImpl implements HeistService {
     @Transactional
     public Heist saveHeist(HeistDTO heistDTO) {
 
+        LocalDateTime startDate = heistDTO.getStartTime();
+        LocalDateTime endDate = heistDTO.getEndTime();
+        LocalDateTime currentTime = LocalDateTime.now();
+
         Heist heistFromDB = heistRepository.findByName(heistDTO.getName());
 
-        // TODO: return 404 when the startTime is after the endTime
-        // TODO: return 404 when the endTime is in the past
-        // TODO: return 404 when multiple skills with the same name and level were provided.
-
+        // check does heist with the same name already exists
         if(heistFromDB != null) {
             throw new BadRequestException(Constants.MSG_HEIST_EXISTS);
         }
+
+        // check is the startTime after the endTime or is the endTime in the past
+        if (startDate.isAfter(endDate) || endDate.isBefore(currentTime)) {
+            throw new BadRequestException(Constants.MSG_INCORRECT_DATE_TIME);
+        }
+
+        // TODO: check does multiple skills with the same name and level were provided
+
 
         Heist heist = heistMapper.mapDTOToHeist(heistDTO);
         heist.setStatus(HeistStatusEnum.PLANNING);
@@ -194,7 +209,11 @@ public class HeistServiceImpl implements HeistService {
             throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_BE_READY);
         }
 
-        startHeist(heist);
+        // set new status to heist
+        heist.setStatus(HeistStatusEnum.IN_PROGRESS);
+
+        // save heist with new status
+        heistRepository.save(heist);
 
     }
 
@@ -203,14 +222,28 @@ public class HeistServiceImpl implements HeistService {
                 .orElseThrow(() -> new NotFoundException(Constants.MSG_HEIST_NOT_FOUND));
     }
 
-    public void startHeist(Heist heist) {
+    @Scheduled(fixedRate = 60000)
+    @Async
+    public void startHeist() {
 
-        // set new status to heist
-        heist.setStatus(HeistStatusEnum.IN_PROGRESS);
+        LocalDateTime now = LocalDateTime.now();
 
-        // save heist with new status
-        heistRepository.save(heist);
+        log.info("Scheduler started at: {}", now);
 
+        List<Heist> heistList = heistRepository.findAll();
+
+        heistList.stream()
+                .forEach(heist -> {
+
+                    if(heist.getStartTime().isEqual(now)) {
+                        startHeistManually(heist.getId());
+                    }
+
+                    if(heist.getEndTime().isEqual(now)) {
+                        endHeist(heist);
+                    }
+
+                });
     }
 
     public void endHeist(Heist heist) {

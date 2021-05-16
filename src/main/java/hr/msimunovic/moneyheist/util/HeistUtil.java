@@ -1,12 +1,13 @@
 package hr.msimunovic.moneyheist.util;
 
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
-import hr.msimunovic.moneyheist.heist_member.HeistMember;
 
 import java.util.List;
-import java.util.Set;
 
 public class HeistUtil {
+
+    private HeistUtil() {
+    }
 
     public static long determineOutcomeInPercents(float requiredMembers, float participatedMembers) {
         return (long) ((participatedMembers / requiredMembers) * 100);

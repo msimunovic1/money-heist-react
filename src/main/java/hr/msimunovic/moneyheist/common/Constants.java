@@ -16,6 +16,7 @@ public class Constants {
     public static final String MSG_HEIST_STATUS_MUST_NOT_BE_PLANNING = "Heist status must not be PLANNING.";
     public static final String MSG_HEIST_STATUS_MUST_BE_READY = "Heist status must be READY.";
     public static final String MSG_HEIST_STATUS_MUST_BE_FINISHED = "Heist status must be FINISHED.";
+    public static final String MSG_INCORRECT_DATE_TIME = "Start or date time is incorrect.";
 
     public static final String DEFAULT_SKILL_LEVEL = "*";
 

@@ -7,9 +7,9 @@ import java.util.Random;
 
 public class MemberUtil {
 
-/*    private static final List<MemberStatusEnum> STATUSES =  List.of(MemberStatusEnum.values());
-           // List.of(MemberStatusEnum.EXPIRED, MemberStatusEnum.INCARCERATED);
-    private static final int SIZE = STATUSES.size();*/
+    private MemberUtil() {
+    }
+
     private static final Random RANDOM = new Random();
 
     public static MemberStatusEnum determineMemberStatus(List<MemberStatusEnum> memberStatuses)  {

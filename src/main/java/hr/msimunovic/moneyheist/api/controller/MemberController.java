@@ -14,18 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RequiredArgsConstructor
-@RequestMapping("/member")
 @RestController
+@RequestMapping("/member")
 public class MemberController {
 
     private final MemberService memberService;
 
-    /**
-     * Add a potential heist member.
-     * @param request       Request URI
-     * @param memberDTO     Request Data
-     * @return              201 and Location Header if member is saved to DB, 400 if exception is thrown
-     */
     @PostMapping()
     public ResponseEntity saveMember(HttpServletRequest request, @RequestBody MemberDTO memberDTO) {
 
@@ -48,7 +42,6 @@ public class MemberController {
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_CONTENT_LOCATION, request.getRequestURI()),HttpStatus.NO_CONTENT);
     }
 
-    // TODO: implement
     @DeleteMapping("/{memberId}/skills")
     public ResponseEntity deleteSkill(@PathVariable Long memberId, @RequestParam String skillName) {
 

@@ -15,18 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/heist")
 @RestController
+@RequestMapping("/heist")
 public class HeistController {
 
     private final HeistService heistService;
 
-    /**
-     * Add a new heist.
-     * @param request       Request URI
-     * @param heistDTO      Request Data
-     * @return              201 and Location Header if heist is saved to DB, 400 if exception is thrown
-     */
     @PostMapping("")
     public ResponseEntity saveHeist(HttpServletRequest request, @RequestBody HeistDTO heistDTO) {
 
