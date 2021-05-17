@@ -13,6 +13,6 @@ public interface HeistRepository extends JpaRepository<Heist, Long> {
     Heist findByName(String name);
 
     @Override
-    @EntityGraph(attributePaths = { "skills.skill" })
+    @EntityGraph(attributePaths = { "members.member", "skills.skill" })
     Optional<Heist> findById(Long aLong);
 }

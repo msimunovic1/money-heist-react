@@ -26,6 +26,8 @@ public class HeistController {
 
         Heist createdHeist = heistService.saveHeist(heistDTO);
 
+        heistService.scheduleStartEndHeist(createdHeist);
+
         // Indicates the URL to redirect a page to.
         String locationHeader = request.getRequestURI() + "/" + createdHeist.getId();
 
@@ -63,7 +65,7 @@ public class HeistController {
     @PutMapping("{heistId}/start")
     public ResponseEntity startHeistManually(HttpServletRequest request, @PathVariable Long heistId) {
 
-        heistService.startHeistManually(heistId);
+        heistService.startHeist(heistId);
 
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_LOCATION, request.getRequestURI()), HttpStatus.OK);
     }

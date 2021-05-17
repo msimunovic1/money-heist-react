@@ -27,12 +27,14 @@ import hr.msimunovic.moneyheist.util.MemberUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,6 +51,10 @@ public class HeistServiceImpl implements HeistService {
     private final SkillMapper skillMapper;
     private final ModelMapper modelMapper;
     private final EmailService emailService;
+    private final ThreadPoolTaskScheduler taskScheduler;
+
+    @Value("${member.levelUpTime}")
+    private Long levelUpTime;
 
     @Override
     @Transactional
@@ -138,20 +144,6 @@ public class HeistServiceImpl implements HeistService {
         return membersEligibleForHeistDTO;
     }
 
-    private boolean validateMemberHeists(Set<HeistMember> heistMembers) {
-
-        for (HeistMember heistMember : heistMembers) {
-            if(heistMember.getHeist().getStatus().equals(HeistStatusEnum.READY)) {
-                throw new MethodNotAllowedException(Constants.MSG_MEMBERS_CONFIRMED);
-            } else if(heistMember.getHeist().getStatus().equals(HeistStatusEnum.IN_PROGRESS)) {
-                return false;
-            }
-        }
-
-        return true;
-
-    }
-
     @Override
     @Transactional(readOnly = true)
     public HeistDTO getHeistById(Long heistId) {
@@ -226,13 +218,17 @@ public class HeistServiceImpl implements HeistService {
 
     @Override
     @Transactional
-    public void startHeistManually(Long heistId) {
+    public void startHeist(Long heistId) {
+
+        log.info("Heist with id {} started.", heistId);
 
         Heist heist = findHeistById(heistId);
 
         if(!heist.getStatus().equals(HeistStatusEnum.READY)) {
             throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_BE_READY);
         }
+
+
 
         // set new status to heist
         heist.setStatus(HeistStatusEnum.IN_PROGRESS);
@@ -246,40 +242,15 @@ public class HeistServiceImpl implements HeistService {
                 .forEach(member ->
                         emailService.sendEmail(member.getEmail(), Constants.MAIL_HEIST_START_SUBJECT, Constants.MAIL_HEIST_START_TEXT));*/
 
+        taskScheduler.scheduleAtFixedRate(() -> memberSkillImprovement(startedHeist.getMembers()), levelUpTime*1000);
+
     }
 
+    @Override
+    @Transactional
+    public void endHeist(Long heistId) {
 
-    public Heist findHeistById(Long heistId) {
-        return heistRepository.findById(heistId)
-                .orElseThrow(() -> new NotFoundException(Constants.MSG_HEIST_NOT_FOUND));
-    }
-
-    @Scheduled(fixedRate = 60000)
-    @Async
-    public void startHeist() {
-
-        LocalDateTime now = LocalDateTime.now();
-
-        log.info("Scheduler started at: {}", now);
-
-        List<Heist> heistList = heistRepository.findAll();
-
-        heistList.stream()
-                .forEach(heist -> {
-
-                    if(heist.getStartTime().isEqual(now)) {
-                        log.info("heist with id {} started at {}", heist.getId(), now);
-                        startHeistManually(heist.getId());
-                    }
-
-                    if(heist.getEndTime().isEqual(now)) {
-                        endHeist(heist);
-                    }
-
-                });
-    }
-
-    public void endHeist(Heist heist) {
+        Heist heist = findHeistById(heistId);
 
         // set new status to heist
         heist.setStatus(HeistStatusEnum.FINISHED);
@@ -338,11 +309,69 @@ public class HeistServiceImpl implements HeistService {
         // save heist with new status and outcome result
         Heist finishedHeist = heistRepository.save(heist);
 
+        log.info("Heist with id {} finished with outcome {}.", finishedHeist.getId(), finishedHeist.getOutcome());
+
         // send email to members - request waiting response !!!!!!
        /* finishedHeist.getMembers().stream()
                 .map(HeistMember::getMember)
                 .forEach(member ->
                         emailService.sendEmail(member.getEmail(), Constants.MAIL_HEIST_FINISH_SUBJECT, Constants.MAIL_HEIST_FINISH_TEXT));*/
+
+    }
+
+    public void memberSkillImprovement(Set<HeistMember> members) {
+
+        log.info("Member skill improvement started.");
+
+        for (HeistMember heistMember : members) {
+
+            Member member = memberRepository.findById(heistMember.getMember().getId())
+                    .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
+
+            for (MemberSkill memberSkill : member.getSkills()) {
+                Skill skill = memberSkill.getSkill();
+                if(skill.getLevel().length() < Constants.MAX_SKILL_LEVEL) {
+                    StringBuilder stringBuilder = new StringBuilder(skill.getLevel());
+                    String increasedLevel = stringBuilder.append("*").toString();
+                    skill.setLevel(increasedLevel);
+                    member.addSkill(skill, memberSkill.getMainSkill());
+                    memberRepository.save(member);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void scheduleStartEndHeist(Heist heist) {
+
+        Date startTime = Date.from(heist.getStartTime().atZone(ZoneId.systemDefault())
+                .toInstant());
+
+        Date endTime = Date.from(heist.getEndTime().atZone(ZoneId.systemDefault())
+                .toInstant());
+
+        taskScheduler.schedule(() -> startHeist(heist.getId()), startTime);
+
+        taskScheduler.schedule(() -> endHeist(heist.getId()), endTime);
+
+    }
+
+    private Heist findHeistById(Long heistId) {
+        return heistRepository.findById(heistId)
+                .orElseThrow(() -> new NotFoundException(Constants.MSG_HEIST_NOT_FOUND));
+    }
+
+    private boolean validateMemberHeists(Set<HeistMember> heistMembers) {
+
+        for (HeistMember heistMember : heistMembers) {
+            if(heistMember.getHeist().getStatus().equals(HeistStatusEnum.READY)) {
+                throw new MethodNotAllowedException(Constants.MSG_MEMBERS_CONFIRMED);
+            } else if(heistMember.getHeist().getStatus().equals(HeistStatusEnum.IN_PROGRESS)) {
+                return false;
+            }
+        }
+
+        return true;
 
     }
 

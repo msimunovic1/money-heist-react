@@ -3,6 +3,7 @@ package hr.msimunovic.moneyheist.common;
 public class Constants {
 
     public static final String DEFAULT_SKILL_LEVEL = "*";
+    public static final Integer MAX_SKILL_LEVEL = 10;
 
     // Http Constants
     public static final String HTTP_HEADER_LOCATION = "Location";

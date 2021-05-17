@@ -15,6 +15,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByName(String name);
 
     @Override
-    @EntityGraph(attributePaths = { "skills.skill" })
+    @EntityGraph(attributePaths = { "skills.skill", "heists.heist" })
     Optional<Member> findById(Long aLong);
 }
