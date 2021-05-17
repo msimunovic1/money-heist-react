@@ -5,10 +5,11 @@ import hr.msimunovic.moneyheist.heist.dto.HeistSkillDTO;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class MembersEligibleForHeistDTO {
 
     List<HeistSkillDTO> skills;
-    List<HeistMemberDTO> members;
+    Set<HeistMemberDTO> members;
 }

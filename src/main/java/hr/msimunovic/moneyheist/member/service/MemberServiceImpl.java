@@ -9,16 +9,15 @@ import hr.msimunovic.moneyheist.member.dto.MemberDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
 import hr.msimunovic.moneyheist.member.mapper.MemberMapper;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
+import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
+import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
 import hr.msimunovic.moneyheist.skill.repository.SkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -58,24 +57,14 @@ public class MemberServiceImpl implements MemberService {
 
         String mainSkill = memberSkillDTO.getMainSkill();
 
-        List<Skill> oldSkills = member.getSkills().stream()
-                .map(memberSkill -> skillMapper.mapMemberSkillToSkill(memberSkill))
-                .collect(Collectors.toList());
-
-        memberSkillDTO.getSkills().stream()
-                .map(skill -> skillMapper.mapSkillDTOToSkill(skill))
-                .forEach(newSkill -> {
-
-                    oldSkills.forEach(oldSkill -> {
-                        if (oldSkill.getName().equals(newSkill.getName())) {
-                            throw new BadRequestException("fdgadf");
-                        }
-                    });
-
-                    member.addSkill(newSkill, mainSkill);
-
-                }
-            );
+        for(SkillDTO skillDTO : memberSkillDTO.getSkills()) {
+            Skill skill = skillRepository.findByNameAndLevel(skillDTO.getName(), skillDTO.getLevel());
+            if (skill==null) {
+                member.addSkill(modelMapper.map(skillDTO, Skill.class), mainSkill);
+            } else {
+                member.addSkill(skill, mainSkill);
+            }
+        }
 
         memberRepository.save(member);
     }
@@ -86,10 +75,16 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = findMemberById(memberId);
 
-        member.getSkills().stream()
-                .map(memberSkill -> skillRepository.findByNameAndLevel(memberSkill.getSkill().getName(), memberSkill.getSkill().getLevel()))
-                .filter(skill -> skill.getName().equals(skillName))
-                .forEach(skill -> member.removeSkill(skill));
+        for (MemberSkill memberSkill : member.getSkills()) {
+            // check does skill exists in DB
+            Skill skill = skillRepository.findByNameAndLevel(skillName, memberSkill.getSkill().getLevel());
+            // throw exception if skill does not exists in DB
+            if(skill == null) {
+                throw new NotFoundException(Constants.MSG_SKILL_NOT_FOUND);
+            }
+            // remove skill if skill exists in DB
+            member.removeSkill(skill);
+        }
 
         memberRepository.save(member);
 

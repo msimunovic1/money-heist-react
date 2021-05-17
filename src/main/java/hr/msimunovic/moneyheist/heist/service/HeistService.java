@@ -25,4 +25,6 @@ public interface HeistService {
     void saveHeistMembers(Long heistId, HeistMembersDTO heistMembersDTO);
 
     void startHeistManually(Long heistId);
+
+    void updateSkills(Long heistId, HeistSkillsDTO heistSkillsDTO);
 }

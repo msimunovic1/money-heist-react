@@ -1,8 +1,10 @@
 package hr.msimunovic.moneyheist.member.mapper;
 
 import hr.msimunovic.moneyheist.common.Constants;
+import hr.msimunovic.moneyheist.heist.dto.HeistMemberDTO;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.dto.MemberDTO;
+import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
@@ -46,7 +48,28 @@ public class MemberMapper {
         return memberDTO;
     }
 
+    public HeistMemberDTO mapMemberToHeistMemberDTO(Member member) {
 
+        HeistMemberDTO heistMemberDTO = new HeistMemberDTO();
+
+        // set member name
+        heistMemberDTO.setName(member.getName());
+
+        List<SkillDTO> skillDTOList = new ArrayList<>();
+
+        for(MemberSkill ms : member.getSkills()) {
+            // map member skill to DTO
+            SkillDTO skillDTO = skillMapper.mapMemberSkillToDTO(ms);
+            // add member skill to list
+            skillDTOList.add(skillDTO);
+        }
+
+        // set member skills
+        heistMemberDTO.setSkills(skillDTOList);
+
+        return heistMemberDTO;
+
+    }
 
 
     // TODO: razmotriti ovu metodu za refactor + izbaciti modelMapper

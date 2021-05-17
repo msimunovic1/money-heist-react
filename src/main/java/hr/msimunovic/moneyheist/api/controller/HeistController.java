@@ -33,23 +33,21 @@ public class HeistController {
 
     }
 
-    // TODO: implement
-    @PatchMapping("/{heistId}/skills)")
+    @PatchMapping(value = "/{heistId}/skills")
     public ResponseEntity updateSkills(HttpServletRequest request,
                                        @PathVariable Long heistId,
-                                       @RequestBody HeistSkillDTO heistSkillDTO) {
+                                       @RequestBody HeistSkillsDTO heistSkillsDTO) {
+
+        heistService.updateSkills(heistId, heistSkillsDTO);
 
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_CONTENT_LOCATION, request.getRequestURI()), HttpStatus.NO_CONTENT);
 
     }
 
-    // TODO: implement
     @GetMapping("/{heistId}/eligible_members")
     public ResponseEntity<MembersEligibleForHeistDTO> getMembersEligibleForHeist(@PathVariable Long heistId) {
 
-        MembersEligibleForHeistDTO membersEligibleForHeist = heistService.getMembersEligibleForHeist(heistId);
-
-        return new ResponseEntity<>(membersEligibleForHeist, HttpStatus.OK);
+        return new ResponseEntity<>(heistService.getMembersEligibleForHeist(heistId), HttpStatus.OK);
     }
 
     @PutMapping("/{heistId}/members")

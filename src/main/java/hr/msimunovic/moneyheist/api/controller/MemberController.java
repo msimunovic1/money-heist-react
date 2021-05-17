@@ -31,7 +31,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_LOCATION, locationHeader), HttpStatus.CREATED);
     }
 
-    // TODO: implement
+    // TODO : fix
     @PutMapping("/{memberId}/skills")
     public ResponseEntity updateSkills(HttpServletRequest request,
                                        @PathVariable Long memberId,
