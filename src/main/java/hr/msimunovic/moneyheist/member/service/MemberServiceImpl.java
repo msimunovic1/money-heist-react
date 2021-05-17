@@ -44,7 +44,8 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = memberMapper.mapDTOToMember(memberDTO);
 
-    //    emailService.sendEmail(member.getEmail(), Constants.MAIL_MEMBER_ADDED_TO_HEIST_SUBJECT, Constants.MAIL_MEMBER_ADDED_TO_HEIST_TEXT);
+        // send email to member - request waiting response !!!!!!
+       /* emailService.sendEmail(member.getEmail(), Constants.MAIL_MEMBER_ADDED_SUBJECT, Constants.MAIL_MEMBER_ADDED_TEXT);*/
 
         return memberRepository.save(member);
     }

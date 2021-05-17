@@ -141,13 +141,11 @@ public class HeistServiceImpl implements HeistService {
     private boolean validateMemberHeists(Set<HeistMember> heistMembers) {
 
         for (HeistMember heistMember : heistMembers) {
-
             if(heistMember.getHeist().getStatus().equals(HeistStatusEnum.READY)) {
                 throw new MethodNotAllowedException(Constants.MSG_MEMBERS_CONFIRMED);
             } else if(heistMember.getHeist().getStatus().equals(HeistStatusEnum.IN_PROGRESS)) {
                 return false;
             }
-
         }
 
         return true;
@@ -218,10 +216,11 @@ public class HeistServiceImpl implements HeistService {
 
         Heist updatedHeist = heistRepository.save(heist);
 
-        // TODO: repair this
-        /*updatedHeist.getMembers()
-                .forEach(heistMember ->
-                        emailService.sendEmail(heistMember.getMember().getEmail(), Constants.MAIL_MEMBER_ADDED_TO_HEIST_SUBJECT, Constants.MAIL_MEMBER_ADDED_TO_HEIST_TEXT));*/
+        // send email to members - request waiting response !!!!!!
+        /*updatedHeist.getMembers().stream()
+                .map(HeistMember::getMember)
+                .forEach(member ->
+                        emailService.sendEmail(member.getEmail(), Constants.MAIL_HEIST_PARTICIPANT_SUBJECT, Constants.MAIL_HEIST_PARTICIPANT_TEXT));*/
 
     }
 
@@ -239,7 +238,13 @@ public class HeistServiceImpl implements HeistService {
         heist.setStatus(HeistStatusEnum.IN_PROGRESS);
 
         // save heist with new status
-        heistRepository.save(heist);
+        Heist startedHeist = heistRepository.save(heist);
+
+        // send email to members - request waiting response !!!!!!
+        /*startedHeist.getMembers().stream()
+                .map(HeistMember::getMember)
+                .forEach(member ->
+                        emailService.sendEmail(member.getEmail(), Constants.MAIL_HEIST_START_SUBJECT, Constants.MAIL_HEIST_START_TEXT));*/
 
     }
 
@@ -281,26 +286,30 @@ public class HeistServiceImpl implements HeistService {
 
         Set<HeistMember> heistMembers = heist.getMembers();
 
+        // get required members from heist_skill.members
         long requiredMembers = heist.getSkills().stream()
                 .mapToLong(HeistSkill::getMembers)
                 .sum();
 
+        // get participated members from heist_member
         long participatedMembers = heistMembers.stream()
                 .map(HeistMember::getMember)
                 .count();
 
-        long outcomeResult = HeistUtil.determineOutcomeInPercents(requiredMembers, participatedMembers);
+        // calculate outcome result in percents
+        long outcomeResult = HeistUtil.calculateOutcomeInPercents(requiredMembers, participatedMembers);
 
         HeistOutcomeEnum heistOutcome = HeistOutcomeEnum.FAILED;
 
         if(outcomeResult < 50) {
-
+            // all members EXPIRED or INCARCERATED
             updateMembersStatus(heistMembers, List.of(MemberStatusEnum.EXPIRED, MemberStatusEnum.INCARCERATED), heistMembers.size());
-
         } else if(outcomeResult >= 50 && outcomeResult < 75) {
 
+            // generate random member statuses
             List<MemberStatusEnum> memberStatuses = updateMembersStatus(heistMembers, List.of(MemberStatusEnum.values()), heistMembers.size());
 
+            // calculate repercussion result with random generated member statuses
             long repercussionResult = HeistUtil.determinateHeistRepercussion(memberStatuses);
 
             if(repercussionResult < 70) {
@@ -317,7 +326,6 @@ public class HeistServiceImpl implements HeistService {
 
             // 1/3 of the members INCARCERATED
             long oneThirdOfMembers = Math.round((heistMembers.size() * 0.33));
-
             updateMembersStatus(heistMembers, List.of(MemberStatusEnum.INCARCERATED), oneThirdOfMembers);
 
         } else if(outcomeResult == 100) {
@@ -328,7 +336,13 @@ public class HeistServiceImpl implements HeistService {
         heist.setOutcome(heistOutcome);
 
         // save heist with new status and outcome result
-        heistRepository.save(heist);
+        Heist finishedHeist = heistRepository.save(heist);
+
+        // send email to members - request waiting response !!!!!!
+       /* finishedHeist.getMembers().stream()
+                .map(HeistMember::getMember)
+                .forEach(member ->
+                        emailService.sendEmail(member.getEmail(), Constants.MAIL_HEIST_FINISH_SUBJECT, Constants.MAIL_HEIST_FINISH_TEXT));*/
 
     }
 
