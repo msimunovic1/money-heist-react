@@ -1,0 +1,25 @@
+<nb-layout>
+
+  <nb-layout-header fixed>
+    {{ title }}
+  </nb-layout-header>
+
+  <nb-layout-column>
+
+    <nb-layout center>
+
+      <nb-layout-column>
+
+        <router-outlet></router-outlet>
+
+      </nb-layout-column>
+
+    </nb-layout>
+
+  </nb-layout-column>
+
+  <nb-layout-footer fixed>
+    {{ date | date: 'medium' }}
+  </nb-layout-footer>
+
+</nb-layout>

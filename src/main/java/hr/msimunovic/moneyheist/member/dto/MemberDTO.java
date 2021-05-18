@@ -15,7 +15,6 @@ public class MemberDTO {
     private String name;
     private String sex;
     private String email;
-    //private MemberSkillDTO skills;
     private List<SkillDTO> skills;
     private String mainSkill;
     private MemberStatusEnum status;

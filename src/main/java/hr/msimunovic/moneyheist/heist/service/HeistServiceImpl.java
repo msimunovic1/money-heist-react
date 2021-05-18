@@ -249,7 +249,6 @@ public class HeistServiceImpl implements HeistService {
     public void endHeist(Long heistId) {
 
         log.info("finishing heist with id {}", heistId);
-        log.info("start thread {}", Thread.currentThread());
 
         Heist heist = findHeistById(heistId);
 

@@ -1,0 +1,52 @@
+<form [formGroup]="heistFormGroup" (ngSubmit)="onSubmit()">
+
+  <div class="form-area">
+    <h4>Add New Heist</h4>
+
+    <div class="input-space">
+      <input formControlName="name" type="text" nbInput fullWidth placeholder="Name...">
+    </div>
+
+    <div class="input-space">
+      <input formControlName="location" type="text" nbInput fullWidth placeholder="Location...">
+    </div>
+
+    <div class="input-space">
+      <input nbInput placeholder="Start Time" [nbDatepicker]="start" [formControl]="startTime">
+      <nb-date-timepicker #start></nb-date-timepicker>
+
+      <input nbInput placeholder="End Time" [nbDatepicker]="end" [formControl]="endTime">
+      <nb-date-timepicker #end [min]="min"></nb-date-timepicker>
+    </div>
+
+    <div formArrayName="skills">
+      <div class="input-space">
+        <button (click)="addSkill()" nbButton>Add skill</button>
+      </div>
+
+      <div *ngFor="let skillForm of skills.controls; let i = index">
+        <div class="lesson-form-row" [formGroup]="skillForm">
+          <div class="input-space">
+            <input formControlName="name" type="text" nbInput fullWidth placeholder="Name">
+          </div>
+          <div class="input-space">
+            <input formControlName="level" type="text" nbInput fullWidth placeholder="Level">
+          </div>
+          <div class="input-space">
+            <input formControlName="members" type="number" nbInput fullWidth placeholder="Members">
+          </div>
+          <div class="input-space">
+            <button (click)="deleteSkill(i)" nbButton>Remove skill</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div>
+      <button type="submit" nbButton>Save</button>
+    </div>
+
+  </div>
+
+</form>
