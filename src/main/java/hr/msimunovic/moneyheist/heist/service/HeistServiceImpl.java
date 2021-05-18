@@ -28,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -228,8 +227,6 @@ public class HeistServiceImpl implements HeistService {
             throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_BE_READY);
         }
 
-
-
         // set new status to heist
         heist.setStatus(HeistStatusEnum.IN_PROGRESS);
 
@@ -242,13 +239,17 @@ public class HeistServiceImpl implements HeistService {
                 .forEach(member ->
                         emailService.sendEmail(member.getEmail(), Constants.MAIL_HEIST_START_SUBJECT, Constants.MAIL_HEIST_START_TEXT));*/
 
-        taskScheduler.scheduleAtFixedRate(() -> memberSkillImprovement(startedHeist.getMembers()), levelUpTime*1000);
+
+        taskScheduler.scheduleAtFixedRate(() -> memberSkillImprovement(startedHeist), levelUpTime);
 
     }
 
     @Override
     @Transactional
     public void endHeist(Long heistId) {
+
+        log.info("finishing heist with id {}", heistId);
+        log.info("start thread {}", Thread.currentThread());
 
         Heist heist = findHeistById(heistId);
 
@@ -319,9 +320,11 @@ public class HeistServiceImpl implements HeistService {
 
     }
 
-    public void memberSkillImprovement(Set<HeistMember> members) {
+    public void memberSkillImprovement(Heist heist) {
 
-        log.info("Member skill improvement started.");
+        log.info("Member skill for {} improvement started.", heist.getId());
+
+        Set<HeistMember> members = heist.getMembers();
 
         for (HeistMember heistMember : members) {
 

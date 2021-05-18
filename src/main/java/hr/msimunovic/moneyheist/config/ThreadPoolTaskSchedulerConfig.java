@@ -17,6 +17,7 @@ public class ThreadPoolTaskSchedulerConfig {
 
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setPoolSize(5);
+        threadPoolTaskScheduler.setRemoveOnCancelPolicy(true);
         threadPoolTaskScheduler.setThreadNamePrefix("ThreadPoolTaskScheduler");
 
         return threadPoolTaskScheduler;
