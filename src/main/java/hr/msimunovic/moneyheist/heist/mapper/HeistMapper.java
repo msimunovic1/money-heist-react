@@ -41,6 +41,7 @@ public class HeistMapper {
                 .collect(Collectors.toList());
 
         heistDTO.setSkills(heistSkillDTOList);
+        heistDTO.setStatus(heist.getStatus());
 
         return heistDTO;
 

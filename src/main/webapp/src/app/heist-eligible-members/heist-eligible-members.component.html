@@ -1,0 +1,4 @@
+<div *ngFor="let member of membersEligibleForHeist.members">
+  {{ member.name }}
+  <button (click)="addMemberToHeist(member.name)" nbButton>Add member</button>
+</div>

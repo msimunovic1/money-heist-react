@@ -358,6 +358,13 @@ public class HeistServiceImpl implements HeistService {
 
     }
 
+    @Override
+    public List<HeistInfoDTO> getAllHeists() {
+        return heistRepository.findAll().stream()
+                .map(heist -> modelMapper.map(heist, HeistInfoDTO.class))
+                .collect(Collectors.toList());
+    }
+
     private Heist findHeistById(Long heistId) {
         return heistRepository.findById(heistId)
                 .orElseThrow(() -> new NotFoundException(Constants.MSG_HEIST_NOT_FOUND));

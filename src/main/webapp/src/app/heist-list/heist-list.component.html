@@ -1,0 +1,13 @@
+<nb-card size="medium">
+  <nb-card-header>
+    Heists
+  </nb-card-header>
+  <nb-list>
+    <nb-list-item *ngFor="let heist of heists">
+      <a routerLink="/heist/{{heist.id}}">
+        {{ heist.name }}
+      </a>
+    </nb-list-item>
+  </nb-list>
+</nb-card>
+<button routerLink="/addHeist" nbButton>Create New Heist</button>

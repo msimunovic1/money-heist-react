@@ -5,6 +5,8 @@ import {Observable} from "rxjs";
 import {Heist} from "../models/heist";
 import {HeistSkill} from "../models/heist-skill";
 import {HeistMember} from "../models/heist-member";
+import {MembersEligibleForHeist} from "../models/members-eligible-for-heist";
+import {HeistInfo} from "../models/heist-info";
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +21,16 @@ export class HeistService {
     return this.httpClient.get<Heist>(this.url + `/${heistId}`);
   }
 
+  getAll(): Observable<HeistInfo[]> {
+    return this.httpClient.get<HeistInfo[]>(this.url + '/list');
+  }
+
   getHeistSkills(heistId: number): Observable<HeistSkill> {
     return this.httpClient.get<HeistSkill>(this.url + `/${heistId}/skills`);
+  }
+
+  getMembersEligibleForHeist(heistId: number): Observable<MembersEligibleForHeist> {
+    return this.httpClient.get<MembersEligibleForHeist>(this.url + `/${heistId}/eligible_members`);
   }
 
   getHeistMembers(heistId: number): Observable<HeistMember[]> {

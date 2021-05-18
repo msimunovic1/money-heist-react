@@ -1,5 +1,6 @@
 package hr.msimunovic.moneyheist.heist.dto;
 
+import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,5 +17,6 @@ public class HeistDTO {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private List<HeistSkillDTO> skills;
+    private HeistStatusEnum status;
 
 }

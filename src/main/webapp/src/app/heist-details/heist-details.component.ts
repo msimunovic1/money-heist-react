@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HeistService} from "../services/heist.service";
 import {Heist} from "../models/heist";
 import {ActivatedRoute} from "@angular/router";
@@ -22,23 +22,38 @@ export class HeistDetailsComponent implements OnInit {
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    // get id from url param
     this.route.paramMap.subscribe(() => {
       this.handleHeistDetails();
     });
   }
 
   handleHeistDetails() {
+    // TODO : provjeriti kako riješiti ovo bez @ts-ignore
     // @ts-ignore
     this.heistId = +this.route.snapshot.paramMap.get('id');
 
     // get heist details from service
     this.heistService.getHeist(this.heistId).subscribe(
-      data => this.heist = data
-    );
+      data => this.heist = data,
+      () => {},
+      () => {
 
-    // get heist members from service
-    this.heistService.getHeistMembers(this.heistId).subscribe(
-      data => this.heistMembers = data
+        if (this.heist.status !== 'PLANNING') {
+          // get heist members from service
+          this.heistService.getHeistMembers(this.heistId).subscribe(
+            data => this.heistMembers = data
+          );
+        }
+
+        if (this.heist.status === 'FINISHED') {
+          // get heist outcome from service
+          this.heistService.getHeistOutcome(this.heistId).subscribe(
+            data => this.heistOutcome = data
+          );
+        }
+
+      }
     );
 
     // get heist status from service
@@ -46,9 +61,6 @@ export class HeistDetailsComponent implements OnInit {
       data => this.heistStatus = data
     );
 
-    // get heist outcome from service
-    this.heistService.getHeistOutcome(this.heistId).subscribe(
-      data => this.heistOutcome = data
-    );
+
   }
 }

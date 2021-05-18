@@ -31,4 +31,6 @@ public interface HeistService {
     void updateSkills(Long heistId, HeistSkillsDTO heistSkillsDTO);
 
     void scheduleStartEndHeist(Heist heist);
+
+    List<HeistInfoDTO> getAllHeists();
 }

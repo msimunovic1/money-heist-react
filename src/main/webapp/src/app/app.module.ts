@@ -10,7 +10,7 @@ import {
   NbInputModule,
   NbLayoutModule,
   NbRadioModule, NbSelectModule,
-  NbThemeModule
+  NbThemeModule, NbListModule, NbCardModule
 } from "@nebular/theme";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NbEvaIconsModule} from '@nebular/eva-icons';
@@ -21,6 +21,8 @@ import { MemberDetailsComponent } from './member-details/member-details.componen
 import { HeistAddComponent } from './heist-add/heist-add.component';
 import { HeistDetailsComponent } from './heist-details/heist-details.component';
 import {ErrorInterceptor} from "./interceptors/error.interceptor";
+import { HeistEligibleMembersComponent } from './heist-eligible-members/heist-eligible-members.component';
+import { HeistListComponent } from './heist-list/heist-list.component';
 
 export const httpInterceptorProviders = [
   {
@@ -36,7 +38,9 @@ export const httpInterceptorProviders = [
     MemberAddComponent,
     MemberDetailsComponent,
     HeistAddComponent,
-    HeistDetailsComponent
+    HeistDetailsComponent,
+    HeistEligibleMembersComponent,
+    HeistListComponent
   ],
   imports: [
     AppRoutingModule,
@@ -56,7 +60,9 @@ export const httpInterceptorProviders = [
     NbSelectModule,
     NbCheckboxModule,
     NbDatepickerModule.forRoot(),
-    NbTimepickerModule.forRoot()
+    NbTimepickerModule.forRoot(),
+    NbListModule,
+    NbCardModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

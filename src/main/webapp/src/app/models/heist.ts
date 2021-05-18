@@ -7,5 +7,6 @@ export class Heist {
   startTime!: Date;
   endTime!: Date;
   skills!: HeistSkill[];
+  status!: string;
 
 }

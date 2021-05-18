@@ -21,6 +21,11 @@ public class HeistController {
 
     private final HeistService heistService;
 
+    @GetMapping("/list")
+    public ResponseEntity<List<HeistInfoDTO>> getAllHeists() {
+        return new ResponseEntity(heistService.getAllHeists(), HttpStatus.OK);
+    }
+
     @PostMapping("")
     public ResponseEntity saveHeist(HttpServletRequest request, @RequestBody HeistDTO heistDTO) {
 

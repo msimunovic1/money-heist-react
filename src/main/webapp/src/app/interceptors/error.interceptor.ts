@@ -20,9 +20,10 @@ export class ErrorInterceptor implements HttpInterceptor {
         tap(() => {},
           (e: HttpErrorResponse) => {
             if(e.error.message) {
+              // TODO: staviti karticu s porukom korisniku
               console.log(e.error.message)
             } else {
-              window.alert("Error occured application. Please contact admin")
+              console.log("Error occured application. Please contact admin")
             }
           })
 
