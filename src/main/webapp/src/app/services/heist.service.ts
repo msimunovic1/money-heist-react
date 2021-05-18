@@ -23,8 +23,8 @@ export class HeistService {
     return this.httpClient.get<HeistSkill>(this.url + `/${heistId}/skills`);
   }
 
-  getHeistMembers(heistId: number): Observable<HeistMember> {
-    return this.httpClient.get<HeistMember>(this.url + `/${heistId}/members`);
+  getHeistMembers(heistId: number): Observable<HeistMember[]> {
+    return this.httpClient.get<HeistMember[]>(this.url + `/${heistId}/members`);
   }
 
   getHeistStatus(heistId: number): Observable<string> {

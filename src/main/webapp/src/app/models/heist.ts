@@ -8,6 +8,4 @@ export class Heist {
   endTime!: Date;
   skills!: HeistSkill[];
 
-
-
 }
