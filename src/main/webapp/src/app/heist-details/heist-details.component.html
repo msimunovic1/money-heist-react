@@ -1,26 +1,44 @@
 <nb-card>
   <nb-card-body>
+    <!--heist name and location-->
     <h3>{{ heist.name }}</h3>
-
-    <div class="">
+    <div>
       {{ heist.location }}
       <nb-icon nbSuffix icon="pin-outline" pack="eva"></nb-icon>
     </div>
 
-    <hr>
+    <hr class="line">
 
-    <h5>Description</h5>
-    <p>Status: {{heist.status}}</p>
-    <div *ngIf="heistOutcome.outcome">
-      <p>Outcome: {{heistOutcome.outcome}}</p>
-    </div>
-    <p>Start Time: {{ heist.startTime | date: 'medium' }}</p>
-    <p>End Time: {{ heist.endTime | date: 'medium' }}</p>
-    <div>
-      Members:<p *ngFor="let member of heistMembers">{{member.name}}</p>
+    <!--heist details-->
+    <div class="space">
+      STATUS <nb-tag status="{{tagStatus}}" appearance="filled" text="{{heist.status}}"></nb-tag>
     </div>
 
-    <div class="input-space">
+    <div *ngIf="heistOutcome.outcome" class="space">
+      OUTCOME <nb-tag status="{{tagOutcome}}" appearance="filled" text="{{heistOutcome.outcome}}"></nb-tag>
+    </div>
+
+    <div class="space">
+      <p>
+        <nb-icon icon="clock-outline" pack="eva"></nb-icon> START TIME: {{ heist.startTime | date: 'medium' }}
+      </p>
+      <p>
+        <nb-icon icon="clock-outline" pack="eva"></nb-icon> END TIME: {{ heist.endTime | date: 'medium' }}
+      </p>
+    </div>
+
+    <div class="space" *ngIf="heistMembers.length > 0">
+      <nb-card class="full-height">
+        <nb-card-header>MEMBERS</nb-card-header>
+          <nb-list>
+            <nb-list-item *ngFor="let member of heistMembers">
+              <a routerLink="/member/{{member.id}}">{{member.name}}</a>
+            </nb-list-item>
+          </nb-list>
+      </nb-card>
+    </div>
+
+    <div class="space right" *ngIf="heist.status === 'PLANNING'">
       <button nbButton routerLink="/heistEligibleMembers/{{heistId}}">Find eligible members</button>
     </div>
 
@@ -30,7 +48,7 @@
       (updatedSkill)="updateSkill($event)"
     ></app-heist-skills>
 
-    <div class="input-space" *ngIf="heistStatus.status==='READY'">
+    <div class="space" *ngIf="heistStatus.status==='READY'">
       <button nbButton (click)="startHeistManually(this.heistId)">Start heist</button>
     </div>
 

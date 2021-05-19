@@ -3,17 +3,17 @@
   <div class="form-area">
     <h4>Add New Heist</h4>
 
-    <div class="input-space">
+    <div class="space">
       <input formControlName="name" type="text" nbInput fullWidth placeholder="Name...">
     </div>
 
-    <div class="input-space">
+    <div class="space">
       <input formControlName="location" type="text" nbInput fullWidth placeholder="Location...">
     </div>
 
 
-    <div class="input-space">
-      <input nbInput placeholder="Start Time" [nbDatepicker]="start" [formControl]="startTime">
+    <div class="space">
+      <input class="start-time-input" nbInput placeholder="Start Time" [nbDatepicker]="start" [formControl]="startTime">
       <nb-date-timepicker #start></nb-date-timepicker>
 
       <input nbInput placeholder="End Time" [nbDatepicker]="end" [formControl]="endTime">
@@ -22,31 +22,31 @@
 
 
     <div formArrayName="skills">
-      <div class="input-space">
-        <button (click)="addSkill()" nbButton>Add skill</button>
+      <div class="space ">
+        <button type="button" (click)="addSkill()" nbButton outline status="primary" size="small" shape="round">Add skill</button>
       </div>
 
       <div *ngFor="let skillForm of skills.controls; let i = index">
-        <div class="lesson-form-row" [formGroup]="skillForm">
-          <div class="input-space">
+        <div class="skill-inputs" [formGroup]="skillForm">
+          <div class="space">
             <input formControlName="name" type="text" nbInput placeholder="Name">
           </div>
-          <div class="input-space">
+          <div class="space">
             <input formControlName="level" type="text" nbInput placeholder="Level">
           </div>
-          <div class="input-space">
+          <div class="space members-input">
             <input formControlName="members" type="number" nbInput placeholder="Members">
           </div>
-          <div class="input-space">
-            <button (click)="deleteSkill(i)" nbButton>Remove skill</button>
+          <div class="space remove-skill-btn">
+            <button (click)="deleteSkill(i)"nbButton size="tiny" status="danger" outline shape="round">Remove</button>
           </div>
         </div>
       </div>
 
     </div>
 
-    <div>
-      <button type="submit" nbButton>Save</button>
+    <div class="right">
+      <button type="submit" nbButton status="primary">Save</button>
     </div>
 
   </div>

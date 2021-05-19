@@ -3,6 +3,7 @@ import {MemberService} from "../services/member.service";
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Member} from "../models/member";
 import {Skill} from "../models/skill";
+import {NbToastrService} from "@nebular/theme";
 
 @Component({
   selector: 'app-member-add',
@@ -36,7 +37,8 @@ export class MemberAddComponent implements OnInit {
   });
 
   constructor(private formBuilder: FormBuilder,
-              private memberService: MemberService) { }
+              private memberService: MemberService,
+              public toastrService: NbToastrService) { }
 
   ngOnInit(): void {
   }
@@ -65,11 +67,9 @@ export class MemberAddComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.memberFormGroup.value)
 
-    // Touching all fields triggers the display of the error messages
-    // TODO: add error messages
     if(this.memberFormGroup.invalid) {
+      this.toastrService.warning("Please fill in all required fields.", "Required fields")
       this.memberFormGroup.markAllAsTouched();
       return;
     }

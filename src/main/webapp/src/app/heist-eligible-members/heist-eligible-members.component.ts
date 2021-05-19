@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HeistService} from "../services/heist.service";
 import {MembersEligibleForHeist} from "../models/members-eligible-for-heist";
-import {ActivatedRoute, Route, Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {HeistMember} from "../models/heist-member";
 import {IHeistMembers} from "../models/i-heist-members";
-import {NbToastrService} from "@nebular/theme";
 
 @Component({
   selector: 'app-heist-eligible-members',
@@ -14,7 +13,7 @@ import {NbToastrService} from "@nebular/theme";
 export class HeistEligibleMembersComponent implements OnInit {
 
   membersEligibleForHeist: MembersEligibleForHeist = new MembersEligibleForHeist();
-  eligibleMembers: HeistMember[] = [];
+  eligibleMembers: string[] = [];
   heistId: number = 0;
 
   heistMembers: string[] = [];
@@ -34,20 +33,22 @@ export class HeistEligibleMembersComponent implements OnInit {
         data => this.membersEligibleForHeist = data,
         () => {},
         () => {
-          if(this.membersEligibleForHeist.members !== undefined) {
-            this.eligibleMembers = this.membersEligibleForHeist.members;
-          }
+          this.membersEligibleForHeist.members?.map(member => {
+            if (member.name != null) {
+              this.eligibleMembers.push(member.name)
+            }
+          })
         }
       );
     });
 
   }
 
-  addMemberToHeist(name: string, index: number) {
+  addMemberToHeist(member: string, index: number) {
     // remove member from eligible members array
     this.eligibleMembers.splice(index, 1);
     // add member to heist
-    this.heistMembers.push(name);
+    this.heistMembers.push(member);
     // remap heist member array
     this.iHeistMembers.members = this.heistMembers;
   }
@@ -58,5 +59,14 @@ export class HeistEligibleMembersComponent implements OnInit {
         this.router.navigateByUrl(`/heist/${this.heistId}`)
       }
     );
+  }
+
+  removeMemberFromHeist(member: string, index: number) {
+    // remove member from eligible members array
+    this.heistMembers.splice(index, 1);
+    // add member to heist
+    this.eligibleMembers.push(member)
+    // remap heist member array
+    this.iHeistMembers.members = this.heistMembers;
   }
 }

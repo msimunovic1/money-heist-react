@@ -7,8 +7,8 @@
       </nb-card-header>
       <nb-list>
         <nb-list-item *ngFor="let member of eligibleMembers; let i = index">
-          {{ member.name }}
-          <button ng (click)="addMemberToHeist(member.name, i)" nbButton size="tiny">Add member</button>
+          {{ member }}
+          <a (click)="addMemberToHeist(member, i)"><nb-icon icon="arrow-circle-right-outline" pack="eva"></nb-icon></a>
         </nb-list-item>
       </nb-list>
     </nb-card>
@@ -20,15 +20,16 @@
         Added Members
       </nb-card-header>
       <nb-list>
-        <nb-list-item *ngFor="let member of heistMembers">
+        <nb-list-item *ngFor="let member of heistMembers; let i = index">
           {{ member }}
+          <a (click)="removeMemberFromHeist(member, i)"><nb-icon icon="close-outline" pack="eva"></nb-icon></a>
         </nb-list-item>
       </nb-list>
     </nb-card>
+    <div class="right">
+      <button nbButton (click)="confirmMembers()" status="primary">Confirm Members</button>
+    </div>
   </nb-layout-column>
-  <nb-layout-footer>
-    <button (click)="confirmMembers()">Confirm Members</button>
-  </nb-layout-footer>
 </nb-layout>
 
 

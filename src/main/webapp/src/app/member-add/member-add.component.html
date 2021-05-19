@@ -2,11 +2,11 @@
 
   <div class="form-area">
     <h4>Add New Member</h4>
-    <div class="input-space">
+    <div class="space">
       <input formControlName="name" type="text" nbInput fullWidth placeholder="Name...">
     </div>
 
-    <div class="input-space">
+    <div class="space">
       <label>Gender</label>
       <nb-radio-group formControlName="sex">
         <nb-radio *ngFor="let gender of genders" [value]="gender.value" [checked]="gender.checked">
@@ -15,14 +15,14 @@
       </nb-radio-group>
     </div>
 
-    <div class="input-space">
+    <div class="space">
       <nb-form-field>
         <nb-icon nbSuffix icon="at-outline" pack="eva"></nb-icon>
         <input formControlName="email" type="text" nbInput fullWidth placeholder="Email...">
       </nb-form-field>
     </div>
 
-    <div class="input-space">
+    <div class="space">
       <nb-select formControlName="status" placeholder="Select Status">
         <nb-option *ngFor="let status of statuses" [value]="status.value">
           {{ status.value }}
@@ -31,31 +31,31 @@
     </div>
 
     <div formArrayName="skills">
-      <div class="input-space">
-        <button (click)="addSkill()" nbButton>Add skill</button>
+      <div class="space">
+        <button type="button" (click)="addSkill()" nbButton outline status="primary" size="small" shape="round">Add skill</button>
       </div>
 
       <div *ngFor="let skillForm of skills.controls; let i = index">
-        <div class="lesson-form-row" [formGroup]="skillForm">
-          <div class="input-space">
-            <input formControlName="name" type="text" nbInput fullWidth placeholder="Name">
+        <div class="skill-inputs" [formGroup]="skillForm">
+          <div class="space">
+            <input formControlName="name" type="text" nbInput placeholder="Name">
           </div>
-          <div class="input-space">
-            <input formControlName="level" type="text" nbInput fullWidth placeholder="Level">
+          <div class="space">
+            <input formControlName="level" type="text" nbInput placeholder="Level">
           </div>
-          <div class="input-space">
-            <button (click)="deleteSkill(i)" nbButton>Remove skill</button>
-          </div>
-          <div class="input-space">
+          <div class="space">
             <nb-checkbox (checkedChange)="checkMainSkill($event, i)">Main skill</nb-checkbox>
+          </div>
+          <div class="space remove-skill-btn">
+            <button (click)="deleteSkill(i)" nbButton size="tiny" status="danger" outline shape="round">Remove</button>
           </div>
         </div>
       </div>
 
     </div>
 
-    <div>
-      <button type="submit" nbButton>Save</button>
+    <div class="right">
+      <button type="submit" nbButton status="primary">Save</button>
     </div>
 
   </div>

@@ -26,6 +26,9 @@ export class HeistDetailsComponent implements OnInit {
 
   source: LocalDataSource = new LocalDataSource();
 
+  tagStatus: string = 'basic';
+  tagOutcome: string = 'basic';
+
   constructor(private heistService: HeistService,
               private route: ActivatedRoute,
               private router: Router) { }
@@ -61,16 +64,31 @@ export class HeistDetailsComponent implements OnInit {
         if (this.heist.status === 'FINISHED') {
           // get heist outcome from service
           this.heistService.getHeistOutcome(this.heistId).subscribe(
-            data => this.heistOutcome = data
+            data => this.heistOutcome = data,
+            () => {},
+            () => this.tagOutcome = this.heistOutcome.outcome === 'SUCCEEDED' ? 'success' : 'basic'
           );
         }
 
+        switch (this.heist.status) {
+          case 'PLANNING':
+            this.tagStatus = 'info';
+            break;
+          case 'IN_PROGRESS':
+            this.tagStatus = 'danger';
+            break;
+          case 'FINISHED':
+            this.tagStatus = 'primary';
+            break;
+          case 'READY':
+            this.tagStatus = 'warning';
+            break;
+        }
       }
     );
     // get heist status from service
     this.heistService.getHeistStatus(this.heistId).subscribe(
-      data => this.heistStatus = data
-    );
+      data => this.heistStatus = data)
   }
 
   // add new skills to list

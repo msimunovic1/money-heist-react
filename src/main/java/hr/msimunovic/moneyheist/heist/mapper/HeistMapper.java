@@ -85,6 +85,7 @@ public class HeistMapper {
     public HeistMemberDTO mapHeistMemberToDTO(HeistMember heistMember) {
 
         HeistMemberDTO heistMemberDTO = new HeistMemberDTO();
+        heistMemberDTO.setId(heistMember.getMember().getId());
         heistMemberDTO.setName(heistMember.getMember().getName());
 
         List<SkillDTO> skillDTOList = heistMember.getMember().getSkills().stream()

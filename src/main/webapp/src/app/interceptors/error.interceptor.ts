@@ -8,11 +8,13 @@ import {
 import { Observable } from 'rxjs';
 import {tap} from "rxjs/operators";
 import {NbToastrService} from "@nebular/theme";
+import {Router} from "@angular/router";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-  constructor(public toastrService: NbToastrService) {}
+  constructor(public toastrService: NbToastrService,
+              private router: Router) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
@@ -20,11 +22,14 @@ export class ErrorInterceptor implements HttpInterceptor {
       .pipe(
         tap(() => {},
           (e: HttpErrorResponse) => {
-            if(e.error.message) {
-              this.toastrService.danger(e.error.message);
-            } else {
-              this.toastrService.danger("Something going wrong. Please contact admin.");
-            }
+          if(e.error.message) {
+            this.toastrService.danger(e.error.message);
+          } else {
+            this.toastrService.danger("Something going wrong. Please contact admin.");
+          }
+          if(e.error.status === 404) {
+            this.router.navigateByUrl('/notFound');
+          }
           })
 
       );

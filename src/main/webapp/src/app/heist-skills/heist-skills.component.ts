@@ -35,7 +35,6 @@ export class HeistSkillsComponent implements OnInit {
             list: this.numberList
           }
         }
-
       },
     },
   };

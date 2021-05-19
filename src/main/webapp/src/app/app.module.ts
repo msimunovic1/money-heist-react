@@ -10,7 +10,7 @@ import {
   NbInputModule,
   NbLayoutModule,
   NbRadioModule, NbSelectModule,
-  NbThemeModule, NbListModule, NbCardModule, NbToastrModule
+  NbThemeModule, NbListModule, NbCardModule, NbToastrModule, NbTagModule
 } from "@nebular/theme";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NbEvaIconsModule} from '@nebular/eva-icons';
@@ -25,6 +25,7 @@ import { HeistEligibleMembersComponent } from './heist-eligible-members/heist-el
 import { HeistListComponent } from './heist-list/heist-list.component';
 import {Ng2SmartTableModule} from "ng2-smart-table";
 import { HeistSkillsComponent } from './heist-skills/heist-skills.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 export const httpInterceptorProviders = [
   {
@@ -43,7 +44,8 @@ export const httpInterceptorProviders = [
     HeistDetailsComponent,
     HeistEligibleMembersComponent,
     HeistListComponent,
-    HeistSkillsComponent
+    HeistSkillsComponent,
+    NotFoundComponent
   ],
   imports: [
     AppRoutingModule,
@@ -67,7 +69,8 @@ export const httpInterceptorProviders = [
     NbTimepickerModule.forRoot(),
     NbListModule,
     NbCardModule,
-    Ng2SmartTableModule
+    Ng2SmartTableModule,
+    NbTagModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

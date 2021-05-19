@@ -1,13 +1,31 @@
-<nb-card size="medium">
-  <nb-card-header>
-    Heists
-  </nb-card-header>
-  <nb-list>
-    <nb-list-item *ngFor="let heist of heists">
-      <a routerLink="/heist/{{heist.id}}">
-        {{ heist.name }}
-      </a>
-    </nb-list-item>
-  </nb-list>
-</nb-card>
-<button routerLink="/addHeist" nbButton>Create New Heist</button>
+<div class="space">
+  <nb-card class="full-height">
+      <nb-card-header>
+        Heists
+      </nb-card-header>
+      <nb-list>
+        <nb-list-item *ngFor="let heist of heists">
+          <a routerLink="/heist/{{heist.id}}">
+            {{ heist.name | uppercase }}
+          </a>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+    <button routerLink="/addHeist" nbButton>Create New Heist</button>
+</div>
+<hr class="line">
+<div class="space">
+  <nb-card class="full-height">
+    <nb-card-header>
+      Members
+    </nb-card-header>
+    <nb-list>
+      <nb-list-item *ngFor="let heist of heists">
+        <a routerLink="/heist/{{heist.id}}">
+          {{ heist.name | uppercase }}
+        </a>
+      </nb-list-item>
+    </nb-list>
+  </nb-card>
+  <button routerLink="/addMember" nbButton>Create New Member</button>
+</div>

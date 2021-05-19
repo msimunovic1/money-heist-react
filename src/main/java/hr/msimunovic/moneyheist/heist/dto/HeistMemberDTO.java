@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class HeistMemberDTO {
 
+    private Long id;
     private String name;
     private List<SkillDTO> skills;
 }

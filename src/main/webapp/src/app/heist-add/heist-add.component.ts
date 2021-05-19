@@ -3,9 +3,9 @@ import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angul
 import {HeistService} from "../services/heist.service";
 import {Heist} from "../models/heist";
 import {HeistSkill} from "../models/heist-skill";
-import {formatDate} from "@angular/common";
-import {NbDateService} from "@nebular/theme";
+import {NbDateService, NbToastrService} from "@nebular/theme";
 import {PRIMARY_OUTLET, Router, UrlSegment} from "@angular/router";
+import {MemberService} from "../services/member.service";
 
 @Component({
   selector: 'app-heist-add',
@@ -15,7 +15,6 @@ import {PRIMARY_OUTLET, Router, UrlSegment} from "@angular/router";
 export class HeistAddComponent implements OnInit {
 
   min: Date;
-  locationHeader: string = "";
 
   heistFormGroup: FormGroup = this.formBuilder.group({
     name: new FormControl('', [Validators.required]),
@@ -28,6 +27,7 @@ export class HeistAddComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private heistService: HeistService,
               private router: Router,
+              public toastrService: NbToastrService,
               protected dateService: NbDateService<Date>) {
     // validation - endTime can't be picked in past
     this.min = this.dateService.addMonth(this.dateService.today(), 0);
@@ -62,11 +62,11 @@ export class HeistAddComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.heistFormGroup.value)
 
     // Touching all fields triggers the display of the error messages
     // TODO: add error messages
     if(this.heistFormGroup.invalid) {
+      this.toastrService.warning("Please fill in all required fields.", "Required fields")
       this.heistFormGroup.markAllAsTouched();
       return;
     }
