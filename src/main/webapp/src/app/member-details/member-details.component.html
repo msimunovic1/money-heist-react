@@ -1,1 +1,25 @@
-<p>member-details works!</p>
+<nb-card>
+  <nb-card-body>
+    <h3>{{ member.name }}</h3>
+    <div>
+      {{ member.email }}
+      <nb-icon nbSuffix icon="email-outline" pack="eva"></nb-icon>
+    </div>
+
+    <hr class="line">
+
+    <div class="space">
+      STATUS <nb-tag status="{{tagStatus}}" appearance="filled" text="{{member.status}}"></nb-tag>
+    </div>
+
+    <div class="space">
+      <nb-icon icon="person-outline" pack="eva"></nb-icon> GENDER: {{sex}}
+    </div>
+
+    <div class="space">
+      <nb-icon icon="activity-outline" pack="eva"></nb-icon> MAIN SKILL: {{member.mainSkill}}
+    </div>
+
+
+  </nb-card-body>
+</nb-card>

@@ -4,6 +4,7 @@ import {SERVER_API_URL} from "../app.constants";
 import {Observable} from "rxjs";
 import {Member} from "../models/member";
 import {MemberSkill} from "../models/member-skill";
+import {MemberInfo} from "../models/member-info";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,10 @@ export class MemberService {
   url = SERVER_API_URL + '/member';
 
   constructor(private httpClient: HttpClient) { }
+
+  getAll(): Observable<MemberInfo[]> {
+    return this.httpClient.get<MemberInfo[]>(this.url + '/list');
+  }
 
   getMember(memberId: number): Observable<Member> {
     return this.httpClient.get<Member>(this.url + `/${memberId}`);

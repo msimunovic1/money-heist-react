@@ -1,8 +1,10 @@
 package hr.msimunovic.moneyheist.api.controller;
 
 import hr.msimunovic.moneyheist.common.Constants;
+import hr.msimunovic.moneyheist.heist.dto.HeistInfoDTO;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.dto.MemberDTO;
+import hr.msimunovic.moneyheist.member.dto.MemberInfoDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
 import hr.msimunovic.moneyheist.member.service.MemberService;
 import hr.msimunovic.moneyheist.util.HttpUtil;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,6 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @GetMapping("/list")
+    public ResponseEntity<List<MemberInfoDTO>> getAllHeists() {
+        return new ResponseEntity(memberService.getAllMembers(), HttpStatus.OK);
+    }
 
     @PostMapping()
     public ResponseEntity saveMember(HttpServletRequest request, @RequestBody MemberDTO memberDTO) {

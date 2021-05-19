@@ -359,6 +359,7 @@ public class HeistServiceImpl implements HeistService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<HeistInfoDTO> getAllHeists() {
         return heistRepository.findAll().stream()
                 .map(heist -> modelMapper.map(heist, HeistInfoDTO.class))

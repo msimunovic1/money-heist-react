@@ -11,21 +11,25 @@
         </nb-list-item>
       </nb-list>
     </nb-card>
-    <button routerLink="/addHeist" nbButton>Create New Heist</button>
+    <div>
+      <button routerLink="/addHeist" nbButton >Create New Heist</button>
+    </div>
 </div>
-<hr class="line">
+
 <div class="space">
   <nb-card class="full-height">
     <nb-card-header>
       Members
     </nb-card-header>
     <nb-list>
-      <nb-list-item *ngFor="let heist of heists">
-        <a routerLink="/heist/{{heist.id}}">
-          {{ heist.name | uppercase }}
+      <nb-list-item *ngFor="let member of members">
+        <a routerLink="/member/{{member.id}}">
+          {{ member.name | uppercase }}
         </a>
       </nb-list-item>
     </nb-list>
   </nb-card>
-  <button routerLink="/addMember" nbButton>Create New Member</button>
+  <div>
+    <button routerLink="/addMember" nbButton>Create New Member</button>
+  </div>
 </div>

@@ -4,8 +4,10 @@ import hr.msimunovic.moneyheist.api.exception.BadRequestException;
 import hr.msimunovic.moneyheist.api.exception.NotFoundException;
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.email.service.EmailService;
+import hr.msimunovic.moneyheist.heist.dto.HeistInfoDTO;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.dto.MemberDTO;
+import hr.msimunovic.moneyheist.member.dto.MemberInfoDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
 import hr.msimunovic.moneyheist.member.mapper.MemberMapper;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
@@ -19,6 +21,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -29,6 +34,14 @@ public class MemberServiceImpl implements MemberService {
     private final SkillMapper skillMapper;
     private final ModelMapper modelMapper;
     private final EmailService emailService;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MemberInfoDTO> getAllMembers() {
+        return memberRepository.findAll().stream()
+                .map(member -> modelMapper.map(member, MemberInfoDTO.class))
+                .collect(Collectors.toList());
+    }
 
     @Override
     @Transactional

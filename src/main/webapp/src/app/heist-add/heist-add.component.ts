@@ -64,7 +64,6 @@ export class HeistAddComponent implements OnInit {
   onSubmit() {
 
     // Touching all fields triggers the display of the error messages
-    // TODO: add error messages
     if(this.heistFormGroup.invalid) {
       this.toastrService.warning("Please fill in all required fields.", "Required fields")
       this.heistFormGroup.markAllAsTouched();
@@ -86,6 +85,7 @@ export class HeistAddComponent implements OnInit {
     this.heistService.saveHeist(heist).subscribe(
       res => {
         this.resetForm();
+
         // get url segments from location response header
         const urlSegments: UrlSegment[]  = this.router.parseUrl(<string>res.headers.get('location')).root.children[PRIMARY_OUTLET].segments;
         // get user id from location response header segment

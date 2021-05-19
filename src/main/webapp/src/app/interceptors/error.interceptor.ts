@@ -23,7 +23,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         tap(() => {},
           (e: HttpErrorResponse) => {
           if(e.error.message) {
-            this.toastrService.danger(e.error.message);
+            this.toastrService.danger(e.error.message, "Error");
           } else {
             this.toastrService.danger("Something going wrong. Please contact admin.");
           }

@@ -4,6 +4,7 @@ import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angul
 import {Member} from "../models/member";
 import {Skill} from "../models/skill";
 import {NbToastrService} from "@nebular/theme";
+import {PRIMARY_OUTLET, Router, UrlSegment} from "@angular/router";
 
 @Component({
   selector: 'app-member-add',
@@ -38,6 +39,7 @@ export class MemberAddComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private memberService: MemberService,
+              private router: Router,
               public toastrService: NbToastrService) { }
 
   ngOnInit(): void {
@@ -89,7 +91,14 @@ export class MemberAddComponent implements OnInit {
     this.memberService.saveMember(member).subscribe(
       res => {
         this.resetForm();
-        console.log(res);
+
+        this.resetForm();
+        // get url segments from location response header
+        const urlSegments: UrlSegment[]  = this.router.parseUrl(<string>res.headers.get('location')).root.children[PRIMARY_OUTLET].segments;
+        // get user id from location response header segment
+        const id = urlSegments[1].path;
+
+        this.router.navigate(['/member/', id]);
       }
     )
 

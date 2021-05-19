@@ -4,7 +4,7 @@
     <h3>{{ heist.name }}</h3>
     <div>
       {{ heist.location }}
-      <nb-icon nbSuffix icon="pin-outline" pack="eva"></nb-icon>
+      <nb-icon icon="pin-outline" pack="eva"></nb-icon>
     </div>
 
     <hr class="line">
@@ -48,8 +48,8 @@
       (updatedSkill)="updateSkill($event)"
     ></app-heist-skills>
 
-    <div class="space" *ngIf="heistStatus.status==='READY'">
-      <button nbButton (click)="startHeistManually(this.heistId)">Start heist</button>
+    <div class="space" *ngIf="heistStatus.status==='READY'" class="right">
+      <button nbButton (click)="startHeistManually(this.heistId)" status="primary">Start heist</button>
     </div>
 
   </nb-card-body>
