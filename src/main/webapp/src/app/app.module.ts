@@ -10,7 +10,7 @@ import {
   NbInputModule,
   NbLayoutModule,
   NbRadioModule, NbSelectModule,
-  NbThemeModule, NbListModule, NbCardModule
+  NbThemeModule, NbListModule, NbCardModule, NbToastrModule
 } from "@nebular/theme";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NbEvaIconsModule} from '@nebular/eva-icons';
@@ -23,6 +23,8 @@ import { HeistDetailsComponent } from './heist-details/heist-details.component';
 import {ErrorInterceptor} from "./interceptors/error.interceptor";
 import { HeistEligibleMembersComponent } from './heist-eligible-members/heist-eligible-members.component';
 import { HeistListComponent } from './heist-list/heist-list.component';
+import {Ng2SmartTableModule} from "ng2-smart-table";
+import { HeistSkillsComponent } from './heist-skills/heist-skills.component';
 
 export const httpInterceptorProviders = [
   {
@@ -40,7 +42,8 @@ export const httpInterceptorProviders = [
     HeistAddComponent,
     HeistDetailsComponent,
     HeistEligibleMembersComponent,
-    HeistListComponent
+    HeistListComponent,
+    HeistSkillsComponent
   ],
   imports: [
     AppRoutingModule,
@@ -50,6 +53,7 @@ export const httpInterceptorProviders = [
     NbLayoutModule,
     BrowserAnimationsModule,
     NbThemeModule.forRoot({name: 'cosmic'}),
+    NbToastrModule.forRoot(),
     NbEvaIconsModule,
     NbInputModule,
     NbFormFieldModule,
@@ -62,7 +66,8 @@ export const httpInterceptorProviders = [
     NbDatepickerModule.forRoot(),
     NbTimepickerModule.forRoot(),
     NbListModule,
-    NbCardModule
+    NbCardModule,
+    Ng2SmartTableModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

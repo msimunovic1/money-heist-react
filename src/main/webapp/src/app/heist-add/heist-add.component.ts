@@ -5,6 +5,7 @@ import {Heist} from "../models/heist";
 import {HeistSkill} from "../models/heist-skill";
 import {formatDate} from "@angular/common";
 import {NbDateService} from "@nebular/theme";
+import {PRIMARY_OUTLET, Router, UrlSegment} from "@angular/router";
 
 @Component({
   selector: 'app-heist-add',
@@ -14,6 +15,7 @@ import {NbDateService} from "@nebular/theme";
 export class HeistAddComponent implements OnInit {
 
   min: Date;
+  locationHeader: string = "";
 
   heistFormGroup: FormGroup = this.formBuilder.group({
     name: new FormControl('', [Validators.required]),
@@ -25,12 +27,11 @@ export class HeistAddComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private heistService: HeistService,
+              private router: Router,
               protected dateService: NbDateService<Date>) {
     // validation - endTime can't be picked in past
     this.min = this.dateService.addMonth(this.dateService.today(), 0);
-
   }
-
 
   ngOnInit(): void {
   }
@@ -85,7 +86,12 @@ export class HeistAddComponent implements OnInit {
     this.heistService.saveHeist(heist).subscribe(
       res => {
         this.resetForm();
-        console.log(res);
+        // get url segments from location response header
+        const urlSegments: UrlSegment[]  = this.router.parseUrl(<string>res.headers.get('location')).root.children[PRIMARY_OUTLET].segments;
+        // get user id from location response header segment
+        const id = urlSegments[1].path;
+
+        this.router.navigate(['/heist/', id]);
       }
     )
 

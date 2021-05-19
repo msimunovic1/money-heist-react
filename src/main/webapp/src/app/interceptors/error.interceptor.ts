@@ -7,11 +7,12 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {tap} from "rxjs/operators";
+import {NbToastrService} from "@nebular/theme";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-  constructor() {}
+  constructor(public toastrService: NbToastrService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
@@ -20,10 +21,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         tap(() => {},
           (e: HttpErrorResponse) => {
             if(e.error.message) {
-              // TODO: staviti karticu s porukom korisniku
-              console.log(e.error.message)
+              this.toastrService.danger(e.error.message);
             } else {
-              console.log("Error occured application. Please contact admin")
+              this.toastrService.danger("Something going wrong. Please contact admin.");
             }
           })
 

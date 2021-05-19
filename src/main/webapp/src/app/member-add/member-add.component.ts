@@ -49,7 +49,7 @@ export class MemberAddComponent implements OnInit {
     const skillForm = this.formBuilder.group({
       name: new FormControl('', [Validators.required]),
       level: new FormControl(''),
-
+      checked: false
     })
     this.skills.push(skillForm);
   }
@@ -59,6 +59,7 @@ export class MemberAddComponent implements OnInit {
   }
 
   checkMainSkill(checked: boolean, index: number) {
+
     this.mainSkill = this.skills.at(index).value.name;
     this.mainSkillChecked = checked;
   }

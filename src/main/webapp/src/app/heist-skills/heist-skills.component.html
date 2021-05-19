@@ -1,0 +1,9 @@
+<nb-layout-column>
+  <ng2-smart-table class="heist-skills"
+                   [settings]="settings"
+                   [source]="heistSkills"
+                   (createConfirm)="onCreateConfirm($event)"
+                   (deleteConfirm)="onUpdateConfirm($event)"
+                   (editConfirm)="onUpdateConfirm($event)">
+  </ng2-smart-table>
+</nb-layout-column>

@@ -3,7 +3,7 @@ import {HeistMember} from "./heist-member";
 
 export class MembersEligibleForHeist {
 
-  skills!: HeistSkill[];
-  members!: HeistMember[];
+  skills?: HeistSkill[];
+  members?: HeistMember[];
 
 }

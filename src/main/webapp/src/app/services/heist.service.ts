@@ -7,6 +7,10 @@ import {HeistSkill} from "../models/heist-skill";
 import {HeistMember} from "../models/heist-member";
 import {MembersEligibleForHeist} from "../models/members-eligible-for-heist";
 import {HeistInfo} from "../models/heist-info";
+import {HeistEligibleMembersComponent} from "../heist-eligible-members/heist-eligible-members.component";
+import {IHeistMembers} from "../models/i-heist-members";
+import {HeistOutcome} from "../models/heist-outcome";
+import {HeistStatus} from "../models/heist-status";
 
 @Injectable({
   providedIn: 'root'
@@ -37,12 +41,12 @@ export class HeistService {
     return this.httpClient.get<HeistMember[]>(this.url + `/${heistId}/members`);
   }
 
-  getHeistStatus(heistId: number): Observable<string> {
-    return this.httpClient.get<string>(this.url + `/${heistId}/status`);
+  getHeistStatus(heistId: number): Observable<HeistStatus> {
+    return this.httpClient.get<HeistStatus>(this.url + `/${heistId}/status`);
   }
 
-  getHeistOutcome(heistId: number): Observable<string> {
-    return this.httpClient.get<string>(this.url + `/${heistId}/outcome`);
+  getHeistOutcome(heistId: number): Observable<HeistOutcome> {
+    return this.httpClient.get<HeistOutcome>(this.url + `/${heistId}/outcome`);
   }
 
   saveHeist(heist: Heist): Observable<HttpResponse<any>> {
@@ -50,7 +54,15 @@ export class HeistService {
   }
 
   updateHeistSkills(heistId: number, skills: HeistSkill[]): Observable<HttpResponse<any>> {
-    return this.httpClient.patch(this.url + `/${heistId}`, skills, {observe: 'response'});
+    return this.httpClient.patch(this.url + `/${heistId}/skills`, skills, {observe: 'response'});
+  }
+
+  saveHeistMembers(heistId: number, members: IHeistMembers): Observable<HttpResponse<any>> {
+    return this.httpClient.put<HttpResponse<any>>(this.url + `/${heistId}/members`, members, {observe: 'response'});
+  }
+
+  startHeist(heistId: number): Observable<HttpResponse<any>> {
+    return this.httpClient.put<HttpResponse<any>>(this.url + `/${heistId}/start`, {observe: 'response'});
   }
 
 }

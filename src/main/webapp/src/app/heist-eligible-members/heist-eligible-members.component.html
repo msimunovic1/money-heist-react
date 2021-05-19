@@ -1,4 +1,34 @@
-<div *ngFor="let member of membersEligibleForHeist.members">
-  {{ member.name }}
-  <button (click)="addMemberToHeist(member.name)" nbButton>Add member</button>
-</div>
+<nb-layout>
+
+  <nb-layout-column left>
+    <nb-card size="small">
+      <nb-card-header>
+        Eligible Members
+      </nb-card-header>
+      <nb-list>
+        <nb-list-item *ngFor="let member of eligibleMembers; let i = index">
+          {{ member.name }}
+          <button ng (click)="addMemberToHeist(member.name, i)" nbButton size="tiny">Add member</button>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </nb-layout-column>
+
+  <nb-layout-column right>
+    <nb-card size="small">
+      <nb-card-header>
+        Added Members
+      </nb-card-header>
+      <nb-list>
+        <nb-list-item *ngFor="let member of heistMembers">
+          {{ member }}
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </nb-layout-column>
+  <nb-layout-footer>
+    <button (click)="confirmMembers()">Confirm Members</button>
+  </nb-layout-footer>
+</nb-layout>
+
+

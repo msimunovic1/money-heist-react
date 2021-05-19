@@ -1,6 +1,6 @@
 export class HeistInfo {
 
-  id!: number;
-  name!: string;
-  status!: string;
+  id?: number;
+  name?: string;
+  status?: string;
 }
