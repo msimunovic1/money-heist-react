@@ -1,76 +1,76 @@
 /* fix table actions font size */
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-action.ng2-smart-action-add-add {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-action.ng2-smart-action-add-add {
   font-size: 1rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-action.ng2-smart-action-add-create {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-action.ng2-smart-action-add-create {
   font-size: 0.75rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-action.ng2-smart-action-add-cancel {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-action.ng2-smart-action-add-cancel {
   font-size: 0.75rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-actions .ng2-smart-action-edit-edit {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-actions .ng2-smart-action-edit-edit {
   font-size: 1rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-actions .ng2-smart-action-delete-delete {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-actions .ng2-smart-action-delete-delete {
   font-size: 1rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-actions .ng2-smart-action-edit-save {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-actions .ng2-smart-action-edit-save {
   font-size: 1rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-actions .ng2-smart-action-edit-cancel {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-actions .ng2-smart-action-edit-cancel {
   font-size: 1rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-action.ng2-smart-action-add-add {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-action.ng2-smart-action-add-add {
   font-size: 1rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-action.ng2-smart-action-add-create {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-action.ng2-smart-action-add-create {
   font-size: 0.75rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-action.ng2-smart-action-add-cancel {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-action.ng2-smart-action-add-cancel {
   font-size: 0.75rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-actions .ng2-smart-action-edit-edit {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-actions .ng2-smart-action-edit-edit {
   font-size: 1rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-actions .ng2-smart-action-delete-delete {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-actions .ng2-smart-action-delete-delete {
   font-size: 1rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-actions-title-add a {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-actions-title-add a {
   border-color: transparent !important;
   background-color: transparent !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-actions-title-add a:hover {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-actions-title-add a:hover {
   border-color: transparent;
   background-color: transparent;
   color: #a16eff;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-actions .ng2-smart-action-edit-save {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-actions .ng2-smart-action-edit-save {
   font-size: 1rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .ng2-smart-actions .ng2-smart-action-edit-cancel {
+::ng-deep .nb-theme-cosmic .skills-table .ng2-smart-actions .ng2-smart-action-edit-cancel {
   font-size: 1rem !important;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills .form-control {
+::ng-deep .nb-theme-cosmic .skills-table .form-control {
   color: #1e1569;
 }
 
-::ng-deep .nb-theme-cosmic .heist-skills ng2-smart-table-filter {
+::ng-deep .nb-theme-cosmic .skills-table ng2-smart-table-filter {
   display: none;
 }

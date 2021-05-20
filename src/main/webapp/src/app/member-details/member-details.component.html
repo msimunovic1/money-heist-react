@@ -1,5 +1,6 @@
 <nb-card>
   <nb-card-body>
+    <!--member details-->
     <h3>{{ member.name }}</h3>
     <div>
       {{ member.email }}
@@ -20,6 +21,19 @@
       <nb-icon icon="activity-outline" pack="eva"></nb-icon> MAIN SKILL: {{member.mainSkill}}
     </div>
 
+    <nb-layout-column>
+      <ng2-smart-table class="skills-table"
+                       [settings]="settings"
+                       [source]="source"
+                       (createConfirm)="onCreateConfirm($event)"
+                       (editConfirm)="onUpdateConfirm($event)">
+      </ng2-smart-table>
+    </nb-layout-column>
+
+    <!--save heist skills changes-->
+    <div class="space" class="right">
+      <button nbButton (click)="saveUpdatedSkills()" status="primary" size="small" outline [disabled]="disableUpdateSkillsBtn()">Save changes</button>
+    </div>
 
   </nb-card-body>
 </nb-card>

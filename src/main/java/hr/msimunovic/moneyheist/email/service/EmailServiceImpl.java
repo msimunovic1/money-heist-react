@@ -38,7 +38,6 @@ public class EmailServiceImpl implements EmailService {
         }
 
         emailSender.send(mimeMessage);
-        String a = "bla";
 
     }
 }

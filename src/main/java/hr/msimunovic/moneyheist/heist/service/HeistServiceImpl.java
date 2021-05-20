@@ -64,6 +64,15 @@ public class HeistServiceImpl implements HeistService {
 
         validatePlanningHeist(heist);
 
+        Set<HeistSkillDTO> skillDuplicates = new HashSet<>();
+        for(HeistSkillDTO heistSkillDTO : heistDTO.getSkills()) {
+            // check is provided multiple skills with same name and level
+            if (!skillDuplicates.add(heistSkillDTO)) {
+                throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
+            }
+        }
+
+
         heist.setStatus(HeistStatusEnum.PLANNING);
 
         return heistRepository.save(heist);
@@ -80,21 +89,21 @@ public class HeistServiceImpl implements HeistService {
             throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_NOT_BE_PLANNING);
         }
 
-        Set<HeistSkillsDTO> skillDuplicates = new HashSet<>();
+        Set<HeistSkillDTO> skillDuplicates = new HashSet<>();
         for(HeistSkillDTO heistSkillDTO : heistSkillsDTO.getSkills()) {
 
             // check is provided multiple skills with same name and level
-            if (!skillDuplicates.add(heistSkillsDTO)) {
+            if (!skillDuplicates.add(heistSkillDTO)) {
                 throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
             }
 
             // check does skill exists in DB
-            Skill skill = skillRepository.findByNameAndLevel(heistSkillDTO.getName(), heistSkillDTO.getLevel());
-            if(skill==null) {
+            Skill skillFromDB = skillRepository.findByNameAndLevel(heistSkillDTO.getName(), heistSkillDTO.getLevel());
+            if(skillFromDB==null) {
                 // add if skill does not exists in DB
                 heist.addSkill(modelMapper.map(heistSkillDTO, Skill.class), heistSkillDTO.getMembers());
             } else {
-                for (HeistSkill heistSkill : skill.getHeists()) {
+                for (HeistSkill heistSkill : skillFromDB.getHeists()) {
                     // check members property
                     if(!heistSkill.getMembers().equals(heistSkillDTO.getMembers())) {
                         // add skill from DB if skill members are different from request members
@@ -404,10 +413,7 @@ public class HeistServiceImpl implements HeistService {
 
     }
 
-    // TODO: prebaciti ovo u neku drugu klasu
     public void validateStartingHeist(Heist heist) {
-        // TODO: 400 (Bad Request) When one of member skills does not match at least one of the required skills of the heist
-        // TODO: 400 when is already a confirmed member of another heist happening at the same time.
         if(!heist.getStatus().equals(HeistStatusEnum.PLANNING)) {
             throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_BE_PLANNING);
         }
@@ -430,8 +436,6 @@ public class HeistServiceImpl implements HeistService {
         if (startDate.isAfter(endDate) || endDate.isBefore(currentTime)) {
             throw new BadRequestException(Constants.MSG_INCORRECT_DATE_TIME);
         }
-
-        // TODO: check does multiple skills with the same name and level were provided
 
     }
 

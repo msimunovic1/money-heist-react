@@ -78,15 +78,14 @@ public class MemberServiceImpl implements MemberService {
 
         for(SkillDTO skillDTO : memberSkillDTO.getSkills()) {
             Skill skillFromDB = skillRepository.findByNameAndLevel(skillDTO.getName(), skillDTO.getLevel());
-
+            // check does skill exists in DB
             if(skillFromDB==null) {
                 member.addSkill(modelMapper.map(skillDTO, Skill.class), mainSkill);
             } else {
-                member.addSkill(modelMapper.map(skillFromDB, Skill.class), mainSkill);
+                for(MemberSkill memberSkill : skillFromDB.getMembers()) {
+                    member.addMemberSkill(memberSkill, mainSkill);
+                }
             }
-            // check does skill exists in DB
-
-
         }
     }
 
