@@ -1,7 +1,6 @@
 package hr.msimunovic.moneyheist.api.controller;
 
 import hr.msimunovic.moneyheist.common.Constants;
-import hr.msimunovic.moneyheist.heist.dto.HeistInfoDTO;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.dto.MemberDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberInfoDTO;
@@ -40,11 +39,10 @@ public class MemberController {
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_LOCATION, locationHeader), HttpStatus.CREATED);
     }
 
-    // TODO : fix
     @PutMapping("/{memberId}/skills")
     public ResponseEntity updateSkills(HttpServletRequest request,
                                        @PathVariable Long memberId,
-                                       @RequestBody MemberSkillDTO memberSkillDTO) {
+                                       @Valid @RequestBody MemberSkillDTO memberSkillDTO) {
 
         memberService.updateSkills(memberId, memberSkillDTO);
 

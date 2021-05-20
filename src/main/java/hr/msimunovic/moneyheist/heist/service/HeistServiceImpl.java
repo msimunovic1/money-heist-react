@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class HeistServiceImpl implements HeistService {
 
     private final HeistRepository heistRepository;
@@ -68,36 +69,43 @@ public class HeistServiceImpl implements HeistService {
         return heistRepository.save(heist);
     }
 
-
     @Override
     @Transactional
     public void updateSkills(Long heistId, HeistSkillsDTO heistSkillsDTO) {
 
         Heist heist = findHeistById(heistId);
-        Set<HeistSkillsDTO> skillDuplicates = new HashSet<>();
 
         // check heist status
         if(heist.getStatus().equals(HeistStatusEnum.IN_PROGRESS)) {
             throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_NOT_BE_PLANNING);
         }
 
+        Set<HeistSkillsDTO> skillDuplicates = new HashSet<>();
         for(HeistSkillDTO heistSkillDTO : heistSkillsDTO.getSkills()) {
 
-            if (skillDuplicates.add(heistSkillsDTO) == false) {
+            // check is provided multiple skills with same name and level
+            if (!skillDuplicates.add(heistSkillsDTO)) {
                 throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
             }
 
             // check does skill exists in DB
             Skill skill = skillRepository.findByNameAndLevel(heistSkillDTO.getName(), heistSkillDTO.getLevel());
             if(skill==null) {
-                // add new if skill does not exists in DB
+                // add if skill does not exists in DB
                 heist.addSkill(modelMapper.map(heistSkillDTO, Skill.class), heistSkillDTO.getMembers());
+            } else {
+                for (HeistSkill heistSkill : skill.getHeists()) {
+                    // check members property
+                    if(!heistSkill.getMembers().equals(heistSkillDTO.getMembers())) {
+                        // add skill from DB if skill members are different from request members
+                        heist.addHeistSkill(heistSkill, heistSkillDTO.getMembers());
+                    }
+                }
             }
         }
     }
 
     @Override
-    @Transactional(readOnly = true)
     public MembersEligibleForHeistDTO getMembersEligibleForHeist(Long heistId) {
 
         Heist heist = findHeistById(heistId);
@@ -147,25 +155,21 @@ public class HeistServiceImpl implements HeistService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public HeistDTO getHeistById(Long heistId) {
         return heistMapper.mapHeistToDTO(findHeistById(heistId));
     }
 
     @Override
-    @Transactional(readOnly = true)
     public HeistStatusDTO getHeistStatus(Long heistId) {
         return modelMapper.map(findHeistById(heistId), HeistStatusDTO.class);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<HeistSkillDTO> getHeistSkills(Long heistId) {
         return skillMapper.mapHeistSkillsToDTO(findHeistById(heistId).getSkills());
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<HeistMemberDTO> getHeistMembers(Long heistId) {
 
         Heist heist = findHeistById(heistId);
@@ -178,7 +182,6 @@ public class HeistServiceImpl implements HeistService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public HeistOutcomeDTO getHeistOutcome(Long heistId) {
 
         Heist heist = findHeistById(heistId);
@@ -322,31 +325,29 @@ public class HeistServiceImpl implements HeistService {
 
     }
 
+    @Transactional
     public void memberSkillImprovement(Heist heist) {
 
         log.info("Member skill for {} improvement started.", heist.getId());
 
-        Set<HeistMember> members = heist.getMembers();
-
-        for (HeistMember heistMember : members) {
+        for (HeistMember heistMember : heist.getMembers()) {
 
             Member member = memberRepository.findById(heistMember.getMember().getId())
                     .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
 
             for (MemberSkill memberSkill : member.getSkills()) {
-                Skill skill = memberSkill.getSkill();
-                if(skill.getLevel().length() < Constants.MAX_SKILL_LEVEL) {
-                    StringBuilder stringBuilder = new StringBuilder(skill.getLevel());
+                if(memberSkill.getSkill().getLevel().length() < Constants.MAX_SKILL_LEVEL) {
+                    StringBuilder stringBuilder = new StringBuilder(memberSkill.getSkill().getLevel());
                     String increasedLevel = stringBuilder.append("*").toString();
-                    skill.setLevel(increasedLevel);
-                    member.addSkill(skill, memberSkill.getMainSkill());
-                    memberRepository.save(member);
+                    memberSkill.getSkill().setLevel(increasedLevel);
+                    member.addSkill(memberSkill.getSkill(), memberSkill.getMainSkill());
                 }
             }
         }
     }
 
     @Override
+    @Transactional
     public void scheduleStartEndHeist(Heist heist) {
 
         Date startTime = Date.from(heist.getStartTime().atZone(ZoneId.systemDefault())
@@ -362,7 +363,6 @@ public class HeistServiceImpl implements HeistService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<HeistInfoDTO> getAllHeists() {
         return heistRepository.findAll().stream()
                 .map(heist -> modelMapper.map(heist, HeistInfoDTO.class))
@@ -434,7 +434,6 @@ public class HeistServiceImpl implements HeistService {
         // TODO: check does multiple skills with the same name and level were provided
 
     }
-
 
     public void validateMember(Member member) {
         if(!member.getStatus().equals(MemberStatusEnum.AVAILABLE) && !member.getStatus().equals(MemberStatusEnum.RETIRED)) {

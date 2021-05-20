@@ -1,9 +1,10 @@
 package hr.msimunovic.moneyheist.skill;
 
-import com.sun.istack.NotNull;
 import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
 import hr.msimunovic.moneyheist.member_skill.MemberSkill;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -29,6 +30,5 @@ public class Skill {
 
     @OneToMany(mappedBy = "skill")
     private Set<HeistSkill> heists = new HashSet<>();
-
 
 }

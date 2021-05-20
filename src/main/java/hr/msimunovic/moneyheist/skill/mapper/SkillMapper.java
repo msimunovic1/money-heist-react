@@ -36,15 +36,6 @@ public class SkillMapper {
         return skill;
     }
 
-    public Skill mapSkillDTOToSkill(SkillDTO skillDTO) {
-
-        Skill skill = new Skill();
-        skill.setName(skillDTO.getName());
-        skill.setLevel(skillDTO.getLevel());
-
-        return skill;
-    }
-
     public MemberSkillDTO mapMemberSkillsToDTO(Set<MemberSkill> memberSkills) {
 
         MemberSkillDTO memberSkillDTO = new MemberSkillDTO();

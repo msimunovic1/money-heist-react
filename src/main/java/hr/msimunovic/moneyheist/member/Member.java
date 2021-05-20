@@ -1,6 +1,5 @@
 package hr.msimunovic.moneyheist.member;
 
-import com.sun.istack.NotNull;
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
 import hr.msimunovic.moneyheist.heist_member.HeistMember;
 import hr.msimunovic.moneyheist.member_skill.MemberSkill;
@@ -8,10 +7,8 @@ import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -29,13 +26,10 @@ public class Member {
 
     private String name;
 
-    @NotNull
     private String sex;
 
-    @NotNull
     private String email;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private MemberStatusEnum status;
 
@@ -47,13 +41,16 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private Set<HeistMember> heists = new HashSet<>();
 
+    /*
+     convention methods for data synchronization
+     */
     public void addSkill(Skill skill, String mainSkill) {
 
         MemberSkill memberSkill = new MemberSkill();
         memberSkill.setMember(this);
         memberSkill.setSkill(skill);
 
-        if(mainSkill != null && skill.getName().equals(mainSkill)) {
+        if(isMainSkill(skill.getName(), mainSkill)) {
             memberSkill.setMainSkill("Y");
         } else {
             memberSkill.setMainSkill("N");
@@ -62,6 +59,18 @@ public class Member {
         skills.add(memberSkill);
         skill.getMembers().add(memberSkill);
 
+    }
+
+    public void addMemberSkill(MemberSkill memberSkill, String mainSkill) {
+
+        if(isMainSkill(memberSkill.getSkill().getName(), mainSkill)) {
+            memberSkill.setMainSkill("Y");
+        } else {
+            memberSkill.setMainSkill("N");
+        }
+
+        skills.add(memberSkill);
+        memberSkill.setMember(this);
     }
 
     public void removeSkill(Skill skill) {
@@ -80,5 +89,23 @@ public class Member {
         }
     }
 
+    public boolean isMainSkill(String skillName, String mainSkill) {
+
+        if(mainSkill != null && skillName.equals(mainSkill)) {
+            if (!skills.isEmpty()) {
+                // reset old main skill
+                resetOldMainSkill();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void resetOldMainSkill() {
+        skills.stream()
+                .filter(ms -> ms.getMainSkill().equals("Y"))
+                .forEach(ms -> ms.setMainSkill("N"));
+    }
 
 }

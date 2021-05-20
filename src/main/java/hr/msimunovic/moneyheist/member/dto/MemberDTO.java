@@ -2,6 +2,7 @@ package hr.msimunovic.moneyheist.member.dto;
 
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
+import hr.msimunovic.moneyheist.validator.MemberSkill;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -14,7 +15,7 @@ import java.util.List;
 @Data
 public class MemberDTO {
 
-    @NotEmpty(message = "Name is required")
+    @NotEmpty(message = "Member name is required")
     private String name;
 
     @NotEmpty(message = "Sex is required")
@@ -23,6 +24,7 @@ public class MemberDTO {
     @NotEmpty(message = "Email is required")
     private String email;
 
+    @NotEmpty(message = "At least one skill is required")
     private List<SkillDTO> skills;
 
     private String mainSkill;

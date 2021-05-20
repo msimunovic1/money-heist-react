@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class HeistController {
     }
 
     @PostMapping("")
-    public ResponseEntity saveHeist(HttpServletRequest request, @RequestBody HeistDTO heistDTO) {
+    public ResponseEntity saveHeist(HttpServletRequest request, @Valid @RequestBody HeistDTO heistDTO) {
 
         Heist createdHeist = heistService.saveHeist(heistDTO);
 
@@ -43,7 +44,7 @@ public class HeistController {
     @PatchMapping(value = "/{heistId}/skills")
     public ResponseEntity updateSkills(HttpServletRequest request,
                                        @PathVariable Long heistId,
-                                       @RequestBody HeistSkillsDTO heistSkillsDTO) {
+                                       @Valid @RequestBody HeistSkillsDTO heistSkillsDTO) {
 
         heistService.updateSkills(heistId, heistSkillsDTO);
 
@@ -60,7 +61,7 @@ public class HeistController {
     @PutMapping("/{heistId}/members")
     public ResponseEntity saveHeistMembers(HttpServletRequest request,
                                            @PathVariable Long heistId,
-                                           @RequestBody HeistMembersDTO heistMembersDTO) {
+                                           @Valid @RequestBody HeistMembersDTO heistMembersDTO) {
 
         heistService.saveHeistMembers(heistId, heistMembersDTO);
 

@@ -75,19 +75,17 @@ public class MemberMapper {
     // TODO: razmotriti ovu metodu za refactor + izbaciti modelMapper
     public Member mapDTOToMember(MemberDTO memberDTO) {
 
-        String mainSkill = memberDTO.getMainSkill();
-
         Member member = new Member();
         member.setName(memberDTO.getName());
         member.setSex(memberDTO.getSex());
         member.setEmail(memberDTO.getEmail());
         member.setStatus(memberDTO.getStatus());
 
+        String mainSkill = memberDTO.getMainSkill();
+
         // If skill array is empty and main skill is provided
-        if(memberDTO.getSkills() == null && !mainSkill.isEmpty()) {
-
+        if(memberDTO.getSkills()==null && !mainSkill.isEmpty()) {
             Skill skillFromDB = skillService.checkSkillInDB(mainSkill, Constants.DEFAULT_SKILL_LEVEL);
-
             if(skillFromDB != null) {
                 member.addSkill(skillFromDB, mainSkill);
             } else {
@@ -96,27 +94,21 @@ public class MemberMapper {
                 skill.setLevel(Constants.DEFAULT_SKILL_LEVEL);
                 member.addSkill(modelMapper.map(skill, Skill.class), mainSkill);
             }
-
-
         } else {
+            for (SkillDTO skillDTO : memberDTO.getSkills()) {
 
-            memberDTO.getSkills()
-                    .forEach(skill -> {
+                if (skillDTO.getLevel() == null) {
+                    skillDTO.setLevel(Constants.DEFAULT_SKILL_LEVEL);
+                }
 
-                        if (skill.getLevel() == null) {
-                            skill.setLevel(Constants.DEFAULT_SKILL_LEVEL);
-                        }
+                Skill skillFromDB = skillService.checkSkillInDB(skillDTO.getName(), skillDTO.getLevel());
 
-                        Skill skillFromDB = skillService.checkSkillInDB(skill.getName(), skill.getLevel());
-
-                        if(skillFromDB != null) {
-                            member.addSkill(modelMapper.map(skillFromDB, Skill.class), mainSkill);
-                        } else {
-                            member.addSkill(modelMapper.map(skill, Skill.class), mainSkill);
-                        }
-
-                    });
-
+                if(skillFromDB==null) {
+                    member.addSkill(modelMapper.map(skillDTO, Skill.class), mainSkill);
+                } else {
+                    member.addSkill(modelMapper.map(skillFromDB, Skill.class), mainSkill);
+                }
+            }
         }
 
         return member;

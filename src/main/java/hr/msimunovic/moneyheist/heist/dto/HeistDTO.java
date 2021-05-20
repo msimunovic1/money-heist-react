@@ -3,6 +3,9 @@ package hr.msimunovic.moneyheist.heist.dto;
 import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,11 +15,18 @@ import java.util.List;
 @Data
 public class HeistDTO {
 
+    @NotEmpty(message = "Heist name is required")
     private String name;
+
+    @NotEmpty(message = "Location is required")
     private String location;
+
     private LocalDateTime startTime;
+
     private LocalDateTime endTime;
+
     private List<HeistSkillDTO> skills;
+
     private HeistStatusEnum status;
 
 }
