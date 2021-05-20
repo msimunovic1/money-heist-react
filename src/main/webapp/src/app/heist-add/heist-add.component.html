@@ -3,15 +3,17 @@
   <div class="form-area">
     <h4>Add New Heist</h4>
 
+    <!--heist name-->
     <div class="space">
       <input formControlName="name" type="text" nbInput fullWidth placeholder="Name...">
     </div>
 
+    <!--heist location-->
     <div class="space">
       <input formControlName="location" type="text" nbInput fullWidth placeholder="Location...">
     </div>
 
-
+    <!--date pickers-->
     <div class="space">
       <input class="start-time-input" nbInput placeholder="Start Time" [nbDatepicker]="start" [formControl]="startTime">
       <nb-date-timepicker #start></nb-date-timepicker>
@@ -20,7 +22,7 @@
       <nb-date-timepicker #end [min]="min"></nb-date-timepicker>
     </div>
 
-
+    <!--heist skills-->
     <div formArrayName="skills">
       <div class="space ">
         <button type="button" (click)="addSkill()" nbButton outline status="primary" size="small" shape="round">Add skill</button>
@@ -32,23 +34,22 @@
             <input formControlName="name" type="text" nbInput placeholder="Name">
           </div>
           <div class="space">
-            <input formControlName="level" maxlength="10" pattern="[\*]" type="text" nbInput placeholder="Level">
+            <input formControlName="level" maxlength="10" pattern="[quot]" type="text" nbInput placeholder="Level">
           </div>
           <div class="space members-input">
             <input formControlName="members" type="number" nbInput placeholder="Members">
           </div>
           <div class="space remove-skill-btn">
-            <button (click)="deleteSkill(i)"nbButton size="tiny" status="danger" outline shape="round">Remove</button>
+            <button (click)="removeSkill(i)" nbButton size="tiny" status="danger" outline shape="round">Remove</button>
           </div>
         </div>
       </div>
 
     </div>
 
+    <!--submit btn-->
     <div class="right">
       <button type="submit" nbButton status="primary">Save</button>
     </div>
-
   </div>
-
 </form>

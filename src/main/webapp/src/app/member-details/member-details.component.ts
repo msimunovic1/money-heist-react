@@ -29,8 +29,7 @@ export class MemberDetailsComponent implements OnInit {
 
   handleMemberDetails() {
 
-    // @ts-ignore
-    this.memberId = +this.route.snapshot.paramMap.get('id');
+    this.memberId = +this.route.snapshot.params.id;
 
     // get heist details from service
     this.memberService.getMember(this.memberId).subscribe(

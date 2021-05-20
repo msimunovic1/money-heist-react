@@ -5,7 +5,6 @@ import {Heist} from "../models/heist";
 import {HeistSkill} from "../models/heist-skill";
 import {NbDateService, NbToastrService} from "@nebular/theme";
 import {PRIMARY_OUTLET, Router, UrlSegment} from "@angular/router";
-import {FormValidator} from "../validators/form-validator";
 
 @Component({
   selector: 'app-heist-add',
@@ -48,6 +47,7 @@ export class HeistAddComponent implements OnInit {
     return this.heistFormGroup.get('endTime') as FormControl;
   }
 
+  // add skill form group to skills form array
   addSkill() {
     const skillForm = this.formBuilder.group({
       name: new FormControl('', [Validators.required]),
@@ -57,7 +57,8 @@ export class HeistAddComponent implements OnInit {
     this.skills.push(skillForm);
   }
 
-  deleteSkill(skillIndex: number) {
+  // remove skill form group from skill form array
+  removeSkill(skillIndex: number) {
     this.skills.removeAt(skillIndex);
   }
 
@@ -78,7 +79,9 @@ export class HeistAddComponent implements OnInit {
 
     let skills: HeistSkill[] = [];
     let heistSkills = this.heistFormGroup.value.skills;
-    heistSkills.map((skill: HeistSkill) => skills.push(skill));
+    heistSkills.map((skill: HeistSkill) => {
+      skills.push(skill);
+    });
 
     heist.skills = skills;
 
@@ -94,13 +97,11 @@ export class HeistAddComponent implements OnInit {
         this.router.navigate(['/heist/', id]);
       }
     )
-
   }
 
   resetForm() {
     //reset the form
     this.heistFormGroup.reset();
   }
-
 
 }

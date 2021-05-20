@@ -26,8 +26,7 @@ export class HeistEligibleMembersComponent implements OnInit {
   ngOnInit(): void {
     // get id from url param
     this.route.paramMap.subscribe(() => {
-      // @ts-ignore
-      this.heistId = +this.route.snapshot.paramMap.get('id');
+      this.heistId = +this.route.snapshot.params.id;
 
       this.heistService.getMembersEligibleForHeist(this.heistId).subscribe(
         data => this.membersEligibleForHeist = data,

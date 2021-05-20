@@ -5,7 +5,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {HeistMember} from "../models/heist-member";
 import {HeistSkill} from "../models/heist-skill";
 import {LocalDataSource} from "ng2-smart-table";
-import {Skill} from "../models/skill";
 import {HeistOutcome} from "../models/heist-outcome";
 import {HeistStatus} from "../models/heist-status";
 
@@ -24,10 +23,10 @@ export class HeistDetailsComponent implements OnInit {
   heistStatus: HeistStatus = new HeistStatus();
   heistOutcome: HeistOutcome = new HeistOutcome();
 
-  source: LocalDataSource = new LocalDataSource();
-
   tagStatus: string = 'basic';
   tagOutcome: string = 'basic';
+
+  source: LocalDataSource = new LocalDataSource();
 
   constructor(private heistService: HeistService,
               private route: ActivatedRoute,
@@ -42,9 +41,7 @@ export class HeistDetailsComponent implements OnInit {
   }
 
   handleHeistDetails() {
-    // TODO : provjeriti kako riješiti ovo bez @ts-ignore
-    // @ts-ignore
-    this.heistId = +this.route.snapshot.paramMap.get('id');
+    this.heistId = +this.route.snapshot.params.id;
 
     // get heist details from service
     this.heistService.getHeist(this.heistId).subscribe(
