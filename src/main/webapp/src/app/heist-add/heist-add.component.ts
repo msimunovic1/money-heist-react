@@ -5,7 +5,7 @@ import {Heist} from "../models/heist";
 import {HeistSkill} from "../models/heist-skill";
 import {NbDateService, NbToastrService} from "@nebular/theme";
 import {PRIMARY_OUTLET, Router, UrlSegment} from "@angular/router";
-import {MemberService} from "../services/member.service";
+import {FormValidator} from "../validators/form-validator";
 
 @Component({
   selector: 'app-heist-add',
@@ -51,7 +51,7 @@ export class HeistAddComponent implements OnInit {
   addSkill() {
     const skillForm = this.formBuilder.group({
       name: new FormControl('', [Validators.required]),
-      level: new FormControl('', [Validators.required]),
+      level: new FormControl('', [Validators.required, Validators.maxLength(10)]),
       members: new FormControl('', [Validators.required])
     })
     this.skills.push(skillForm);

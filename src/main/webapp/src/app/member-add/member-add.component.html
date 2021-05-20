@@ -41,10 +41,10 @@
             <input formControlName="name" type="text" nbInput placeholder="Name">
           </div>
           <div class="space">
-            <input formControlName="level" type="text" nbInput placeholder="Level">
+            <input formControlName="level" maxlength="10" type="text" nbInput placeholder="Level">
           </div>
           <div class="space">
-            <nb-checkbox (checkedChange)="checkMainSkill($event, i)">Main skill</nb-checkbox>
+            <nb-checkbox (checkedChange)="checkMainSkill($event, i)" [checked]="skills.at(i).value.checked">Main skill</nb-checkbox>
           </div>
           <div class="space remove-skill-btn">
             <button (click)="deleteSkill(i)" nbButton size="tiny" status="danger" outline shape="round">Remove</button>

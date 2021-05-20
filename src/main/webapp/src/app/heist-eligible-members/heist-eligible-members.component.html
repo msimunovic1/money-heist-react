@@ -27,7 +27,7 @@
       </nb-list>
     </nb-card>
     <div class="right">
-      <button nbButton (click)="confirmMembers()" status="primary">Confirm Members</button>
+      <button nbButton (click)="confirmMembers()" status="primary" [disabled]="disableConfirmBtn()">Confirm Members</button>
     </div>
   </nb-layout-column>
 </nb-layout>

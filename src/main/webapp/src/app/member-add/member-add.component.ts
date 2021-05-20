@@ -14,7 +14,6 @@ import {PRIMARY_OUTLET, Router, UrlSegment} from "@angular/router";
 export class MemberAddComponent implements OnInit {
 
   mainSkill: string = '';
-  mainSkillChecked = false;
 
   // radio button values
   genders = [
@@ -52,8 +51,8 @@ export class MemberAddComponent implements OnInit {
   addSkill() {
     const skillForm = this.formBuilder.group({
       name: new FormControl('', [Validators.required]),
-      level: new FormControl(''),
-      checked: false
+      level: new FormControl('', [Validators.maxLength(10)]),
+      checked: new FormControl(false)
     })
     this.skills.push(skillForm);
   }
@@ -63,9 +62,20 @@ export class MemberAddComponent implements OnInit {
   }
 
   checkMainSkill(checked: boolean, index: number) {
-
+    this.skills.controls.forEach((skill, i) => {
+      // set checked only one checkbox
+      if(i === index) {
+        skill.patchValue({
+          checked: checked
+        })
+      } else {
+        skill.patchValue({
+          checked: false
+        })
+      }
+    })
+    // set main skill from checkbox
     this.mainSkill = this.skills.at(index).value.name;
-    this.mainSkillChecked = checked;
   }
 
   onSubmit() {
@@ -81,18 +91,20 @@ export class MemberAddComponent implements OnInit {
     member.sex = this.memberFormGroup.value.sex;
     member.email = this.memberFormGroup.value.email;
     member.status = this.memberFormGroup.value.status;
+    member.mainSkill = this.mainSkill;
 
     let skills: Skill[] = [];
     let memberSkills = this.memberFormGroup.value.skills;
+    // mapping member skills
     memberSkills.map((skill: Skill) => skills.push(skill));
 
     member.skills = skills;
 
     this.memberService.saveMember(member).subscribe(
       res => {
+        // reset form inputs
         this.resetForm();
 
-        this.resetForm();
         // get url segments from location response header
         const urlSegments: UrlSegment[]  = this.router.parseUrl(<string>res.headers.get('location')).root.children[PRIMARY_OUTLET].segments;
         // get user id from location response header segment

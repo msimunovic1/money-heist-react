@@ -41,7 +41,13 @@ export class HeistEligibleMembersComponent implements OnInit {
         }
       );
     });
+  }
 
+  disableConfirmBtn(): boolean {
+    if (this.heistMembers.length<1) {
+      return true;
+    }
+    return false;
   }
 
   addMemberToHeist(member: string, index: number) {
