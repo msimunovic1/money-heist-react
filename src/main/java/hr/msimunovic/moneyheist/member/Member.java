@@ -8,8 +8,10 @@ import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -25,7 +27,6 @@ public class Member {
     @SequenceGenerator(name = "memberSeq", sequenceName = "member_seq", allocationSize = 1)
     private Long id;
 
-    @NotNull
     private String name;
 
     @NotNull

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class MemberController {
     }
 
     @PostMapping()
-    public ResponseEntity saveMember(HttpServletRequest request, @RequestBody MemberDTO memberDTO) {
+    public ResponseEntity saveMember(HttpServletRequest request, @Valid @RequestBody MemberDTO memberDTO) {
 
         Member createdMember = memberService.saveMember(memberDTO);
 
