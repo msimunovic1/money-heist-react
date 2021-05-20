@@ -3,7 +3,7 @@ import {HeistService} from "../services/heist.service";
 import {MembersEligibleForHeist} from "../models/members-eligible-for-heist";
 import {ActivatedRoute, Router} from "@angular/router";
 import {HeistMember} from "../models/heist-member";
-import {IHeistMembers} from "../models/i-heist-members";
+import {HeistMembers} from "../models/heist-members";
 
 @Component({
   selector: 'app-heist-eligible-members',
@@ -17,7 +17,7 @@ export class HeistEligibleMembersComponent implements OnInit {
   heistId: number = 0;
 
   heistMembers: string[] = [];
-  iHeistMembers: IHeistMembers = new IHeistMembers();
+  iHeistMembers: HeistMembers = new HeistMembers();
 
   constructor(private heistService: HeistService,
               private route: ActivatedRoute,

@@ -74,6 +74,7 @@ public class HeistServiceImpl implements HeistService {
     public void updateSkills(Long heistId, HeistSkillsDTO heistSkillsDTO) {
 
         Heist heist = findHeistById(heistId);
+        Set<HeistSkillsDTO> skillDuplicates = new HashSet<>();
 
         // check heist status
         if(heist.getStatus().equals(HeistStatusEnum.IN_PROGRESS)) {
@@ -81,14 +82,16 @@ public class HeistServiceImpl implements HeistService {
         }
 
         for(HeistSkillDTO heistSkillDTO : heistSkillsDTO.getSkills()) {
+
+            if (skillDuplicates.add(heistSkillsDTO) == false) {
+                throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
+            }
+
             // check does skill exists in DB
             Skill skill = skillRepository.findByNameAndLevel(heistSkillDTO.getName(), heistSkillDTO.getLevel());
             if(skill==null) {
                 // add new if skill does not exists in DB
                 heist.addSkill(modelMapper.map(heistSkillDTO, Skill.class), heistSkillDTO.getMembers());
-            } else {
-                // add skill from DB if skill exists
-                heist.addSkill(skill, heistSkillDTO.getMembers());
             }
         }
     }

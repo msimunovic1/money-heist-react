@@ -1,5 +1,6 @@
 <nb-card>
   <nb-card-body>
+
     <!--heist name and location-->
     <h3>{{ heist.name }}</h3>
     <div>
@@ -19,14 +20,11 @@
     </div>
 
     <div class="space">
-      <p>
-        <nb-icon icon="clock-outline" pack="eva"></nb-icon> START TIME: {{ heist.startTime | date: 'medium' }}
-      </p>
-      <p>
-        <nb-icon icon="clock-outline" pack="eva"></nb-icon> END TIME: {{ heist.endTime | date: 'medium' }}
-      </p>
+      <p><nb-icon icon="clock-outline" pack="eva"></nb-icon> START TIME: {{ heist.startTime | date: 'medium' }}</p>
+      <p><nb-icon icon="clock-outline" pack="eva"></nb-icon> END TIME: {{ heist.endTime | date: 'medium' }}</p>
     </div>
 
+    <!--heist members table-->
     <div class="space" *ngIf="heistMembers.length > 0">
       <nb-card class="full-height">
         <nb-card-header>MEMBERS</nb-card-header>
@@ -38,17 +36,31 @@
       </nb-card>
     </div>
 
-    <div class="space right" *ngIf="heist.status === 'PLANNING'">
-      <button nbButton routerLink="/heistEligibleMembers/{{heistId}}">Find eligible members</button>
+    <!--find eligible members btn-->
+    <div class="space" *ngIf="heist.status === 'PLANNING'">
+      <button nbButton routerLink="/heistEligibleMembers/{{heistId}}">
+        <nb-icon icon="search-outline" pack="eva"></nb-icon>
+        Find eligible members
+      </button>
     </div>
 
-    <app-heist-skills
-      [heistSkills]="source"
-      (addedSkill)="addSkill($event)"
-      (updatedSkill)="updateSkill($event)"
-    ></app-heist-skills>
+    <!--heist skills table-->
+    <div class="update-skills-table">
+      <app-heist-skills
+        [skills]="source"
+        (addedSkill)="addSkill($event)"
+        (update)="updateSkill($event)"
+        (updatedSkill)="addSkillToList($event)"
+      ></app-heist-skills>
+    </div>
 
-    <div class="space" *ngIf="heistStatus.status==='READY'" class="right">
+    <!--save heist skills changes-->
+    <div class="space" class="right">
+      <button nbButton (click)="saveUpdatedSkills()" status="primary" size="small" outline [disabled]="disableUpdateSkillsBtn()">Save changes</button>
+    </div>
+
+    <!--start heist btn-->
+    <div class="space" *ngIf="heistStatus.status==='READY'" class="center">
       <button nbButton (click)="startHeistManually(this.heistId)" status="primary">Start heist</button>
     </div>
 

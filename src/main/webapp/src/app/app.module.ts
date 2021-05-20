@@ -10,7 +10,7 @@ import {
   NbInputModule,
   NbLayoutModule,
   NbRadioModule, NbSelectModule,
-  NbThemeModule, NbListModule, NbCardModule, NbToastrModule, NbTagModule, NbActionsModule, NbProgressBarModule
+  NbThemeModule, NbListModule, NbCardModule, NbToastrModule, NbTagModule
 } from "@nebular/theme";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NbEvaIconsModule} from '@nebular/eva-icons';
@@ -70,9 +70,7 @@ export const httpInterceptorProviders = [
     NbListModule,
     NbCardModule,
     Ng2SmartTableModule,
-    NbTagModule,
-    NbActionsModule,
-    NbProgressBarModule
+    NbTagModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

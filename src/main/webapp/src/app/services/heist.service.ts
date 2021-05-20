@@ -8,9 +8,10 @@ import {HeistMember} from "../models/heist-member";
 import {MembersEligibleForHeist} from "../models/members-eligible-for-heist";
 import {HeistInfo} from "../models/heist-info";
 import {HeistEligibleMembersComponent} from "../heist-eligible-members/heist-eligible-members.component";
-import {IHeistMembers} from "../models/i-heist-members";
+import {HeistMembers} from "../models/heist-members";
 import {HeistOutcome} from "../models/heist-outcome";
 import {HeistStatus} from "../models/heist-status";
+import {HeistSkills} from "../models/heist-skills";
 
 @Injectable({
   providedIn: 'root'
@@ -53,11 +54,11 @@ export class HeistService {
     return this.httpClient.post(this.url, heist, {observe: 'response'});
   }
 
-  updateHeistSkills(heistId: number, skills: HeistSkill[]): Observable<HttpResponse<any>> {
-    return this.httpClient.patch(this.url + `/${heistId}/skills`, skills, {observe: 'response'});
+  updateHeistSkills(heistId: number, skills: HeistSkills): Observable<HttpResponse<any>> {
+    return this.httpClient.patch<HeistSkills>(this.url + `/${heistId}/skills`, skills, {observe: 'response'});
   }
 
-  saveHeistMembers(heistId: number, members: IHeistMembers): Observable<HttpResponse<any>> {
+  saveHeistMembers(heistId: number, members: HeistMembers): Observable<HttpResponse<any>> {
     return this.httpClient.put<HttpResponse<any>>(this.url + `/${heistId}/members`, members, {observe: 'response'});
   }
 

@@ -21,7 +21,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -49,11 +51,17 @@ public class MemberServiceImpl implements MemberService {
 
         Member memberFromDB = memberRepository.findByEmail(memberDTO.getEmail());
 
-        // TODO: return 404 when multiple skills having the same name were provided.
-
         if(memberFromDB != null) {
             throw new BadRequestException(Constants.MSG_MEMBER_EXISTS);
         }
+
+        Set<String> skillNameDuplicates = new HashSet<>();
+        memberDTO.getSkills().stream()
+                .forEach(skillDTO -> {
+                    if(skillNameDuplicates.add(skillDTO.getName()) == false) {
+                        throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
+                    }
+                });
 
         Member member = memberMapper.mapDTOToMember(memberDTO);
 

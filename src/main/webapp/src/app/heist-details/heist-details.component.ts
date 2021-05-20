@@ -7,6 +7,7 @@ import {HeistSkill} from "../models/heist-skill";
 import {LocalDataSource} from "ng2-smart-table";
 import {HeistOutcome} from "../models/heist-outcome";
 import {HeistStatus} from "../models/heist-status";
+import {HeistSkills} from "../models/heist-skills";
 
 @Component({
   selector: 'app-heist-details',
@@ -33,14 +34,43 @@ export class HeistDetailsComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
-    // get id from url param
     this.route.paramMap.subscribe(() => {
       this.handleHeistDetails();
     });
+  }
 
+  disableUpdateSkillsBtn(){
+    if (this.updatedHeistSkills.length < 1) {
+      return true;
+    }
+    return false;
+  }
+
+  // add new skills to list
+  addSkill(heistSkill: HeistSkill) {
+    this.source.add(heistSkill).then(() => {
+      // refresh skill list
+      this.source.refresh();
+      // add new skill to list
+      this.addSkillToList(heistSkill)
+    })
+  }
+
+  addSkillToList(heistSkill: HeistSkill) {
+    this.updatedHeistSkills.push(heistSkill);
+  console.log(this.updatedHeistSkills)
+  }
+
+  // update/delete skills from list
+  updateSkill(event: HeistSkill) {
+    this.source.remove(event).then(() => {
+      this.source.refresh();
+    })
   }
 
   handleHeistDetails() {
+
+    // get id from url param
     this.heistId = +this.route.snapshot.params.id;
 
     // get heist details from service
@@ -49,6 +79,7 @@ export class HeistDetailsComponent implements OnInit {
       () => {},
       () => {
 
+        // add heist skills to LocalDataSource
         this.source = new LocalDataSource(this.heist.skills);
 
         if (this.heist.status !== 'PLANNING') {
@@ -67,6 +98,7 @@ export class HeistDetailsComponent implements OnInit {
           );
         }
 
+        // set tag status to heist status
         switch (this.heist.status) {
           case 'PLANNING':
             this.tagStatus = 'info';
@@ -88,24 +120,14 @@ export class HeistDetailsComponent implements OnInit {
       data => this.heistStatus = data)
   }
 
-  // add new skills to list
-  addSkill(event: HeistSkill) {
-    this.source.add(event).then(() => {
-      this.source.refresh();
-      this.source.getAll().then(data =>{
-        this.updatedHeistSkills = data;
-      });
-    })
-  }
-
-  // update/delete skills from list
-  updateSkill(event: HeistSkill) {
-    this.source.remove(event).then(() => this.source.refresh())
-  }
-
   // save updated skills
   saveUpdatedSkills() {
-    this.heistService.updateHeistSkills(this.heistId, this.updatedHeistSkills).subscribe(
+    // convert skills members from string to number
+    this.updatedHeistSkills.forEach(skill => {
+      skill.members = +skill.members
+    });
+
+    this.heistService.updateHeistSkills(this.heistId, new HeistSkills(this.updatedHeistSkills)).subscribe(
       res => console.log(res)
     );
   }

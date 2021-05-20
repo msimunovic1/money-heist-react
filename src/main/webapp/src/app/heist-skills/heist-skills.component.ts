@@ -10,9 +10,10 @@ export class HeistSkillsComponent implements OnInit {
 
   numberList: any[] = [];
 
+  /*ng2-smart-table settings*/
   settings = {
-    delete: {
-      confirmDelete: true
+    actions: {
+      delete: false
     },
     add: {
       confirmCreate: true
@@ -22,13 +23,13 @@ export class HeistSkillsComponent implements OnInit {
     },
     columns: {
       name: {
-        title: 'Name',
+        title: 'SKILL NAME',
       },
       level: {
-        title: 'Level',
+        title: 'LEVEL',
       },
       members: {
-        title: 'Required Members',
+        title: 'REQUIRED MEMBERS',
         editor: {
           type: 'list',
           config: {
@@ -40,20 +41,22 @@ export class HeistSkillsComponent implements OnInit {
   };
 
   @Input()
-  heistSkills: HeistSkill[] = [];
+  skills: HeistSkill[] = [];
 
   @Output()
   addedSkill: EventEmitter<HeistSkill> = new EventEmitter<HeistSkill>();
 
   @Output()
-  updatedSkill: EventEmitter<HeistSkill> = new EventEmitter<HeistSkill>();
+  update: EventEmitter<HeistSkill> = new EventEmitter<HeistSkill>();
 
+  @Output()
+  updatedSkill: EventEmitter<HeistSkill> = new EventEmitter<HeistSkill>();
 
   constructor() { }
 
   ngOnInit(): void {
     for (let i=0; i<50; i++) {
-      this.numberList.push({value:i ,title:i});
+      this.numberList.push({value:i, title:i});
     }
   }
 
@@ -62,7 +65,8 @@ export class HeistSkillsComponent implements OnInit {
   }
 
   onUpdateConfirm(event: any) {
-    this.updatedSkill.emit(event.confirm.resolve());
+    this.updatedSkill.emit(event.newData);
+    this.update.emit(event.confirm.resolve());
   }
 
 }

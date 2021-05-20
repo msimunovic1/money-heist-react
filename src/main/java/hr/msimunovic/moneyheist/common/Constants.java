@@ -24,8 +24,10 @@ public class Constants {
     public static final String MSG_HEIST_STATUS_MUST_BE_READY = "Heist status must be READY.";
     public static final String MSG_HEIST_STATUS_MUST_BE_FINISHED = "Heist status must be FINISHED.";
 
-    public static final String MSG_INCORRECT_DATE_TIME = "Start or date time is incorrect.";
+    public static final String MSG_INCORRECT_DATE_TIME = "Start/End time incorrect.";
     public static final String MSG_MEMBERS_CONFIRMED = "Members have already been confirmed to another heist.";
+
+    public static final String MSG_DUPLICATED_SKILLS = "Multiple skills with the same values were provided.";
 
 
     // Email Subjects and Messages
