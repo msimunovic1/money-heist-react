@@ -46,12 +46,12 @@
 
     <!--heist skills table-->
     <div class="update-skills-table">
-      <app-heist-skills
+      <app-skill-list
         [skills]="source"
+        [columns]="skillTableColumns"
         (addedSkill)="addSkill($event)"
-        (update)="updateSkill($event)"
-        (updatedSkill)="addSkillToList($event)"
-      ></app-heist-skills>
+        (updatedSkill)="updateSkill($event)"
+      ></app-skill-list>
     </div>
 
     <!--save heist skills changes-->

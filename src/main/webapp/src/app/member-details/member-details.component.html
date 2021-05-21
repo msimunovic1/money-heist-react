@@ -21,14 +21,16 @@
       <nb-icon icon="activity-outline" pack="eva"></nb-icon> MAIN SKILL: {{member.mainSkill}}
     </div>
 
-    <nb-layout-column>
-      <ng2-smart-table class="skills-table"
-                       [settings]="settings"
-                       [source]="source"
-                       (createConfirm)="onCreateConfirm($event)"
-                       (editConfirm)="onUpdateConfirm($event)">
-      </ng2-smart-table>
-    </nb-layout-column>
+    <div class="update-skills-table">
+      <div class="update-skills-table">
+        <app-skill-list
+          [skills]="source"
+          [columns]="skillTableColumns"
+          (addedSkill)="addSkill($event)"
+          (updatedSkill)="updateSkill($event)"
+        ></app-skill-list>
+      </div>
+    </div>
 
     <!--save heist skills changes-->
     <div class="space" class="right">

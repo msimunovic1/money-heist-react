@@ -13,7 +13,7 @@ import {Router} from "@angular/router";
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-  constructor(public toastrService: NbToastrService,
+  constructor(private toastrService: NbToastrService,
               private router: Router) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {

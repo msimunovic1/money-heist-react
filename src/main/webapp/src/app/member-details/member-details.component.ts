@@ -1,50 +1,42 @@
 import {Component, OnInit} from '@angular/core';
 import {Member} from "../models/member";
 import {MemberService} from "../services/member.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {LocalDataSource} from "ng2-smart-table";
 import {MemberSkill} from "../models/member-skill";
 import {Skill} from "../models/skill";
+import {NbToastrService} from "@nebular/theme";
+import {HeistSkill} from "../models/heist-skill";
 
 @Component({
   selector: 'app-member-details',
   templateUrl: './member-details.component.html',
-  styleUrls: ['./member-details.component.css', '../heist-skills/heist-skills.component.css']
+  styleUrls: ['./member-details.component.css']
 })
 export class MemberDetailsComponent implements OnInit {
-
-  /*ng2-smart-table settings*/
-  settings = {
-    delete: {
-      confirmDelete: true
-    },
-    add: {
-      confirmCreate: true
-    },
-    edit: {
-      confirmSave: true,
-    },
-    columns: {
-      name: {
-        title: 'SKILL NAME'
-      },
-      level: {
-        title: 'LEVEL'
-      }
-    },
-  };
-
-  source: LocalDataSource = new LocalDataSource();
-
-  updatedMemberSkills: Skill[] = [];
 
   member: Member = new Member();
   memberId: number = 0;
   sex: string = '';
   tagStatus: string = 'basic';
 
+  source: LocalDataSource = new LocalDataSource();
+
+  updatedMemberSkills: Skill[] = [];
+
+  /*ng2-smart-table settings*/
+  skillTableColumns = {
+    name: {
+      title: 'SKILL NAME',
+    },
+    level: {
+      title: 'LEVEL',
+    }
+  }
+
   constructor(private memberService: MemberService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private toastrService: NbToastrService) { }
 
   ngOnInit(): void {
     // get id from url param
@@ -60,12 +52,21 @@ export class MemberDetailsComponent implements OnInit {
     return false;
   }
 
-  onCreateConfirm(event: any) {
-
+  // add new skills to list
+  addSkill(event: HeistSkill) {
+    this.source.add(event).then(() => this.refreshUpdateSkillList())
   }
 
-  onUpdateConfirm(event: any) {
+  // update/delete skills from list
+  updateSkill(event: HeistSkill) {
+    this.source.remove(event).then(() => this.refreshUpdateSkillList())
+  }
 
+  refreshUpdateSkillList() {
+    this.source.getAll().then(data => {
+      this.source.refresh();
+      this.updatedMemberSkills = data;
+    });
   }
 
   handleMemberDetails() {
@@ -105,8 +106,13 @@ export class MemberDetailsComponent implements OnInit {
 
   // save updated skills
   saveUpdatedSkills() {
+
     this.memberService.updateMemberSkills(this.memberId, new MemberSkill(this.updatedMemberSkills, "")).subscribe(
-      res => console.log(res)
+      res => {
+        if(res.status === 204) {
+          this.toastrService.success('Skills updated', 'Success')
+        }
+      }
     );
   }
 }

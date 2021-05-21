@@ -32,7 +32,7 @@ export class MemberService {
   }
 
   updateMemberSkills(memberId: number, memberSkill: MemberSkill): Observable<HttpResponse<any>> {
-    return this.httpClient.put(this.url + `/${memberId}`, memberSkill, {observe: 'response'});
+    return this.httpClient.put(this.url + `/${memberId}/skills`, memberSkill, {observe: 'response'});
   }
 
   deleteMemberSkill(memberId: number, skillName: string): Observable<any> {

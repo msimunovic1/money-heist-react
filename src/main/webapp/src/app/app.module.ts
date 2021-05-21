@@ -24,7 +24,7 @@ import {ErrorInterceptor} from "./interceptors/error.interceptor";
 import { HeistEligibleMembersComponent } from './heist-eligible-members/heist-eligible-members.component';
 import { HeistListComponent } from './heist-list/heist-list.component';
 import {Ng2SmartTableModule} from "ng2-smart-table";
-import { HeistSkillsComponent } from './heist-skills/heist-skills.component';
+import { SkillListComponent } from './skill-list/skill-list.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 export const httpInterceptorProviders = [
@@ -44,7 +44,7 @@ export const httpInterceptorProviders = [
     HeistDetailsComponent,
     HeistEligibleMembersComponent,
     HeistListComponent,
-    HeistSkillsComponent,
+    SkillListComponent,
     NotFoundComponent
   ],
   imports: [

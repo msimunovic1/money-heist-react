@@ -8,6 +8,7 @@ import {LocalDataSource} from "ng2-smart-table";
 import {HeistOutcome} from "../models/heist-outcome";
 import {HeistStatus} from "../models/heist-status";
 import {HeistSkills} from "../models/heist-skills";
+import {NbToastrService} from "@nebular/theme";
 
 @Component({
   selector: 'app-heist-details',
@@ -29,14 +30,42 @@ export class HeistDetailsComponent implements OnInit {
 
   source: LocalDataSource = new LocalDataSource();
 
+  skillTableNumberList: any[] = [];
+
+  skillTableColumns = {
+    name: {
+      title: 'SKILL NAME',
+    },
+    level: {
+      title: 'LEVEL',
+    },
+    members: {
+      title: 'REQUIRED MEMBERS',
+      editor: {
+        type: 'list',
+        config: {
+          list: this.skillTableNumberList
+        }
+      }
+    },
+  }
+
   constructor(private heistService: HeistService,
               private route: ActivatedRoute,
-              private router: Router) { }
+              private router: Router,
+              private toastrService: NbToastrService) { }
 
   ngOnInit(): void {
+    // get id from url param
     this.route.paramMap.subscribe(() => {
       this.handleHeistDetails();
     });
+
+    for (let i=0; i<50; i++) {
+      this.skillTableNumberList.push(
+          { value:i, title:i }
+        );
+    }
   }
 
   disableUpdateSkillsBtn(){
@@ -47,25 +76,20 @@ export class HeistDetailsComponent implements OnInit {
   }
 
   // add new skills to list
-  addSkill(heistSkill: HeistSkill) {
-    this.source.add(heistSkill).then(() => {
-      // refresh skill list
-      this.source.refresh();
-      // add new skill to list
-      this.addSkillToList(heistSkill)
-    })
-  }
-
-  addSkillToList(heistSkill: HeistSkill) {
-    this.updatedHeistSkills.push(heistSkill);
-  console.log(this.updatedHeistSkills)
+  addSkill(event: HeistSkill) {
+    this.source.add(event).then(() => this.refreshUpdateSkillList())
   }
 
   // update/delete skills from list
   updateSkill(event: HeistSkill) {
-    this.source.remove(event).then(() => {
+    this.source.remove(event).then(() => this.refreshUpdateSkillList())
+  }
+
+  refreshUpdateSkillList() {
+    this.source.getAll().then(data => {
       this.source.refresh();
-    })
+      this.updatedHeistSkills = data;
+    });
   }
 
   handleHeistDetails() {
@@ -128,7 +152,11 @@ export class HeistDetailsComponent implements OnInit {
     });
 
     this.heistService.updateHeistSkills(this.heistId, new HeistSkills(this.updatedHeistSkills)).subscribe(
-      res => console.log(res)
+      res => {
+        if(res.status === 204) {
+          this.toastrService.success('Skills updated', 'Success')
+        }
+      }
     );
   }
 
