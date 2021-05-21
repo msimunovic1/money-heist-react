@@ -3,6 +3,7 @@ package hr.msimunovic.moneyheist.heist.dto;
 import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -25,6 +26,7 @@ public class HeistDTO {
 
     private LocalDateTime endTime;
 
+    @Valid
     private List<HeistSkillDTO> skills;
 
     private HeistStatusEnum status;

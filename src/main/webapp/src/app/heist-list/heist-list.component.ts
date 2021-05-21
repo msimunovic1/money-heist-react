@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {HeistService} from "../services/heist.service";
 import {HeistInfo} from "../models/heist-info";
 import {MemberService} from "../services/member.service";

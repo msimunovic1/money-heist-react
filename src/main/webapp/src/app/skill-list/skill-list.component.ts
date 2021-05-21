@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 
 @Component({
   selector: 'app-skill-list',
   templateUrl: './skill-list.component.html',
   styleUrls: ['./skill-list.component.css']
 })
-export class SkillListComponent implements OnInit {
+export class SkillListComponent implements OnInit, OnChanges {
 
   @Input()
   skills: any[] = [];
@@ -22,7 +22,12 @@ export class SkillListComponent implements OnInit {
   /*ng2-smart-table settings*/
   settings: any;
 
-  constructor() { }
+  constructor() {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+        console.log("Changes", changes)
+    }
 
   ngOnInit(): void {
     this.settings = {
