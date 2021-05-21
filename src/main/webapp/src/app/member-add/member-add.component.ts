@@ -15,18 +15,9 @@ export class MemberAddComponent implements OnInit {
 
   mainSkill: string = '';
 
-  // radio button values
-  genders = [
-    { value: 'M', label: 'Male', checked: true },
-    { value: 'F', label: 'Female' },
-  ];
+  genders: Array<{value:string, label:string}> = [];
+  statuses: Array<{value: string}> = [];
 
-  statuses = [
-    { value: 'AVAILABLE' },
-    { value: 'EXPIRED' },
-    { value: 'INCARCERATED' },
-    { value: 'RETIRED' }
-  ]
 
   memberFormGroup: FormGroup = this.formBuilder.group({
     name: new FormControl('', [Validators.required]),
@@ -39,7 +30,20 @@ export class MemberAddComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private memberService: MemberService,
               private router: Router,
-              public toastrService: NbToastrService) { }
+              public toastrService: NbToastrService) {
+
+    this.statuses = [
+      { value: 'AVAILABLE' },
+      { value: 'EXPIRED' },
+      { value: 'INCARCERATED' },
+      { value: 'RETIRED' }
+    ];
+
+    this.genders = [
+      { value: 'M', label: 'Male'},
+      { value: 'F', label: 'Female' },
+    ];
+  }
 
   ngOnInit(): void {
   }

@@ -11,6 +11,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -47,8 +48,7 @@ public class Member {
     public void addSkill(Skill skill, String mainSkill) {
 
         // check does skill with same name exists
-        for (Iterator<MemberSkill> iterator = skills.iterator();
-             iterator.hasNext(); ) {
+        for (Iterator<MemberSkill> iterator = skills.iterator(); iterator.hasNext(); ) {
             MemberSkill memberSkill = iterator.next();
             if(memberSkill.getSkill().getName().equals(skill.getName())) {
                 iterator.remove();
@@ -73,16 +73,6 @@ public class Member {
     }
 
     public void addMemberSkill(MemberSkill memberSkill, String mainSkill) {
-
-        for (Iterator<MemberSkill> iterator = skills.iterator();
-             iterator.hasNext(); ) {
-            memberSkill = iterator.next();
-            if(memberSkill.getSkill().getName().equals(memberSkill.getSkill().getName())) {
-                iterator.remove();
-                this.getSkills().remove(memberSkill);
-                memberSkill.getSkill().getMembers().remove(this);
-            }
-        }
 
         if(isMainSkill(memberSkill.getSkill().getName(), mainSkill)) {
             memberSkill.setMainSkill("Y");

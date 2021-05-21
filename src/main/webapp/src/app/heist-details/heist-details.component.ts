@@ -93,7 +93,6 @@ export class HeistDetailsComponent implements OnInit {
   }
 
   handleHeistDetails() {
-
     // get id from url param
     this.heistId = +this.route.snapshot.params.id;
 

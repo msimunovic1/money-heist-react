@@ -346,10 +346,24 @@ public class HeistServiceImpl implements HeistService {
 
             for (MemberSkill memberSkill : member.getSkills()) {
                 if(memberSkill.getSkill().getLevel().length() < Constants.MAX_SKILL_LEVEL) {
+
                     StringBuilder stringBuilder = new StringBuilder(memberSkill.getSkill().getLevel());
                     String increasedLevel = stringBuilder.append("*").toString();
-                    memberSkill.getSkill().setLevel(increasedLevel);
-                    member.addMemberSkill(memberSkill, memberSkill.getMainSkill());
+
+                    Skill skillFromDB = skillRepository.findByNameAndLevel(memberSkill.getSkill().getName(), increasedLevel);
+                    if(skillFromDB==null) {
+                        Skill skill = new Skill();
+                        skill.setName(memberSkill.getSkill().getName());
+                        skill.setLevel(increasedLevel);
+                        member.addSkill(skill, memberSkill.getMainSkill());
+                    } else {
+                        // loop over member existed skills
+                        for(MemberSkill memberSkillFromDB : skillFromDB.getMembers()) {
+                            member.addMemberSkill(memberSkillFromDB, memberSkill.getMainSkill());
+                        }
+                    }
+                    //memberSkill.getSkill().setLevel(increasedLevel);
+                    //member.addSkill(memberSkill.getSkill(), memberSkill.getMainSkill());
                 }
             }
         }

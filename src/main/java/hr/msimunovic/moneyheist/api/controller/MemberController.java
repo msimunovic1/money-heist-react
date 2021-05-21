@@ -1,6 +1,7 @@
 package hr.msimunovic.moneyheist.api.controller;
 
 import hr.msimunovic.moneyheist.common.Constants;
+import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.dto.MemberDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberInfoDTO;
@@ -68,4 +69,5 @@ public class MemberController {
 
         return new ResponseEntity<>(memberService.getMemberSkills(memberId), HttpStatus.OK);
     }
+
 }
