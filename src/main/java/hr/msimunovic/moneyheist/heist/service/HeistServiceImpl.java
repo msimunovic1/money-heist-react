@@ -349,7 +349,7 @@ public class HeistServiceImpl implements HeistService {
                     StringBuilder stringBuilder = new StringBuilder(memberSkill.getSkill().getLevel());
                     String increasedLevel = stringBuilder.append("*").toString();
                     memberSkill.getSkill().setLevel(increasedLevel);
-                    member.addSkill(memberSkill.getSkill(), memberSkill.getMainSkill());
+                    member.addMemberSkill(memberSkill, memberSkill.getMainSkill());
                 }
             }
         }
