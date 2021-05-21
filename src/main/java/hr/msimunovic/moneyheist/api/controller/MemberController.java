@@ -46,7 +46,7 @@ public class MemberController {
 
         memberService.updateSkills(memberId, memberSkillDTO);
 
-        return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_CONTENT_LOCATION, request.getRequestURI()),HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_CONTENT_LOCATION, request.getRequestURI()), HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{memberId}/skills")

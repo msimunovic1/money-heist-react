@@ -41,7 +41,7 @@ public class HeistController {
 
     }
 
-    @PatchMapping(value = "/{heistId}/skills")
+    @PatchMapping( "/{heistId}/skills")
     public ResponseEntity updateSkills(HttpServletRequest request,
                                        @PathVariable Long heistId,
                                        @Valid @RequestBody HeistSkillsDTO heistSkillsDTO) {

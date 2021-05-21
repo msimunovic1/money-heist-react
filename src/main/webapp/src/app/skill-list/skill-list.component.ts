@@ -26,17 +26,14 @@ export class SkillListComponent implements OnInit {
 
   ngOnInit(): void {
     this.settings = {
-      delete: {
-        confirmDelete: true
+      actions: {
+        delete: false,
+        edit: false
       },
       add: {
         confirmCreate: true
       },
-      edit: {
-        confirmSave: true,
-      },
-      columns:
-      this.columns,
+      columns: this.columns
     };
   }
 

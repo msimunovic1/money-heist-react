@@ -55,23 +55,20 @@ public class HeistMapper {
         heist.setStartTime(heistDTO.getStartTime());
         heist.setEndTime(heistDTO.getEndTime());
 
-        heistDTO.getSkills()
-                .forEach(skill -> {
+        for (HeistSkillDTO heistSkillDTO : heistDTO.getSkills()) {
+            if (heistSkillDTO.getLevel() == null) {
+                heistSkillDTO.setLevel(Constants.DEFAULT_SKILL_LEVEL);
+            }
 
-                    if (skill.getLevel() == null) {
-                        skill.setLevel(Constants.DEFAULT_SKILL_LEVEL);
-                    }
+            Skill skillFromDB = skillService.checkSkillInDB(heistSkillDTO.getName(), heistSkillDTO.getLevel());
+            Integer members = heistSkillDTO.getMembers();
 
-                    Skill skillFromDB = skillService.checkSkillInDB(skill.getName(), skill.getLevel());
-                    Integer members = skill.getMembers();
-
-                    if(skillFromDB != null) {
-                        heist.addSkill(skillFromDB, members);
-                    } else {
-                        heist.addSkill(modelMapper.map(skill, Skill.class), members);
-                    }
-
-                });
+            if(skillFromDB != null) {
+                heist.addSkill(skillFromDB, members);
+            } else {
+                heist.addSkill(modelMapper.map(heistSkillDTO, Skill.class), members);
+            }
+        }
 
         return heist;
     }

@@ -46,6 +46,17 @@ public class Member {
      */
     public void addSkill(Skill skill, String mainSkill) {
 
+        // check does skill with same name exists
+        MemberSkill existedMemberSkill = this.getSkills().stream()
+                .filter(memberSkill -> memberSkill.getSkill().getName().equals(skill.getName()))
+                .findAny()
+                .orElse(null);
+
+        if(existedMemberSkill!=null) {
+            this.getSkills().remove(existedMemberSkill);
+            skill.getMembers().remove(this);
+        }
+
         MemberSkill memberSkill = new MemberSkill();
         memberSkill.setMember(this);
         memberSkill.setSkill(skill);
@@ -73,7 +84,7 @@ public class Member {
         memberSkill.setMember(this);
     }
 
-    public void removeSkill(Skill skill) {
+    public void removeSkills(Skill skill) {
 
         for (Iterator<MemberSkill> iterator = skills.iterator();
              iterator.hasNext(); ) {

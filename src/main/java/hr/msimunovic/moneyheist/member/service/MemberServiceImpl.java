@@ -77,11 +77,14 @@ public class MemberServiceImpl implements MemberService {
         String mainSkill = memberSkillDTO.getMainSkill();
 
         for(SkillDTO skillDTO : memberSkillDTO.getSkills()) {
-            Skill skillFromDB = skillRepository.findByNameAndLevel(skillDTO.getName(), skillDTO.getLevel());
+
             // check does skill exists in DB
+            Skill skillFromDB = skillRepository.findByNameAndLevel(skillDTO.getName(), skillDTO.getLevel());
             if(skillFromDB==null) {
+                // if skill does not exists then add new skill
                 member.addSkill(modelMapper.map(skillDTO, Skill.class), mainSkill);
             } else {
+                // loop over member existed skills
                 for(MemberSkill memberSkill : skillFromDB.getMembers()) {
                     member.addMemberSkill(memberSkill, mainSkill);
                 }
@@ -95,15 +98,18 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = findMemberById(memberId);
 
+        // check does skill exists in DB
+        List<Skill> skills = skillRepository.findByName(skillName);
+        // throw exception if skill does not exists in DB
+        if(skills.isEmpty()) {
+            throw new NotFoundException(Constants.MSG_SKILL_NOT_FOUND);
+        }
+
         for (MemberSkill memberSkill : member.getSkills()) {
-            // check does skill exists in DB
-            Skill skill = skillRepository.findByNameAndLevel(skillName, memberSkill.getSkill().getLevel());
-            // throw exception if skill does not exists in DB
-            if(skill == null) {
-                throw new NotFoundException(Constants.MSG_SKILL_NOT_FOUND);
-            }
             // remove skill if skill exists in DB
-            member.removeSkill(skill);
+            skills.stream()
+                    .filter(skill -> skill.getName().equals(memberSkill.getSkill().getName()))
+                    .forEach(skill -> member.removeSkills(skill));
         }
 
         memberRepository.save(member);

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ public class Skill {
     @SequenceGenerator(name = "skillSeq", sequenceName = "skill_seq", allocationSize = 1)
     private Long id;
 
+    @NotEmpty(message = "Heist name field is required")
     private String name;
 
     private String level;
