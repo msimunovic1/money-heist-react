@@ -74,6 +74,7 @@ public class Member {
 
     public MemberSkill findExistedMemberSkill(Set<MemberSkill> memberSkills) {
         return memberSkills.stream()
+                .filter(memberSkill -> memberSkill.getMember().getId().equals(this.getId()))
                 .findAny()
                 .orElse(null);
     }
@@ -92,7 +93,7 @@ public class Member {
             }
         }
     }
-    
+
     public void updateMainSkill(String mainSkill) {
         skills.forEach(memberSkill -> {
                 if(memberSkill.getSkill().getName().equals(mainSkill)) {
