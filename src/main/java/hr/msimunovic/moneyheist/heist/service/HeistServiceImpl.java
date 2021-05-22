@@ -30,6 +30,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -40,7 +42,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
 public class HeistServiceImpl implements HeistService {
 
     private final HeistRepository heistRepository;
@@ -115,6 +116,7 @@ public class HeistServiceImpl implements HeistService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MembersEligibleForHeistDTO getMembersEligibleForHeist(Long heistId) {
 
         Heist heist = findHeistById(heistId);
@@ -164,21 +166,25 @@ public class HeistServiceImpl implements HeistService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public HeistDTO getHeistById(Long heistId) {
         return heistMapper.mapHeistToDTO(findHeistById(heistId));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public HeistStatusDTO getHeistStatus(Long heistId) {
         return modelMapper.map(findHeistById(heistId), HeistStatusDTO.class);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<HeistSkillDTO> getHeistSkills(Long heistId) {
         return skillMapper.mapHeistSkillsToDTO(findHeistById(heistId).getSkills());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<HeistMemberDTO> getHeistMembers(Long heistId) {
 
         Heist heist = findHeistById(heistId);
@@ -191,6 +197,7 @@ public class HeistServiceImpl implements HeistService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public HeistOutcomeDTO getHeistOutcome(Long heistId) {
 
         Heist heist = findHeistById(heistId);
@@ -253,7 +260,6 @@ public class HeistServiceImpl implements HeistService {
                 .map(HeistMember::getMember)
                 .forEach(member ->
                         emailService.sendEmail(member.getEmail(), Constants.MAIL_HEIST_START_SUBJECT, Constants.MAIL_HEIST_START_TEXT));*/
-
 
         taskScheduler.scheduleAtFixedRate(() -> memberSkillImprovement(startedHeist), levelUpTime);
 
@@ -334,7 +340,7 @@ public class HeistServiceImpl implements HeistService {
 
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void memberSkillImprovement(Heist heist) {
 
         log.info("Member skill for {} improvement started.", heist.getId());
@@ -357,20 +363,14 @@ public class HeistServiceImpl implements HeistService {
                         skill.setLevel(increasedLevel);
                         member.addSkill(skill, memberSkill.getMainSkill());
                     } else {
-                        // loop over member existed skills
-                        for(MemberSkill memberSkillFromDB : skillFromDB.getMembers()) {
-                            member.addMemberSkill(memberSkillFromDB, memberSkill.getMainSkill());
-                        }
+                        member.addSkill(skillFromDB, memberSkill.getMainSkill());
                     }
-                    //memberSkill.getSkill().setLevel(increasedLevel);
-                    //member.addSkill(memberSkill.getSkill(), memberSkill.getMainSkill());
                 }
             }
         }
     }
 
     @Override
-    @Transactional
     public void scheduleStartEndHeist(Heist heist) {
 
         Date startTime = Date.from(heist.getStartTime().atZone(ZoneId.systemDefault())
@@ -386,6 +386,7 @@ public class HeistServiceImpl implements HeistService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<HeistInfoDTO> getAllHeists() {
         return heistRepository.findAll().stream()
                 .map(heist -> modelMapper.map(heist, HeistInfoDTO.class))
@@ -412,7 +413,6 @@ public class HeistServiceImpl implements HeistService {
     }
 
     private List<MemberStatusEnum> updateMembersStatus(Set<HeistMember> members, List<MemberStatusEnum> possibleStatuses, long limit) {
-
        return members.stream()
             .map(heistMember -> memberRepository.findById(heistMember.getMember().getId())
                     .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND)))

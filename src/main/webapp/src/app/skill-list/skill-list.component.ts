@@ -26,6 +26,7 @@ export class SkillListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+
         console.log("Changes", changes)
     }
 

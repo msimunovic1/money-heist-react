@@ -7,11 +7,12 @@ import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -45,50 +46,41 @@ public class Member {
     /*
      convention methods for data synchronization
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void addSkill(Skill skill, String mainSkill) {
 
         // check does skill with same name exists
-        for (Iterator<MemberSkill> iterator = skills.iterator(); iterator.hasNext(); ) {
-            MemberSkill memberSkill = iterator.next();
-            if(memberSkill.getSkill().getName().equals(skill.getName())) {
-                iterator.remove();
-                this.getSkills().remove(memberSkill);
-                skill.getMembers().remove(this);
-            }
-        }
+        // if Member Skill with same name and different level exits remove it from relationship
+        skills.removeIf(memberSkill -> memberSkill.getSkill().getName().equals(skill.getName()) &&
+                !memberSkill.getSkill().getLevel().equals(skill.getLevel()));
+
+        MemberSkill existedMemberSkill = findExistedMemberSkill(skill.getMembers());
 
         MemberSkill memberSkill = new MemberSkill();
-        memberSkill.setMember(this);
-        memberSkill.setSkill(skill);
 
-        if(isMainSkill(skill.getName(), mainSkill)) {
-            memberSkill.setMainSkill("Y");
+        if(existedMemberSkill==null) {
+            memberSkill.setMember(this);
+            memberSkill.setSkill(skill);
         } else {
-            memberSkill.setMainSkill("N");
+            memberSkill = existedMemberSkill;
         }
 
         skills.add(memberSkill);
         skill.getMembers().add(memberSkill);
 
+        updateMainSkill(mainSkill);
+
     }
 
-    public void addMemberSkill(MemberSkill memberSkill, String mainSkill) {
-
-        if(isMainSkill(memberSkill.getSkill().getName(), mainSkill)) {
-            memberSkill.setMainSkill("Y");
-        } else {
-            memberSkill.setMainSkill("N");
-        }
-
-        skills.add(memberSkill);
-        memberSkill.setMember(this);
-
+    public MemberSkill findExistedMemberSkill(Set<MemberSkill> memberSkills) {
+        return memberSkills.stream()
+                .findAny()
+                .orElse(null);
     }
 
     public void removeSkills(Skill skill) {
 
-        for (Iterator<MemberSkill> iterator = skills.iterator();
-             iterator.hasNext(); ) {
+        for (Iterator<MemberSkill> iterator = skills.iterator(); iterator.hasNext(); ) {
 
             MemberSkill memberSkill = iterator.next();
 
@@ -100,24 +92,15 @@ public class Member {
             }
         }
     }
-
-    public boolean isMainSkill(String skillName, String mainSkill) {
-
-        if(mainSkill != null && skillName.equals(mainSkill)) {
-            if (!skills.isEmpty()) {
-                // reset old main skill
-                resetOldMainSkill();
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void resetOldMainSkill() {
-        skills.stream()
-                .filter(ms -> ms.getMainSkill().equals("Y"))
-                .forEach(ms -> ms.setMainSkill("N"));
+    
+    public void updateMainSkill(String mainSkill) {
+        skills.forEach(memberSkill -> {
+                if(memberSkill.getSkill().getName().equals(mainSkill)) {
+                    memberSkill.setMainSkill("Y");
+                } else {
+                    memberSkill.setMainSkill("N");
+                }
+            });
     }
 
 }

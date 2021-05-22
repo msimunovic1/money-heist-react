@@ -84,10 +84,7 @@ public class MemberServiceImpl implements MemberService {
                 // if skill does not exists then add new skill
                 member.addSkill(modelMapper.map(skillDTO, Skill.class), mainSkill);
             } else {
-                // loop over member existed skills
-                for(MemberSkill memberSkill : skillFromDB.getMembers()) {
-                    member.addMemberSkill(memberSkill, mainSkill);
-                }
+                member.addSkill(skillFromDB, mainSkill);
             }
         }
     }
