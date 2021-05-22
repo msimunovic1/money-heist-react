@@ -104,13 +104,7 @@ public class HeistServiceImpl implements HeistService {
                 // add if skill does not exists in DB
                 heist.addSkill(modelMapper.map(heistSkillDTO, Skill.class), heistSkillDTO.getMembers());
             } else {
-                for (HeistSkill heistSkill : skillFromDB.getHeists()) {
-                    // check members property
-                    if(!heistSkill.getMembers().equals(heistSkillDTO.getMembers())) {
-                        // add skill from DB if skill members are different from request members
-                        heist.addHeistSkill(heistSkill, heistSkillDTO.getMembers());
-                    }
-                }
+                heist.addSkill(skillFromDB, heistSkillDTO.getMembers());
             }
         }
     }

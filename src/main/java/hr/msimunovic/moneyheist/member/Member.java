@@ -65,10 +65,16 @@ public class Member {
             memberSkill = existedMemberSkill;
         }
 
+        if(mainSkill==null || mainSkill.isEmpty()) {
+            memberSkill.setMainSkill("N");
+        }
+
         skills.add(memberSkill);
         skill.getMembers().add(memberSkill);
 
-        updateMainSkill(mainSkill);
+        if(mainSkill!=null) {
+            updateMainSkill(mainSkill);
+        }
 
     }
 

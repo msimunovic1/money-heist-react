@@ -5,6 +5,7 @@ import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
 import hr.msimunovic.moneyheist.heist_member.HeistMember;
 import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
 import hr.msimunovic.moneyheist.member.Member;
+import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -55,21 +56,27 @@ public class Heist {
      */
     public void addSkill(Skill skill, Integer members) {
 
-        HeistSkill heistSkill = new HeistSkill();
-        heistSkill.setHeist(this);
-        heistSkill.setSkill(skill);
-        heistSkill.setMembers(members);
+        HeistSkill existedHeistSkill = findExistedHeistSkill(skill.getHeists());
 
+        HeistSkill heistSkill = new HeistSkill();
+
+        if(existedHeistSkill==null) {
+            heistSkill.setHeist(this);
+            heistSkill.setSkill(skill);
+        } else {
+            heistSkill = existedHeistSkill;
+        }
+
+        heistSkill.setMembers(members);
         skills.add(heistSkill);
         skill.getHeists().add(heistSkill);
     }
 
-    public void addHeistSkill(HeistSkill heistSkill, Integer members) {
-
-        heistSkill.setMembers(members);
-
-        skills.add(heistSkill);
-        heistSkill.setHeist(this);
+    public HeistSkill findExistedHeistSkill(Set<HeistSkill> heistSkills) {
+        return heistSkills.stream()
+                .filter(heistSkill -> heistSkill.getHeist().getId().equals(this.getId()))
+                .findAny()
+                .orElse(null);
     }
 
     public void addMember(Member member) {
