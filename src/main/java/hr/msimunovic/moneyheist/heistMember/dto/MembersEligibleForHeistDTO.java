@@ -1,4 +1,4 @@
-package hr.msimunovic.moneyheist.heist_member.dto;
+package hr.msimunovic.moneyheist.heistMember.dto;
 
 import hr.msimunovic.moneyheist.heist.dto.HeistMemberDTO;
 import hr.msimunovic.moneyheist.heist.dto.HeistSkillDTO;

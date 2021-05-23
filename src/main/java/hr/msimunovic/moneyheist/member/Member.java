@@ -1,8 +1,8 @@
 package hr.msimunovic.moneyheist.member;
 
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
-import hr.msimunovic.moneyheist.heist_member.HeistMember;
-import hr.msimunovic.moneyheist.member_skill.MemberSkill;
+import hr.msimunovic.moneyheist.heistMember.HeistMember;
+import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

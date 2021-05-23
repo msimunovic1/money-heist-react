@@ -4,7 +4,7 @@ import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.heist.dto.*;
 import hr.msimunovic.moneyheist.heist.service.HeistService;
-import hr.msimunovic.moneyheist.heist_member.dto.MembersEligibleForHeistDTO;
+import hr.msimunovic.moneyheist.heistMember.dto.MembersEligibleForHeistDTO;
 import hr.msimunovic.moneyheist.util.HttpUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

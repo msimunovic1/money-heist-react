@@ -2,10 +2,9 @@ package hr.msimunovic.moneyheist.heist;
 
 import hr.msimunovic.moneyheist.common.enums.HeistOutcomeEnum;
 import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
-import hr.msimunovic.moneyheist.heist_member.HeistMember;
-import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
+import hr.msimunovic.moneyheist.heistMember.HeistMember;
+import hr.msimunovic.moneyheist.heistSkill.HeistSkill;
 import hr.msimunovic.moneyheist.member.Member;
-import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

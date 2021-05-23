@@ -1,6 +1,5 @@
-package hr.msimunovic.moneyheist.heist_skill;
+package hr.msimunovic.moneyheist.heistSkill;
 
-import com.sun.istack.NotNull;
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.AllArgsConstructor;

@@ -4,7 +4,7 @@ import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.heist.dto.HeistMemberDTO;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.dto.MemberDTO;
-import hr.msimunovic.moneyheist.member_skill.MemberSkill;
+import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;

@@ -12,13 +12,13 @@ import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.heist.dto.*;
 import hr.msimunovic.moneyheist.heist.mapper.HeistMapper;
 import hr.msimunovic.moneyheist.heist.repository.HeistRepository;
-import hr.msimunovic.moneyheist.heist_member.HeistMember;
-import hr.msimunovic.moneyheist.heist_member.dto.MembersEligibleForHeistDTO;
-import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
+import hr.msimunovic.moneyheist.heistMember.HeistMember;
+import hr.msimunovic.moneyheist.heistMember.dto.MembersEligibleForHeistDTO;
+import hr.msimunovic.moneyheist.heistSkill.HeistSkill;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.mapper.MemberMapper;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
-import hr.msimunovic.moneyheist.member_skill.MemberSkill;
+import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
 import hr.msimunovic.moneyheist.skill.repository.SkillRepository;
@@ -29,14 +29,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.scheduling.support.PeriodicTrigger;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -53,9 +54,12 @@ public class HeistServiceImpl implements HeistService {
     private final ModelMapper modelMapper;
     private final EmailService emailService;
     private final ThreadPoolTaskScheduler taskScheduler;
+    private final PeriodicTrigger periodicTrigger;
 
     @Value("${member.levelUpTime}")
     private Long levelUpTime;
+
+    private final Map<Object, ScheduledFuture<?>> scheduledTasks = new IdentityHashMap<>();
 
     @Override
     @Transactional
@@ -255,13 +259,20 @@ public class HeistServiceImpl implements HeistService {
                 .forEach(member ->
                         emailService.sendEmail(member.getEmail(), Constants.MAIL_HEIST_START_SUBJECT, Constants.MAIL_HEIST_START_TEXT));*/
 
-        taskScheduler.scheduleAtFixedRate(() -> memberSkillImprovement(startedHeist), levelUpTime);
+        ScheduledFuture<?> future = taskScheduler.schedule(() -> memberSkillImprovement(startedHeist), periodicTrigger);
+        scheduledTasks.put(startedHeist.getId(), future);
 
     }
 
     @Override
     @Transactional
     public void endHeist(Long heistId) {
+
+        scheduledTasks.forEach((k, v) -> {
+            if (k.equals(heistId)) {
+                v.cancel(true);
+            }
+        });
 
         log.info("finishing heist with id {}", heistId);
 
@@ -344,7 +355,9 @@ public class HeistServiceImpl implements HeistService {
             Member member = memberRepository.findById(heistMember.getMember().getId())
                     .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
 
-            for (MemberSkill memberSkill : member.getSkills()) {
+            List<MemberSkill> memberSkills = new ArrayList<>(member.getSkills());
+
+            for (MemberSkill memberSkill : memberSkills) {
                 if(memberSkill.getSkill().getLevel().length() < Constants.MAX_SKILL_LEVEL) {
 
                     StringBuilder stringBuilder = new StringBuilder(memberSkill.getSkill().getLevel());

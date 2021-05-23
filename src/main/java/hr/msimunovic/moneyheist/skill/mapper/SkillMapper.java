@@ -1,9 +1,9 @@
 package hr.msimunovic.moneyheist.skill.mapper;
 
 import hr.msimunovic.moneyheist.heist.dto.HeistSkillDTO;
-import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
+import hr.msimunovic.moneyheist.heistSkill.HeistSkill;
 import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
-import hr.msimunovic.moneyheist.member_skill.MemberSkill;
+import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import lombok.RequiredArgsConstructor;

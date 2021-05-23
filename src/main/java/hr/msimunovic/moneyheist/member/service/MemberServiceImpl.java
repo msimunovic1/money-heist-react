@@ -10,7 +10,7 @@ import hr.msimunovic.moneyheist.member.dto.MemberInfoDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
 import hr.msimunovic.moneyheist.member.mapper.MemberMapper;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
-import hr.msimunovic.moneyheist.member_skill.MemberSkill;
+import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
