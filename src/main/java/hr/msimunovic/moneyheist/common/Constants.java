@@ -19,6 +19,7 @@ public class Constants {
     public static final String MSG_HEIST_EXISTS = "Heist exists.";
 
     public static final String MSG_MEMBER_STATUS_NOT_MATCH_TO_HEIST = "Member status must be AVAILABLE or RETIRED.";
+    public static final String MSG_MEMBER_CONFIRMED = "Member confirmed of another heist happening at the same time.";
     public static final String MSG_HEIST_STATUS_MUST_BE_PLANNING = "Heist status must be PLANNING.";
     public static final String MSG_HEIST_STATUS_MUST_NOT_BE_PLANNING = "Heist status must not be PLANNING.";
     public static final String MSG_HEIST_STATUS_MUST_BE_READY = "Heist status must be READY.";

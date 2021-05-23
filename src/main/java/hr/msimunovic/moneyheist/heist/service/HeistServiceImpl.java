@@ -19,6 +19,7 @@ import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.mapper.MemberMapper;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
 import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
+import hr.msimunovic.moneyheist.memberSkill.MemberSkillImprovement.MemberSkillImprovement;
 import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
 import hr.msimunovic.moneyheist.skill.repository.SkillRepository;
@@ -27,11 +28,9 @@ import hr.msimunovic.moneyheist.util.MemberUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.PeriodicTrigger;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -55,9 +54,7 @@ public class HeistServiceImpl implements HeistService {
     private final EmailService emailService;
     private final ThreadPoolTaskScheduler taskScheduler;
     private final PeriodicTrigger periodicTrigger;
-
-    @Value("${member.levelUpTime}")
-    private Long levelUpTime;
+    private final MemberSkillImprovement memberSkillImprovement;
 
     private final Map<Object, ScheduledFuture<?>> scheduledTasks = new IdentityHashMap<>();
 
@@ -225,7 +222,7 @@ public class HeistServiceImpl implements HeistService {
 
         heist.setStatus(HeistStatusEnum.READY);
 
-        Heist updatedHeist = heistRepository.save(heist);
+        heistRepository.save(heist);
 
         // send email to members - request waiting response !!!!!!
         /*updatedHeist.getMembers().stream()
@@ -259,7 +256,7 @@ public class HeistServiceImpl implements HeistService {
                 .forEach(member ->
                         emailService.sendEmail(member.getEmail(), Constants.MAIL_HEIST_START_SUBJECT, Constants.MAIL_HEIST_START_TEXT));*/
 
-        ScheduledFuture<?> future = taskScheduler.schedule(() -> memberSkillImprovement(startedHeist), periodicTrigger);
+        ScheduledFuture<?> future = taskScheduler.schedule(() -> memberSkillImprovement.increaseMemberSkills(startedHeist), periodicTrigger);
         scheduledTasks.put(startedHeist.getId(), future);
 
     }
@@ -343,38 +340,6 @@ public class HeistServiceImpl implements HeistService {
                 .forEach(member ->
                         emailService.sendEmail(member.getEmail(), Constants.MAIL_HEIST_FINISH_SUBJECT, Constants.MAIL_HEIST_FINISH_TEXT));*/
 
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void memberSkillImprovement(Heist heist) {
-
-        log.info("Member skill for {} improvement started.", heist.getId());
-
-        for (HeistMember heistMember : heist.getMembers()) {
-
-            Member member = memberRepository.findById(heistMember.getMember().getId())
-                    .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
-
-            List<MemberSkill> memberSkills = new ArrayList<>(member.getSkills());
-
-            for (MemberSkill memberSkill : memberSkills) {
-                if(memberSkill.getSkill().getLevel().length() < Constants.MAX_SKILL_LEVEL) {
-
-                    StringBuilder stringBuilder = new StringBuilder(memberSkill.getSkill().getLevel());
-                    String increasedLevel = stringBuilder.append("*").toString();
-
-                    Skill skillFromDB = skillRepository.findByNameAndLevel(memberSkill.getSkill().getName(), increasedLevel);
-                    if(skillFromDB==null) {
-                        Skill skill = new Skill();
-                        skill.setName(memberSkill.getSkill().getName());
-                        skill.setLevel(increasedLevel);
-                        member.addSkill(skill, memberSkill.getMainSkill());
-                    } else {
-                        member.addSkill(skillFromDB, memberSkill.getMainSkill());
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -464,6 +429,23 @@ public class HeistServiceImpl implements HeistService {
         if(!member.getStatus().equals(MemberStatusEnum.AVAILABLE) && !member.getStatus().equals(MemberStatusEnum.RETIRED)) {
             throw new BadRequestException(Constants.MSG_MEMBER_STATUS_NOT_MATCH_TO_HEIST);
         }
+
+        // check does member already confirmed of another heist happening at the same time
+        List<Heist> readyHeists = heistRepository.findByStatusOrStatus(HeistStatusEnum.READY, HeistStatusEnum.IN_PROGRESS);
+        for (Heist heist : readyHeists) {
+
+            Member memberConfirmed = heist.getMembers().stream()
+                    .map(heistMember -> heistMember.getMember())
+                    .filter(heistMember -> heistMember.getId().equals(member.getId()))
+                    .findAny()
+                    .orElse(null);
+
+            if (memberConfirmed!=null) {
+                throw new BadRequestException(Constants.MSG_MEMBER_CONFIRMED);
+            }
+        }
+
+
     }
 
 }

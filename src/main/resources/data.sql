@@ -5,7 +5,7 @@ INSERT INTO MEMBER(id, name, sex, email, status) VALUES
 
 INSERT INTO SKILL(id, name, level) VALUES
     (100, 'driving', '****'),
-    (101, 'combat', '******'),
+    (101, 'combat', '*'),
     (102, 'combat', '********');
 
 INSERT INTO MEMBER_SKILL(member_id, skill_id, main_skill) VALUES

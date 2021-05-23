@@ -12,8 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @ComponentScan(
-        basePackages="hr.msimunovic.moneyheist",
-        basePackageClasses={HeistServiceImpl.class})
+        basePackages="hr.msimunovic.moneyheist")
 public class ThreadPoolTaskSchedulerConfig {
 
     @Value("${member.levelUpTime}")

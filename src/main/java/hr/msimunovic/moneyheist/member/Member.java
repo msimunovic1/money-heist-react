@@ -7,6 +7,7 @@ import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +47,6 @@ public class Member {
     /*
      convention methods for data synchronization
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void addSkill(Skill skill, String mainSkill) {
 
         // check does skill with same name exists
