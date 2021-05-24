@@ -49,6 +49,7 @@
       <app-skill-list
         [skills]="source"
         [columns]="skillTableColumns"
+        [actions]="skillTableActions"
         (addedSkill)="addSkill($event)"
         (updatedSkill)="updateSkill($event)"
       ></app-skill-list>

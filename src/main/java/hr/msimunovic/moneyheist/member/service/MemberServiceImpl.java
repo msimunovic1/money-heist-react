@@ -104,9 +104,9 @@ public class MemberServiceImpl implements MemberService {
 
         for (MemberSkill memberSkill : member.getSkills()) {
             // remove skill if skill exists in DB
-            skills.stream()
-                    .filter(skill -> skill.getName().equals(memberSkill.getSkill().getName()))
-                    .forEach(skill -> member.removeSkills(skill));
+            if(memberSkill.getSkill().getName().equals(skillName)) {
+                member.removeSkills(memberSkill.getSkill());
+            }
         }
 
         memberRepository.save(member);

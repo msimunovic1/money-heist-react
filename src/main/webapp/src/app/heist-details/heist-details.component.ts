@@ -50,6 +50,11 @@ export class HeistDetailsComponent implements OnInit {
     },
   }
 
+  skillTableActions = {
+    delete: false,
+    edit: false
+  }
+
   constructor(private heistService: HeistService,
               private route: ActivatedRoute,
               private router: Router,

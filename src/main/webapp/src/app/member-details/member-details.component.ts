@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Member} from "../models/member";
 import {MemberService} from "../services/member.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Route, Router} from "@angular/router";
 import {LocalDataSource} from "ng2-smart-table";
 import {MemberSkill} from "../models/member-skill";
 import {Skill} from "../models/skill";
@@ -34,8 +34,13 @@ export class MemberDetailsComponent implements OnInit {
     }
   }
 
+  skillTableActions = {
+    edit: false
+  }
+
   constructor(private memberService: MemberService,
               private route: ActivatedRoute,
+              private router: Router,
               private toastrService: NbToastrService) { }
 
   ngOnInit(): void {
@@ -104,9 +109,18 @@ export class MemberDetailsComponent implements OnInit {
     );
   }
 
+  deleteSkill(skillName: string) {
+    this.memberService.deleteMemberSkill(this.memberId, skillName).subscribe(
+      res => {
+        if(res.status === 204) {
+          this.toastrService.success('Skills deleted', 'Success');
+        }
+      }
+    );
+  }
+
   // save updated skills
   saveUpdatedSkills() {
-
     this.memberService.updateMemberSkills(this.memberId, new MemberSkill(this.updatedMemberSkills, "")).subscribe(
       res => {
         if(res.status === 204) {

@@ -35,8 +35,8 @@ export class MemberService {
     return this.httpClient.put(this.url + `/${memberId}/skills`, memberSkill, {observe: 'response'});
   }
 
-  deleteMemberSkill(memberId: number, skillName: string): Observable<any> {
-    return this.httpClient.delete(this.url + `/${memberId}?skillName=${skillName}`);
+  deleteMemberSkill(memberId: number, skillName: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete<HttpResponse<any>>(this.url + `/${memberId}/skills?skillName=${skillName}`, {observe: 'response'});
   }
 
 }
