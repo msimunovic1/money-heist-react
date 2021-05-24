@@ -20,6 +20,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -102,7 +103,9 @@ public class MemberServiceImpl implements MemberService {
             throw new NotFoundException(Constants.MSG_SKILL_NOT_FOUND);
         }
 
-        for (MemberSkill memberSkill : member.getSkills()) {
+        List<MemberSkill> memberSkills = new ArrayList<>(member.getSkills());
+
+        for (MemberSkill memberSkill : memberSkills) {
             // remove skill if skill exists in DB
             if(memberSkill.getSkill().getName().equals(skillName)) {
                 member.removeSkills(memberSkill.getSkill());

@@ -114,6 +114,7 @@ export class MemberDetailsComponent implements OnInit {
       res => {
         if(res.status === 204) {
           this.toastrService.success('Skills deleted', 'Success');
+          this.ngOnInit()
         }
       }
     );
@@ -124,7 +125,8 @@ export class MemberDetailsComponent implements OnInit {
     this.memberService.updateMemberSkills(this.memberId, new MemberSkill(this.updatedMemberSkills, "")).subscribe(
       res => {
         if(res.status === 204) {
-          this.toastrService.success('Skills updated', 'Success')
+          this.toastrService.success('Skills updated', 'Success');
+          this.ngOnInit()
         }
       }
     );

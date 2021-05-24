@@ -167,7 +167,7 @@ export class HeistDetailsComponent implements OnInit {
   // start heist manually
   startHeistManually(heistId: number) {
     this.heistService.startHeist(heistId).subscribe(
-      res => this.router.navigateByUrl(`/heist/${heistId}`)
+      res => this.ngOnInit()
     );
   }
 }

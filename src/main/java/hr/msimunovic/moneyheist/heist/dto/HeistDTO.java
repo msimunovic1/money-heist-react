@@ -27,6 +27,7 @@ public class HeistDTO {
     private LocalDateTime endTime;
 
     @Valid
+    @NotEmpty(message = "Skill is required")
     private List<HeistSkillDTO> skills;
 
     private HeistStatusEnum status;
