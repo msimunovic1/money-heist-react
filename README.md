@@ -1,4 +1,4 @@
-# money-heist
+# Money Heist Application
 
 <b>DB:</b> H2 in-memory database
 
