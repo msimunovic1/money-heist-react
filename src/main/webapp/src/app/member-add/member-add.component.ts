@@ -21,7 +21,7 @@ export class MemberAddComponent implements OnInit {
 
   memberFormGroup: FormGroup = this.formBuilder.group({
     name: new FormControl('', [Validators.required]),
-    sex: new FormControl('', [Validators.required]),
+    sex: new FormControl('M', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]),
     status: new FormControl('', [Validators.required]),
     skills: this.formBuilder.array([])

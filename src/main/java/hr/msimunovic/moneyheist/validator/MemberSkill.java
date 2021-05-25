@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = MemberSkillValidator.class)
 public @interface MemberSkill {
 
-    String message() default "{hr.msimunovic.moneyheist.validator.MemberSkill.message}";
+    String message() default "{hr.msimunovic.moneyheist.validator.MemberSkills.message}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

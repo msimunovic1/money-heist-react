@@ -60,6 +60,8 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = memberMapper.mapDTOToMember(memberDTO);
 
+        addMemberSkills(member, memberDTO.getSkills(), memberDTO.getMainSkill());
+
         // send email to member - request waiting response !!!!!!
         /*emailService.sendEmail(member.getEmail(), Constants.MAIL_MEMBER_ADDED_SUBJECT, Constants.MAIL_MEMBER_ADDED_TEXT);*/
 
@@ -75,19 +77,8 @@ public class MemberServiceImpl implements MemberService {
         // check is provided multiple skills with same name
         multipleSkillNameValidator(memberSkillDTO.getSkills());
 
-        String mainSkill = memberSkillDTO.getMainSkill();
+        addMemberSkills(member, memberSkillDTO.getSkills(), memberSkillDTO.getMainSkill());
 
-        for(SkillDTO skillDTO : memberSkillDTO.getSkills()) {
-
-            // check does skill exists in DB
-            Skill skillFromDB = skillRepository.findByNameAndLevel(skillDTO.getName(), skillDTO.getLevel());
-            if(skillFromDB==null) {
-                // if skill does not exists then add new skill
-                member.addSkill(modelMapper.map(skillDTO, Skill.class), mainSkill);
-            } else {
-                member.addSkill(skillFromDB, mainSkill);
-            }
-        }
     }
 
     @Override
@@ -104,7 +95,6 @@ public class MemberServiceImpl implements MemberService {
         }
 
         List<MemberSkill> memberSkills = new ArrayList<>(member.getSkills());
-
         for (MemberSkill memberSkill : memberSkills) {
             // remove skill if skill exists in DB
             if(memberSkill.getSkill().getName().equals(skillName)) {
@@ -132,6 +122,34 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new NotFoundException(Constants.MSG_MEMBER_NOT_FOUND));
     }
 
+    public void addMemberSkills(Member member, List<SkillDTO> skillDTOList, String mainSkill) {
+
+        // if skill array is empty and main skill is provided
+        if((skillDTOList==null || skillDTOList.isEmpty()) && !mainSkill.isEmpty()) {
+            Skill skillFromDB = skillRepository.findByNameAndLevel(mainSkill, Constants.DEFAULT_SKILL_LEVEL);
+            // check skill in DB
+            if(skillFromDB != null) {
+                member.addSkill(skillFromDB, mainSkill);
+            } else {
+                Skill skill = new Skill();
+                skill.setName(mainSkill);
+                skill.setLevel(Constants.DEFAULT_SKILL_LEVEL);
+                member.addSkill(modelMapper.map(skill, Skill.class), mainSkill);
+            }
+        } else {
+            for (SkillDTO skillDTO : skillDTOList) {
+                if (skillDTO.getLevel() == null) {
+                    skillDTO.setLevel(Constants.DEFAULT_SKILL_LEVEL);
+                }
+                Skill skillFromDB = skillRepository.findByNameAndLevel(skillDTO.getName(), skillDTO.getLevel());
+                if(skillFromDB==null) {
+                    member.addSkill(modelMapper.map(skillDTO, Skill.class), mainSkill);
+                } else {
+                    member.addSkill(skillFromDB, mainSkill);
+                }
+            }
+        }
+    }
 
     public void multipleSkillNameValidator(List<SkillDTO> memberSkills) {
 

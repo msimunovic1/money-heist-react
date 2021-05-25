@@ -1,5 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
 import {NbDialogService} from "@nebular/theme";
+import {UpdatedSkill} from "../models/updated-skill";
 
 @Component({
   selector: 'app-skill-list',
@@ -21,7 +22,7 @@ export class SkillListComponent implements OnInit {
   addedSkill: EventEmitter<any> = new EventEmitter<any>();
 
   @Output()
-  updatedSkill: EventEmitter<any> = new EventEmitter<any>();
+  updatedSkill: EventEmitter<UpdatedSkill> = new EventEmitter<UpdatedSkill>();
 
   @Output()
   deletedSkill: EventEmitter<any> = new EventEmitter<any>();
@@ -44,6 +45,9 @@ export class SkillListComponent implements OnInit {
       delete: {
         confirmDelete : true,
       },
+      edit: {
+        confirmSave : true,
+      },
       columns: this.columns
     };
   }
@@ -53,7 +57,7 @@ export class SkillListComponent implements OnInit {
   }
 
   onUpdateConfirm(event: any) {
-    this.updatedSkill.emit(event.confirm.resolve());
+    this.updatedSkill.emit(new UpdatedSkill(event.data, event.newData));
   }
 
   onDeleteConfirm(event: any, dialog: TemplateRef<any>) {
@@ -70,4 +74,5 @@ export class SkillListComponent implements OnInit {
     this.isConfirmed = true;
     ref.close();
   }
+
 }

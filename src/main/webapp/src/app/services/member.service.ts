@@ -3,7 +3,7 @@ import {HttpClient, HttpResponse} from "@angular/common/http";
 import {SERVER_API_URL} from "../app.constants";
 import {Observable} from "rxjs";
 import {Member} from "../models/member";
-import {MemberSkill} from "../models/member-skill";
+import {MemberSkills} from "../models/member-skills";
 import {MemberInfo} from "../models/member-info";
 
 @Injectable({
@@ -23,15 +23,15 @@ export class MemberService {
     return this.httpClient.get<Member>(this.url + `/${memberId}`);
   }
 
-  getMemberSkills(memberId: number): Observable<MemberSkill> {
-    return this.httpClient.get<MemberSkill>(this.url + `/${memberId}/skills`);
+  getMemberSkills(memberId: number): Observable<MemberSkills> {
+    return this.httpClient.get<MemberSkills>(this.url + `/${memberId}/skills`);
   }
 
   saveMember(member: Member): Observable<HttpResponse<any>> {
     return this.httpClient.post(this.url, member, {observe: 'response'});
   }
 
-  updateMemberSkills(memberId: number, memberSkill: MemberSkill): Observable<HttpResponse<any>> {
+  updateMemberSkills(memberId: number, memberSkill: MemberSkills): Observable<HttpResponse<any>> {
     return this.httpClient.put(this.url + `/${memberId}/skills`, memberSkill, {observe: 'response'});
   }
 

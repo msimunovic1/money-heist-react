@@ -9,6 +9,7 @@ import {HeistOutcome} from "../models/heist-outcome";
 import {HeistStatus} from "../models/heist-status";
 import {HeistSkills} from "../models/heist-skills";
 import {NbToastrService} from "@nebular/theme";
+import {UpdatedSkill} from "../models/updated-skill";
 
 @Component({
   selector: 'app-heist-details',
@@ -35,9 +36,11 @@ export class HeistDetailsComponent implements OnInit {
   skillTableColumns = {
     name: {
       title: 'SKILL NAME',
+      editable: false
     },
     level: {
       title: 'LEVEL',
+      editable: false
     },
     members: {
       title: 'REQUIRED MEMBERS',
@@ -52,7 +55,6 @@ export class HeistDetailsComponent implements OnInit {
 
   skillTableActions = {
     delete: false,
-    edit: false
   }
 
   constructor(private heistService: HeistService,
@@ -74,10 +76,8 @@ export class HeistDetailsComponent implements OnInit {
   }
 
   disableUpdateSkillsBtn(){
-    if (this.updatedHeistSkills.length < 1) {
-      return true;
-    }
-    return false;
+    return this.updatedHeistSkills.length < 1;
+
   }
 
   // add new skills to list
@@ -86,8 +86,8 @@ export class HeistDetailsComponent implements OnInit {
   }
 
   // update/delete skills from list
-  updateSkill(event: HeistSkill) {
-    this.source.remove(event).then(() => this.refreshUpdateSkillList())
+  updateSkill(event: UpdatedSkill) {
+    this.source.update(event.oldData, event.newData).then(() => this.refreshUpdateSkillList())
   }
 
   refreshUpdateSkillList() {
@@ -167,7 +167,7 @@ export class HeistDetailsComponent implements OnInit {
   // start heist manually
   startHeistManually(heistId: number) {
     this.heistService.startHeist(heistId).subscribe(
-      res => this.ngOnInit()
+      () => this.ngOnInit()
     );
   }
 }

@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {Member} from "../models/member";
 import {MemberService} from "../services/member.service";
 import {ActivatedRoute, Route, Router} from "@angular/router";
 import {LocalDataSource} from "ng2-smart-table";
-import {MemberSkill} from "../models/member-skill";
 import {Skill} from "../models/skill";
-import {NbToastrService} from "@nebular/theme";
-import {HeistSkill} from "../models/heist-skill";
+import {NbDialogService, NbToastrService} from "@nebular/theme";
+import {MemberSkills} from "../models/member-skills";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-member-details',
@@ -19,15 +19,18 @@ export class MemberDetailsComponent implements OnInit {
   memberId: number = 0;
   sex: string = '';
   tagStatus: string = 'basic';
+  mainSkill: string = '';
 
   source: LocalDataSource = new LocalDataSource();
 
+  memberSkills: Skill[] = [];
   updatedMemberSkills: Skill[] = [];
 
   /*ng2-smart-table settings*/
   skillTableColumns = {
     name: {
       title: 'SKILL NAME',
+      editable: false
     },
     level: {
       title: 'LEVEL',
@@ -41,7 +44,8 @@ export class MemberDetailsComponent implements OnInit {
   constructor(private memberService: MemberService,
               private route: ActivatedRoute,
               private router: Router,
-              private toastrService: NbToastrService) { }
+              private toastrService: NbToastrService,
+              private dialogService: NbDialogService) { }
 
   ngOnInit(): void {
     // get id from url param
@@ -51,20 +55,13 @@ export class MemberDetailsComponent implements OnInit {
   }
 
   disableUpdateSkillsBtn(){
-    if (this.updatedMemberSkills.length < 1) {
-      return true;
-    }
-    return false;
+    return this.updatedMemberSkills.length < 1;
+
   }
 
   // add new skills to list
-  addSkill(event: HeistSkill) {
+  addSkill(event: MemberSkills) {
     this.source.add(event).then(() => this.refreshUpdateSkillList())
-  }
-
-  // update/delete skills from list
-  updateSkill(event: HeistSkill) {
-    this.source.remove(event).then(() => this.refreshUpdateSkillList())
   }
 
   refreshUpdateSkillList() {
@@ -72,6 +69,16 @@ export class MemberDetailsComponent implements OnInit {
       this.source.refresh();
       this.updatedMemberSkills = data;
     });
+  }
+
+  editMainSkillDialog(dialog: TemplateRef<any>) {
+    this.dialogService.open(dialog, {closeOnEsc: true});
+  }
+
+  editMainSkill(mainSkillForm: NgForm, ref: any) {
+    this.mainSkill = mainSkillForm.controls.mainSkill.value;
+    this.saveUpdatedSkills();
+    ref.close();
   }
 
   handleMemberDetails() {
@@ -82,6 +89,10 @@ export class MemberDetailsComponent implements OnInit {
       data => this.member = data,
       () => {},
       () => {
+
+        this.member.skills ? this.memberSkills = this.member.skills : [];
+
+        this.member.mainSkill ? this.mainSkill = this.member.mainSkill : null;
 
         // add member skills to LocalDataSource
         this.source = new LocalDataSource(this.member.skills);
@@ -122,7 +133,7 @@ export class MemberDetailsComponent implements OnInit {
 
   // save updated skills
   saveUpdatedSkills() {
-    this.memberService.updateMemberSkills(this.memberId, new MemberSkill(this.updatedMemberSkills, "")).subscribe(
+    this.memberService.updateMemberSkills(this.memberId, new MemberSkills(this.updatedMemberSkills, this.mainSkill)).subscribe(
       res => {
         if(res.status === 204) {
           this.toastrService.success('Skills updated', 'Success');

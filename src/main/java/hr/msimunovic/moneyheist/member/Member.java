@@ -72,7 +72,7 @@ public class Member {
         skills.add(memberSkill);
         skill.getMembers().add(memberSkill);
 
-        if(mainSkill!=null) {
+        if(mainSkill!=null && !mainSkill.isEmpty()) {
             updateMainSkill(mainSkill);
         }
 

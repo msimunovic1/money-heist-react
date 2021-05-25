@@ -1,6 +1,6 @@
 import {Skill} from "./skill";
 
-export class MemberSkill {
+export class MemberSkills {
 
   skills: Skill[];
   mainSkill: string;

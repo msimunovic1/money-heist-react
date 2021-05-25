@@ -9,7 +9,7 @@
     <div class="space">
       <label>Gender</label>
       <nb-radio-group formControlName="sex">
-        <nb-radio *ngFor="let gender of genders" [value]="gender.value" [checked]="gender.checked">
+        <nb-radio *ngFor="let gender of genders" [value]="gender.value">
           {{ gender.label }}
         </nb-radio>
       </nb-radio-group>
