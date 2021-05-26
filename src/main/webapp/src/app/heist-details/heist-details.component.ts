@@ -85,7 +85,7 @@ export class HeistDetailsComponent implements OnInit {
     this.source.add(event).then(() => this.refreshUpdateSkillList())
   }
 
-  // update/delete skills from list
+  // update skills from list
   updateSkill(event: UpdatedSkill) {
     this.source.update(event.oldData, event.newData).then(() => this.refreshUpdateSkillList())
   }

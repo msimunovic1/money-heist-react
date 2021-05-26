@@ -27,9 +27,9 @@
         <app-skill-list
           [skills]="source"
           [columns]="skillTableColumns"
-          [actions]="skillTableActions"
           (addedSkill)="addSkill($event)"
           (deletedSkill)="deleteSkill($event)"
+          (updatedSkill)="updateSkill($event)"
         ></app-skill-list>
       </div>
     </div>

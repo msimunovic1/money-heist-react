@@ -7,6 +7,7 @@ import {Skill} from "../models/skill";
 import {NbDialogService, NbToastrService} from "@nebular/theme";
 import {MemberSkills} from "../models/member-skills";
 import {NgForm} from "@angular/forms";
+import {UpdatedSkill} from "../models/updated-skill";
 
 @Component({
   selector: 'app-member-details',
@@ -37,10 +38,6 @@ export class MemberDetailsComponent implements OnInit {
     }
   }
 
-  skillTableActions = {
-    edit: false
-  }
-
   constructor(private memberService: MemberService,
               private route: ActivatedRoute,
               private router: Router,
@@ -62,6 +59,11 @@ export class MemberDetailsComponent implements OnInit {
   // add new skills to list
   addSkill(event: MemberSkills) {
     this.source.add(event).then(() => this.refreshUpdateSkillList())
+  }
+
+  // update skills from list
+  updateSkill(event: UpdatedSkill) {
+    this.source.update(event.oldData, event.newData).then(() => this.refreshUpdateSkillList())
   }
 
   refreshUpdateSkillList() {
@@ -90,9 +92,13 @@ export class MemberDetailsComponent implements OnInit {
       () => {},
       () => {
 
-        this.member.skills ? this.memberSkills = this.member.skills : [];
+        if (this.member.skills) {
+          this.memberSkills = this.member.skills;
+        }
 
-        this.member.mainSkill ? this.mainSkill = this.member.mainSkill : null;
+        if (this.member.mainSkill) {
+          this.mainSkill = this.member.mainSkill;
+        }
 
         // add member skills to LocalDataSource
         this.source = new LocalDataSource(this.member.skills);
