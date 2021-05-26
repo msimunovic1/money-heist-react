@@ -1,21 +1,21 @@
-<nb-layout-column>
-  <ng2-smart-table class="skills-table"
-                   [settings]="settings"
-                   [source]="skills"
-                   (createConfirm)="onCreateConfirm($event)"
-                   (editConfirm)="onUpdateConfirm($event)"
-                   (deleteConfirm)="onDeleteConfirm($event, dialog)">
-  </ng2-smart-table>
-  <ng-template #dialog let-ref="dialogRef">
-    <nb-card>
-      <nb-card-header>Delete Skill</nb-card-header>
-      <nb-card-body>Are you sure want to delete skill?</nb-card-body>
-      <nb-card-footer>
-        <button nbButton (click)="confirm(ref)" status="primary">Yes</button>
-        <button class="right" nbButton (click)="ref.close()" status="danger">No</button>
-      </nb-card-footer>
-    </nb-card>
-  </ng-template>
-</nb-layout-column>
+<ng2-smart-table class="skills-table"
+                 [settings]="settings"
+                 [source]="skills"
+                 (createConfirm)="onCreateConfirm($event)"
+                 (editConfirm)="onUpdateConfirm($event)"
+                 (deleteConfirm)="onDeleteConfirm($event, dialog)">
+</ng2-smart-table>
+
+<!--Delete skill confirmation dialog-->
+<ng-template #dialog let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Delete Skill</nb-card-header>
+    <nb-card-body>Are you sure want to delete skill?</nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="confirm(ref)" status="primary">Yes</button>
+      <button class="right" nbButton (click)="ref.close()" status="danger">No</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
 
 
