@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface SkillRepository extends JpaRepository<Skill, Long> {
 
-    Skill findByNameAndLevel(String name, String level);
+    Skill findByNameIgnoreCaseAndLevel(String name, String level);
 
     List<Skill> findByName(String name);
 

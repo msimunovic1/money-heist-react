@@ -5,6 +5,7 @@ import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnTransformer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -23,6 +24,7 @@ public class Skill {
     private Long id;
 
     @NotEmpty(message = "Heist name field is required")
+    @ColumnTransformer(write = "LOWER(?)")
     private String name;
 
     private String level;

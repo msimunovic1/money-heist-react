@@ -48,7 +48,7 @@ public class MemberSkillImprovement {
                     StringBuilder stringBuilder = new StringBuilder(memberSkill.getSkill().getLevel());
                     String increasedLevel = stringBuilder.append("*").toString();
 
-                    Skill skillFromDB = skillRepository.findByNameAndLevel(memberSkill.getSkill().getName(), increasedLevel);
+                    Skill skillFromDB = skillRepository.findByNameIgnoreCaseAndLevel(memberSkill.getSkill().getName(), increasedLevel);
                     if(skillFromDB==null) {
                         Skill skill = new Skill();
                         skill.setName(memberSkill.getSkill().getName());

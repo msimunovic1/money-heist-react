@@ -138,7 +138,7 @@ public class MemberServiceImpl implements MemberService {
                 member.addSkill(existedMemberSkill, mainSkill);
             } else {
                 // check skill in DB
-                Skill skillFromDB = skillRepository.findByNameAndLevel(mainSkill, Constants.DEFAULT_SKILL_LEVEL);
+                Skill skillFromDB = skillRepository.findByNameIgnoreCaseAndLevel(mainSkill, Constants.DEFAULT_SKILL_LEVEL);
                 if(skillFromDB != null) {
                     member.addSkill(skillFromDB, mainSkill);
                 } else {
@@ -155,7 +155,7 @@ public class MemberServiceImpl implements MemberService {
                     skillDTO.setLevel(Constants.DEFAULT_SKILL_LEVEL);
                 }
                 // check skill in DB
-                Skill skillFromDB = skillRepository.findByNameAndLevel(skillDTO.getName(), skillDTO.getLevel());
+                Skill skillFromDB = skillRepository.findByNameIgnoreCaseAndLevel(skillDTO.getName(), skillDTO.getLevel());
                 if(skillFromDB==null) {
                     member.addSkill(modelMapper.map(skillDTO, Skill.class), mainSkill);
                 } else {

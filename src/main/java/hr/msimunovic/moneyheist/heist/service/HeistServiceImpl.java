@@ -100,7 +100,7 @@ public class HeistServiceImpl implements HeistService {
             }
 
             // check does skill exists in DB
-            Skill skillFromDB = skillRepository.findByNameAndLevel(heistSkillDTO.getName(), heistSkillDTO.getLevel());
+            Skill skillFromDB = skillRepository.findByNameIgnoreCaseAndLevel(heistSkillDTO.getName(), heistSkillDTO.getLevel());
             if(skillFromDB==null) {
                 // add if skill does not exists in DB
                 heist.addSkill(modelMapper.map(heistSkillDTO, Skill.class), heistSkillDTO.getMembers());
