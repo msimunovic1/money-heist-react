@@ -1,13 +1,14 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
 import {Member} from "../models/member";
 import {MemberService} from "../services/member.service";
-import {ActivatedRoute, Route, Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {LocalDataSource} from "ng2-smart-table";
 import {Skill} from "../models/skill";
 import {NbDialogService, NbToastrService} from "@nebular/theme";
 import {MemberSkills} from "../models/member-skills";
 import {NgForm} from "@angular/forms";
 import {UpdatedSkill} from "../models/updated-skill";
+
 
 @Component({
   selector: 'app-member-details',
@@ -78,7 +79,6 @@ export class MemberDetailsComponent implements OnInit {
   }
 
   editMainSkill(mainSkillForm: NgForm, ref: any) {
-    this.mainSkill = mainSkillForm.controls.mainSkill.value;
     this.saveUpdatedSkills();
     ref.close();
   }

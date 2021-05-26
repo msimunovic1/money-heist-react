@@ -42,13 +42,16 @@
   </nb-card-body>
 </nb-card>
 
+<!--edit main skill dialog-->
 <ng-template #editDialog let-ref="dialogRef">
   <form #mainSkillUpdateForm="ngForm" (ngSubmit)="editMainSkill(mainSkillUpdateForm, ref)">
     <nb-card>
         <nb-card-header>Edit Main Skill</nb-card-header>
         <nb-card-body>
-          <nb-radio-group name="mainSkill" ngModel>
-            <nb-radio *ngFor="let memberSkill of memberSkills" [value]="memberSkill.name">
+          <nb-radio-group [(value)]="mainSkill" name="mainSkill">
+            <nb-radio *ngFor="let memberSkill of memberSkills"
+                      [value]="memberSkill.name"
+                      [checked]="memberSkill.name===mainSkill">
               {{ memberSkill.name }}
             </nb-radio>
           </nb-radio-group>
