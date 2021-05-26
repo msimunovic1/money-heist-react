@@ -126,21 +126,35 @@ public class MemberServiceImpl implements MemberService {
 
         // if skill array is empty and main skill is provided
         if((skillDTOList==null || skillDTOList.isEmpty()) && !mainSkill.isEmpty()) {
-            Skill skillFromDB = skillRepository.findByNameAndLevel(mainSkill, Constants.DEFAULT_SKILL_LEVEL);
-            // check skill in DB
-            if(skillFromDB != null) {
-                member.addSkill(skillFromDB, mainSkill);
+
+            // check member’s previous skill array
+            Skill existedMemberSkill = member.getSkills().stream()
+                    .map(memberSkill -> memberSkill.getSkill())
+                    .filter(skill -> skill.getName().equals(mainSkill))
+                    .findAny()
+                    .orElse(null);
+
+            if (existedMemberSkill!=null) {
+                member.addSkill(existedMemberSkill, mainSkill);
             } else {
-                Skill skill = new Skill();
-                skill.setName(mainSkill);
-                skill.setLevel(Constants.DEFAULT_SKILL_LEVEL);
-                member.addSkill(modelMapper.map(skill, Skill.class), mainSkill);
+                // check skill in DB
+                Skill skillFromDB = skillRepository.findByNameAndLevel(mainSkill, Constants.DEFAULT_SKILL_LEVEL);
+                if(skillFromDB != null) {
+                    member.addSkill(skillFromDB, mainSkill);
+                } else {
+                    Skill skill = new Skill();
+                    skill.setName(mainSkill);
+                    skill.setLevel(Constants.DEFAULT_SKILL_LEVEL);
+                    member.addSkill(skill, mainSkill);
+                }
             }
         } else {
+            // if skill array is provided loop over it
             for (SkillDTO skillDTO : skillDTOList) {
                 if (skillDTO.getLevel() == null) {
                     skillDTO.setLevel(Constants.DEFAULT_SKILL_LEVEL);
                 }
+                // check skill in DB
                 Skill skillFromDB = skillRepository.findByNameAndLevel(skillDTO.getName(), skillDTO.getLevel());
                 if(skillFromDB==null) {
                     member.addSkill(modelMapper.map(skillDTO, Skill.class), mainSkill);
