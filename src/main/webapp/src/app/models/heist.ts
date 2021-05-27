@@ -4,8 +4,8 @@ export class Heist {
 
   name?: string;
   location?: string;
-  startTime?: Date;
-  endTime?: Date;
+  startTime?: string | null;
+  endTime?: string | null;
   skills?: HeistSkill[];
   status?: string;
 

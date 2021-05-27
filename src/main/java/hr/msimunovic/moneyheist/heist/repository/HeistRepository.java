@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface HeistRepository extends JpaRepository<Heist, Long> {
 
-    Heist findByName(String name);
+    Heist findByNameIgnoreCase(String name);
 
     @Override
     @EntityGraph(attributePaths = { "members.member", "skills.skill" })

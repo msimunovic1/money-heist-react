@@ -1,5 +1,6 @@
 import {LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import '@angular/common/locales/global/hr';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -73,7 +74,10 @@ export const httpInterceptorProviders = [
     NbTagModule,
     NbDialogModule.forRoot()
   ],
-  providers: [httpInterceptorProviders],
+  providers: [
+    httpInterceptorProviders,
+    { provide: LOCALE_ID, useValue: 'en-HR' }
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

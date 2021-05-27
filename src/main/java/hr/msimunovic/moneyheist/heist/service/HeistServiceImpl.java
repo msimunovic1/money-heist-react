@@ -74,7 +74,6 @@ public class HeistServiceImpl implements HeistService {
             }
         }
 
-
         heist.setStatus(HeistStatusEnum.PLANNING);
 
         return heistRepository.save(heist);
@@ -411,7 +410,7 @@ public class HeistServiceImpl implements HeistService {
         LocalDateTime endDate = heist.getEndTime();
         LocalDateTime currentTime = LocalDateTime.now();
 
-        Heist heistFromDB = heistRepository.findByName(heist.getName());
+        Heist heistFromDB = heistRepository.findByNameIgnoreCase(heist.getName());
 
         // check does heist with the same name already exists
         if(heistFromDB != null) {

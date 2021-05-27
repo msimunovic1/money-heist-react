@@ -5,6 +5,7 @@ import {Heist} from "../models/heist";
 import {HeistSkill} from "../models/heist-skill";
 import {NbDateService, NbToastrService} from "@nebular/theme";
 import {PRIMARY_OUTLET, Router, UrlSegment} from "@angular/router";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-heist-add',
@@ -27,6 +28,7 @@ export class HeistAddComponent implements OnInit {
               private heistService: HeistService,
               private router: Router,
               public toastrService: NbToastrService,
+              public datePipe: DatePipe,
               protected dateService: NbDateService<Date>) {
     // validation - endTime can't be picked in past
     this.min = this.dateService.addMonth(this.dateService.today(), 0);
@@ -72,10 +74,11 @@ export class HeistAddComponent implements OnInit {
     }
 
     let heist = new Heist();
+
     heist.name = this.heistFormGroup.value.name;
     heist.location = this.heistFormGroup.value.location;
-    heist.startTime = this.heistFormGroup.value.startTime;
-    heist.endTime = this.heistFormGroup.value.endTime;
+    heist.startTime = this.datePipe.transform(this.heistFormGroup.value.startTime, 'yyyy-MM-ddTHH:mm:ss.SSS');
+    heist.endTime = this.datePipe.transform(this.heistFormGroup.value.endTime, 'yyyy-MM-ddTHH:mm:ss.SSS');
 
     let skills: HeistSkill[] = [];
     let heistSkills = this.heistFormGroup.value.skills;
