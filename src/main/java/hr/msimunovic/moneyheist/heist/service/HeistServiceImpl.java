@@ -373,7 +373,8 @@ public class HeistServiceImpl implements HeistService {
 
         for (HeistMember heistMember : heistMembers) {
             if(heistMember.getHeist().getStatus().equals(HeistStatusEnum.READY)) {
-                throw new MethodNotAllowedException(Constants.MSG_MEMBERS_CONFIRMED);
+                return false;
+                /*throw new MethodNotAllowedException(Constants.MSG_MEMBERS_CONFIRMED);*/
             } else if(heistMember.getHeist().getStatus().equals(HeistStatusEnum.IN_PROGRESS)) {
                 return false;
             }

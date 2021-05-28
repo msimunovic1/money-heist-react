@@ -37,7 +37,7 @@
             <input formControlName="level" maxlength="10" type="text" nbInput placeholder="Level">
           </div>
           <div class="space members-input">
-            <input formControlName="members" type="number" nbInput placeholder="Members">
+            <input formControlName="members" type="number" nbInput placeholder="Members" min="0">
           </div>
           <div class="space remove-skill-btn">
             <button (click)="removeSkill(i)" nbButton size="tiny" status="danger" outline shape="round">Remove</button>
