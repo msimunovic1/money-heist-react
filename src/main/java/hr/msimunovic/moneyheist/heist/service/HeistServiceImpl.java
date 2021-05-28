@@ -87,7 +87,7 @@ public class HeistServiceImpl implements HeistService {
 
         // check heist status
         if(heist.getStatus().equals(HeistStatusEnum.IN_PROGRESS)) {
-            throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_NOT_BE_PLANNING);
+            throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_SHOULD_NOT_BE_READY);
         }
 
         Set<HeistSkillDTO> skillDuplicates = new HashSet<>();
@@ -184,7 +184,7 @@ public class HeistServiceImpl implements HeistService {
         Heist heist = findHeistById(heistId);
 
         if(heist.getStatus().equals(HeistStatusEnum.PLANNING)) {
-            throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_NOT_BE_PLANNING);
+            throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_SHOULD_NOT_BE_PLANNING);
         }
 
         return heistMapper.mapHeistMembersToDTO(heist.getMembers());
@@ -197,7 +197,7 @@ public class HeistServiceImpl implements HeistService {
         Heist heist = findHeistById(heistId);
 
         if(!heist.getStatus().equals(HeistStatusEnum.FINISHED)) {
-            throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_BE_FINISHED);
+            throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_SHOULD_BE_FINISHED);
         }
 
         return modelMapper.map(heist, HeistOutcomeDTO.class);
@@ -240,7 +240,7 @@ public class HeistServiceImpl implements HeistService {
         Heist heist = findHeistById(heistId);
 
         if(!heist.getStatus().equals(HeistStatusEnum.READY)) {
-            throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_BE_READY);
+            throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_SHOULD_BE_READY);
         }
 
         // set new status to heist
@@ -400,7 +400,7 @@ public class HeistServiceImpl implements HeistService {
 
     public void validateStartingHeist(Heist heist) {
         if(!heist.getStatus().equals(HeistStatusEnum.PLANNING)) {
-            throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_MUST_BE_PLANNING);
+            throw new MethodNotAllowedException(Constants.MSG_HEIST_STATUS_SHOULD_BE_PLANNING);
         }
     }
 

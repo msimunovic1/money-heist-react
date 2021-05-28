@@ -160,6 +160,8 @@ export class HeistDetailsComponent implements OnInit {
         if(res.status === 204) {
           this.toastrService.success('Skills updated', 'Success')
         }
+      }, () => {
+        this.ngOnInit()
       }
     );
   }

@@ -133,6 +133,8 @@ export class MemberDetailsComponent implements OnInit {
           this.toastrService.success('Skills deleted', 'Success');
           this.ngOnInit()
         }
+      }, () => {
+        this.ngOnInit()
       }
     );
   }
@@ -145,6 +147,8 @@ export class MemberDetailsComponent implements OnInit {
           this.toastrService.success('Skills updated', 'Success');
           this.ngOnInit()
         }
+      }, () => {
+        this.ngOnInit()
       }
     );
   }
