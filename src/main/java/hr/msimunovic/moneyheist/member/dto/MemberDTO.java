@@ -5,6 +5,8 @@ import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.validator.MemberSkill;
 import lombok.Data;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -22,8 +24,10 @@ public class MemberDTO {
     private String sex;
 
     @NotEmpty(message = "Email is required")
+    @Email(message = "Incorrect email format")
     private String email;
 
+    @Valid
     @NotEmpty(message = "At least one skill is required")
     private List<SkillDTO> skills;
 

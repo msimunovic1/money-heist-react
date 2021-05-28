@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * Data Transformation Object for work with API-s that request or response Heist_Skill data.
@@ -15,6 +17,8 @@ public class HeistSkillDTO {
     private String name;
 
     @NotEmpty(message = "Level field is required")
+    @Pattern(regexp = "[\\*]*", message = "Skill level should be made of asterisk characters")
+    @Size(max = 10, message = "Skill level max value is 10")
     private String level;
 
     @NotNull(message = "Member field is required")
