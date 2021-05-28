@@ -4,6 +4,7 @@ import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.validator.MemberSkill;
 import lombok.Data;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -13,7 +14,9 @@ import java.util.List;
 @MemberSkill(message = "Required is to enter a group of skills or a main skill.")
 public class MemberSkillDTO {
 
+    @Valid
     private List<SkillDTO> skills;
+
     private String mainSkill;
 
 }
