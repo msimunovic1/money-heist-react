@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -56,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // check is provided multiple skills with same name
-        multipleSkillNameValidator(memberDTO.getSkills());
+        multipleSkillNameValidator(memberDTO.getSkills(), memberDTO.getMainSkill());
 
         Member member = memberMapper.mapDTOToMember(memberDTO);
 
@@ -75,7 +76,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = findMemberById(memberId);
 
         // check is provided multiple skills with same name
-        multipleSkillNameValidator(memberSkillDTO.getSkills());
+        multipleSkillNameValidator(memberSkillDTO.getSkills(), memberSkillDTO.getMainSkill());
 
         addMemberSkills(member, memberSkillDTO.getSkills(), memberSkillDTO.getMainSkill());
 
@@ -165,15 +166,26 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    public void multipleSkillNameValidator(List<SkillDTO> memberSkills) {
+    public void multipleSkillNameValidator(List<SkillDTO> memberSkills, String mainSkill) {
+
+        AtomicBoolean mainSkillReferencesSkills = new AtomicBoolean(false);
 
         Set<String> skillNameDuplicates = new HashSet<>();
         memberSkills.stream()
                 .forEach(skillDTO -> {
-                    if(!skillNameDuplicates.add(skillDTO.getName())) {
+                    if (!skillNameDuplicates.add(skillDTO.getName())) {
                         throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
                     }
+
+                    // if skill name and mainSkill are equals set flag mainSkillReferencesSkills to true
+                    if (skillDTO.getName().equals(mainSkill)) {
+                        mainSkillReferencesSkills.set(true);
+                    }
                 });
+
+        if (!mainSkillReferencesSkills.get()) {
+            throw new BadRequestException(Constants.MSG_MAIN_SKILL_NOT_REFERENCES_SKILLS);
+        }
 
     }
 

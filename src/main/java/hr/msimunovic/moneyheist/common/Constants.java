@@ -2,6 +2,9 @@ package hr.msimunovic.moneyheist.common;
 
 public class Constants {
 
+    public Constants() {
+    }
+
     public static final String DEFAULT_SKILL_LEVEL = "*";
     public static final Integer MAX_SKILL_LEVEL = 10;
 
@@ -20,6 +23,7 @@ public class Constants {
 
     public static final String MSG_MEMBER_STATUS_NOT_MATCH_TO_HEIST = "Member status must be AVAILABLE or RETIRED.";
     public static final String MSG_MEMBER_CONFIRMED = "Member confirmed of another heist happening at the same time.";
+    public static final String MSG_MAIN_SKILL_NOT_REFERENCES_SKILLS = "Main skill must references one of the skills from the skills array.";
     public static final String MSG_HEIST_STATUS_SHOULD_BE_PLANNING = "Heist status should be PLANNING.";
     public static final String MSG_HEIST_STATUS_SHOULD_NOT_BE_PLANNING = "Heist status shouldn't be PLANNING.";
     public static final String MSG_HEIST_STATUS_SHOULD_BE_READY = "Heist status should be READY.";

@@ -49,8 +49,8 @@ public class MemberController {
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_CONTENT_LOCATION, request.getRequestURI()), HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{memberId}/skills")
-    public ResponseEntity deleteSkill(@PathVariable Long memberId, @RequestParam String skillName) {
+    @DeleteMapping("/{memberId}/skills/{skillName}")
+    public ResponseEntity deleteSkill(@PathVariable Long memberId, @PathVariable String skillName) {
 
         memberService.deleteSkill(memberId, skillName);
 
