@@ -14,7 +14,7 @@ public class SkillDTO {
     private String name;
 
     @Pattern(regexp = "[\\*]*", message = "Skill level should be made of asterisk characters")
-    @Size(max = 10, message = "Skill level max value is 10")
+    @Size(min = 1, max = 10, message = "Skill level must be from 1* to 10*")
     private String level;
 
 }
