@@ -1,5 +1,6 @@
 package hr.msimunovic.moneyheist.member;
 
+import hr.msimunovic.moneyheist.common.enums.MemberSexEnum;
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
 import hr.msimunovic.moneyheist.heistMember.HeistMember;
 import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
@@ -26,7 +27,8 @@ public class Member {
 
     private String name;
 
-    private String sex;
+    @Enumerated(EnumType.STRING)
+    private MemberSexEnum sex;
 
     private String email;
 

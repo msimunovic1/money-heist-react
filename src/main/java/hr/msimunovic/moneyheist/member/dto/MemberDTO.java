@@ -1,8 +1,9 @@
 package hr.msimunovic.moneyheist.member.dto;
 
+import hr.msimunovic.moneyheist.common.enums.MemberSexEnum;
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
-import hr.msimunovic.moneyheist.validator.MemberSkill;
+import hr.msimunovic.moneyheist.validator.MemberSex;
 import lombok.Data;
 
 import javax.validation.Valid;
@@ -20,8 +21,9 @@ public class MemberDTO {
     @NotEmpty(message = "Member name is required")
     private String name;
 
-    @NotEmpty(message = "Sex is required")
-    private String sex;
+    @NotNull(message = "Sex is required")
+    @MemberSex(anyOf = {MemberSexEnum.F, MemberSexEnum.M})
+    private MemberSexEnum sex;
 
     @NotEmpty(message = "Email is required")
     @Email(message = "Incorrect email format")
