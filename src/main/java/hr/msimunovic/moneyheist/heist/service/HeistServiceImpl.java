@@ -21,6 +21,7 @@ import hr.msimunovic.moneyheist.member.repository.MemberRepository;
 import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
 import hr.msimunovic.moneyheist.memberSkill.MemberSkillImprovement.MemberSkillImprovement;
 import hr.msimunovic.moneyheist.skill.Skill;
+import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
 import hr.msimunovic.moneyheist.skill.repository.SkillRepository;
 import hr.msimunovic.moneyheist.util.HeistUtil;
@@ -66,10 +67,15 @@ public class HeistServiceImpl implements HeistService {
 
         validatePlanningHeist(heist);
 
-        Set<HeistSkillDTO> skillDuplicates = new HashSet<>();
+        Set<SkillDTO> skillDuplicates = new HashSet<>();
         for(HeistSkillDTO heistSkillDTO : heistDTO.getSkills()) {
+
+            SkillDTO skillDTO = new SkillDTO();
+            skillDTO.setName(heistSkillDTO.getName());
+            skillDTO.setLevel(heistSkillDTO.getLevel());
+
             // check is provided multiple skills with same name and level
-            if (!skillDuplicates.add(heistSkillDTO)) {
+            if (!skillDuplicates.add(skillDTO)) {
                 throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
             }
         }

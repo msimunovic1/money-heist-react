@@ -171,20 +171,23 @@ public class MemberServiceImpl implements MemberService {
         AtomicBoolean mainSkillReferencesSkills = new AtomicBoolean(false);
 
         Set<String> skillNameDuplicates = new HashSet<>();
-        memberSkills.stream()
-                .forEach(skillDTO -> {
-                    if (!skillNameDuplicates.add(skillDTO.getName())) {
-                        throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
-                    }
 
-                    // if skill name and mainSkill are equals set flag mainSkillReferencesSkills to true
-                    if (skillDTO.getName().equals(mainSkill)) {
-                        mainSkillReferencesSkills.set(true);
-                    }
-                });
+        if (!memberSkills.isEmpty()) {
+            memberSkills.stream()
+                    .forEach(skillDTO -> {
+                        if (!skillNameDuplicates.add(skillDTO.getName())) {
+                            throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
+                        }
 
-        if (!mainSkillReferencesSkills.get()) {
-            throw new BadRequestException(Constants.MSG_MAIN_SKILL_NOT_REFERENCES_SKILLS);
+                        // if skill name and mainSkill are equals set flag mainSkillReferencesSkills to true
+                        if (skillDTO.getName().equals(mainSkill)) {
+                            mainSkillReferencesSkills.set(true);
+                        }
+                    });
+
+            if (!mainSkillReferencesSkills.get()) {
+                throw new BadRequestException(Constants.MSG_MAIN_SKILL_NOT_REFERENCES_SKILLS);
+            }
         }
 
     }
