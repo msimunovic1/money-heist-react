@@ -63,22 +63,18 @@ public class HeistServiceImpl implements HeistService {
     @Transactional
     public Heist saveHeist(HeistDTO heistDTO) {
 
+        Heist heistFromDb = heistRepository.findByName(heistDTO.getName());
+
+        if (heistFromDb != null) {
+            throw new BadRequestException(Constants.MSG_HEIST_EXISTS);
+        }
+
+        // check is provided multiple skills with same name
+        multipleSkillNameAndLevelValidator(heistDTO.getSkills());
+
         Heist heist = heistMapper.mapDTOToHeist(heistDTO);
 
         validatePlanningHeist(heist);
-
-        Set<SkillDTO> skillDuplicates = new HashSet<>();
-        for(HeistSkillDTO heistSkillDTO : heistDTO.getSkills()) {
-
-            SkillDTO skillDTO = new SkillDTO();
-            skillDTO.setName(heistSkillDTO.getName());
-            skillDTO.setLevel(heistSkillDTO.getLevel());
-
-            // check is provided multiple skills with same name and level
-            if (!skillDuplicates.add(skillDTO)) {
-                throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
-            }
-        }
 
         heist.setStatus(HeistStatusEnum.PLANNING);
 
@@ -450,8 +446,22 @@ public class HeistServiceImpl implements HeistService {
                 throw new BadRequestException(Constants.MSG_MEMBER_CONFIRMED);
             }
         }
+    }
 
+    private void multipleSkillNameAndLevelValidator(List<HeistSkillDTO> skills) {
 
+        Set<SkillDTO> skillDuplicates = new HashSet<>();
+        for(HeistSkillDTO heistSkillDTO : skills) {
+
+            SkillDTO skillDTO = new SkillDTO();
+            skillDTO.setName(heistSkillDTO.getName());
+            skillDTO.setLevel(heistSkillDTO.getLevel());
+
+            // check is provided multiple skills with same name and level
+            if (!skillDuplicates.add(skillDTO)) {
+                throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
+            }
+        }
     }
 
 }
