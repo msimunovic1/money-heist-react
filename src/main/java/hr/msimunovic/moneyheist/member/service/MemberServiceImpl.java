@@ -172,7 +172,7 @@ public class MemberServiceImpl implements MemberService {
 
         Set<String> skillNameDuplicates = new HashSet<>();
 
-        if (!memberSkills.isEmpty()) {
+        if (memberSkills != null && !memberSkills.isEmpty()) {
             memberSkills.stream()
                     .forEach(skillDTO -> {
                         if (!skillNameDuplicates.add(skillDTO.getName())) {

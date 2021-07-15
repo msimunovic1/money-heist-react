@@ -80,10 +80,14 @@ export class MemberDetailsComponent implements OnInit {
 
         if (this.member.skills) {
           this.memberSkills = this.member.skills;
+        } else {
+          this.memberSkills = [];
         }
 
         if (this.member.mainSkill) {
           this.mainSkill = this.member.mainSkill;
+        } else {
+          this.mainSkill = '';
         }
 
         // add member skills to LocalDataSource
@@ -94,6 +98,7 @@ export class MemberDetailsComponent implements OnInit {
         } else {
           this.sex = 'female'
         }
+
         switch (this.member.status) {
           case 'AVAILABLE':
             this.tagStatus = 'success';
@@ -108,8 +113,10 @@ export class MemberDetailsComponent implements OnInit {
             this.tagStatus = 'info';
             break;
         }
+
       }
     );
+
   }
 
   // add new skills to list

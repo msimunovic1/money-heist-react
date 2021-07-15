@@ -97,6 +97,8 @@ export class HeistDetailsComponent implements OnInit {
 
         if (this.heist.skills) {
           this.heistSkills = this.heist.skills;
+        } else {
+          this.heistSkills = [];
         }
 
         // add heist skills to LocalDataSource

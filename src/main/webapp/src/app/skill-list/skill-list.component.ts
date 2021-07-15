@@ -40,7 +40,7 @@ export class SkillListComponent implements OnInit {
     this.settings = {
       actions: this.actions,
       add: {
-        confirmCreate: true
+        confirmCreate: true,
       },
       delete: {
         confirmDelete : true,
@@ -54,6 +54,7 @@ export class SkillListComponent implements OnInit {
 
   onCreateConfirm(event: any) {
     this.addedSkill.emit(event.newData);
+    event.confirm.resolve();
   }
 
   onUpdateConfirm(event: any) {

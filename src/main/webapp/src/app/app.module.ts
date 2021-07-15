@@ -28,7 +28,6 @@ import {Ng2SmartTableModule} from "ng2-smart-table";
 import { SkillListComponent } from './skill-list/skill-list.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { MemberListComponent } from './member-list/member-list.component';
-import { EditMainSkillComponent } from './edit-main-skill/edit-main-skill.component';
 
 export const httpInterceptorProviders = [
   {
@@ -49,8 +48,7 @@ export const httpInterceptorProviders = [
     HeistListComponent,
     SkillListComponent,
     NotFoundComponent,
-    MemberListComponent,
-    EditMainSkillComponent
+    MemberListComponent
   ],
   imports: [
     AppRoutingModule,

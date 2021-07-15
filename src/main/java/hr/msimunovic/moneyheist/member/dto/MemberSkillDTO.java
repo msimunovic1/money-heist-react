@@ -3,6 +3,7 @@ package hr.msimunovic.moneyheist.member.dto;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.validator.MemberSkill;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import javax.validation.Valid;
 import java.util.List;
