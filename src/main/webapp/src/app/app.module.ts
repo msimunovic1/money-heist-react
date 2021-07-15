@@ -11,7 +11,7 @@ import {
   NbInputModule,
   NbLayoutModule,
   NbRadioModule, NbSelectModule,
-  NbThemeModule, NbListModule, NbCardModule, NbToastrModule, NbTagModule, NbDialogModule
+  NbThemeModule, NbListModule, NbCardModule, NbToastrModule, NbTagModule, NbDialogModule, NbDialogRef, NbDialogService
 } from "@nebular/theme";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NbEvaIconsModule} from '@nebular/eva-icons';
@@ -27,6 +27,8 @@ import { HeistListComponent } from './heist-list/heist-list.component';
 import {Ng2SmartTableModule} from "ng2-smart-table";
 import { SkillListComponent } from './skill-list/skill-list.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { MemberListComponent } from './member-list/member-list.component';
+import { EditMainSkillComponent } from './edit-main-skill/edit-main-skill.component';
 
 export const httpInterceptorProviders = [
   {
@@ -46,7 +48,9 @@ export const httpInterceptorProviders = [
     HeistEligibleMembersComponent,
     HeistListComponent,
     SkillListComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    MemberListComponent,
+    EditMainSkillComponent
   ],
   imports: [
     AppRoutingModule,

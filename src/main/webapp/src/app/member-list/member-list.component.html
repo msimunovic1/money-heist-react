@@ -1,0 +1,17 @@
+<div class="space">
+  <div>
+    <button routerLink="/addMember" nbButton status="basic"><nb-icon icon="plus"></nb-icon>New Member</button>
+  </div>
+  <nb-card class="full-height margin-top-25">
+    <nb-card-header>
+      Members
+    </nb-card-header>
+    <nb-list>
+      <nb-list-item *ngFor="let member of members">
+        <a routerLink="/member/{{member.id}}">
+          {{ member.name | uppercase }}
+        </a>
+      </nb-list-item>
+    </nb-list>
+  </nb-card>
+</div>

@@ -9,8 +9,7 @@ import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Component
@@ -53,7 +52,7 @@ public class MemberMapper {
 
         for(MemberSkill ms : member.getSkills()) {
             // map member skill to DTO
-            SkillDTO skillDTO = skillMapper.mapMemberSkillToDTO(ms);
+            var skillDTO = skillMapper.mapMemberSkillToDTO(ms);
             // add member skill to list
             skillDTOList.add(skillDTO);
         }

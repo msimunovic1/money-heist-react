@@ -55,9 +55,9 @@ public class Heist {
      */
     public void addSkill(Skill skill, Integer members) {
 
-        HeistSkill existedHeistSkill = findExistedHeistSkill(skill.getHeists());
+        var existedHeistSkill = findExistedHeistSkill(skill.getHeists());
 
-        HeistSkill heistSkill = new HeistSkill();
+        var heistSkill = new HeistSkill();
 
         if(existedHeistSkill==null) {
             heistSkill.setHeist(this);
@@ -80,7 +80,7 @@ public class Heist {
 
     public void addMember(Member member) {
 
-        HeistMember heistMember = new HeistMember();
+        var heistMember = new HeistMember();
         heistMember.setHeist(this);
         heistMember.setMember(member);
 

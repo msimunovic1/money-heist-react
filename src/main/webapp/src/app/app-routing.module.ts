@@ -7,12 +7,14 @@ import {HeistDetailsComponent} from "./heist-details/heist-details.component";
 import {HeistEligibleMembersComponent} from "./heist-eligible-members/heist-eligible-members.component";
 import {HeistListComponent} from "./heist-list/heist-list.component";
 import {NotFoundComponent} from "./not-found/not-found.component";
+import {MemberListComponent} from "./member-list/member-list.component";
 
 const routes: Routes = [
   { path: 'heists', component: HeistListComponent },
   { path: 'heistEligibleMembers/:id', component: HeistEligibleMembersComponent },
   { path: 'heist/:id', component: HeistDetailsComponent },
   { path: 'addHeist', component: HeistAddComponent },
+  { path: 'members', component: MemberListComponent },
   { path: 'member/:id', component: MemberDetailsComponent },
   { path: 'addMember', component: MemberAddComponent },
   { path: 'notFound', component: NotFoundComponent },

@@ -1,0 +1,18 @@
+<form (ngSubmit)="editMainSkill()">
+  <nb-card>
+    <nb-card-header>Edit Main Skill</nb-card-header>
+    <nb-card-body>
+      <nb-radio-group [(value)]="mainSkill" name="mainSkill">
+        <nb-radio *ngFor="let memberSkill of memberSkills"
+                  [value]="memberSkill.name"
+                  [checked]="memberSkill.name===mainSkill">
+          {{memberSkill.name}}
+        </nb-radio>
+      </nb-radio-group>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton type="submit" status="primary">Save</button>
+      <button class="right" nbButton (click)="close()" status="danger">Close</button>
+    </nb-card-footer>
+  </nb-card>
+</form>

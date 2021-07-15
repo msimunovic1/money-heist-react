@@ -2,9 +2,9 @@
   <nb-card-body>
 
     <!--heist name and location-->
-    <h3>{{ heist.name }}</h3>
+    <h3>{{heist.name}}</h3>
     <div>
-      {{ heist.location }}
+      {{heist.location}}
       <nb-icon icon="pin-outline" pack="eva"></nb-icon>
     </div>
 
@@ -20,8 +20,8 @@
     </div>
 
     <div class="space">
-      <p><nb-icon icon="clock-outline" pack="eva"></nb-icon> START TIME: {{ heist.startTime | date: 'medium' }}</p>
-      <p><nb-icon icon="clock-outline" pack="eva"></nb-icon> END TIME: {{ heist.endTime | date: 'medium' }}</p>
+      <p><nb-icon icon="clock-outline" pack="eva"></nb-icon> START TIME: {{heist.startTime | date: 'medium'}}</p>
+      <p><nb-icon icon="clock-outline" pack="eva"></nb-icon> END TIME: {{heist.endTime | date: 'medium'}}</p>
     </div>
 
     <!--heist members table-->

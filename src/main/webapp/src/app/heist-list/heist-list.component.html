@@ -1,5 +1,8 @@
 <div class="space">
-  <nb-card class="full-height">
+  <div>
+    <button routerLink="/addHeist" nbButton status="basic"><nb-icon icon="plus"></nb-icon>New Heist</button>
+  </div>
+  <nb-card class="full-height margin-top-25">
       <nb-card-header>
         Heists
       </nb-card-header>
@@ -11,25 +14,7 @@
         </nb-list-item>
       </nb-list>
     </nb-card>
-    <div>
-      <button routerLink="/addHeist" nbButton status="basic">New Heist</button>
-    </div>
-</div>
-
-<div class="space">
-  <nb-card class="full-height">
-    <nb-card-header>
-      Members
-    </nb-card-header>
-    <nb-list>
-      <nb-list-item *ngFor="let member of members">
-        <a routerLink="/member/{{member.id}}">
-          {{ member.name | uppercase }}
-        </a>
-      </nb-list-item>
-    </nb-list>
-  </nb-card>
   <div>
-    <button routerLink="/addMember" nbButton status="basic">New Member</button>
+    <button routerLink="/members" fullWidth nbButton status="info"><nb-icon icon="people-outline"></nb-icon>Show All Members</button>
   </div>
 </div>
