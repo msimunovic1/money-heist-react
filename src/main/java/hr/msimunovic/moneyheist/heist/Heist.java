@@ -43,6 +43,7 @@ public class Heist {
     @OneToMany(mappedBy = "heist",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
+    @OrderBy("skill desc")
     private Set<HeistSkill> skills = new HashSet<>();
 
     @OneToMany(mappedBy = "heist",

@@ -55,11 +55,6 @@
       ></app-skill-list>
     </div>
 
-    <!--save heist skills changes-->
-    <div class="space" class="right">
-      <button nbButton (click)="saveUpdatedSkills()" status="primary" size="small" outline [disabled]="disableUpdateSkillsBtn()">Save changes</button>
-    </div>
-
     <!--start heist btn-->
     <div class="space" *ngIf="heistStatus.status==='READY'" class="center">
       <button nbButton (click)="startHeistManually(this.heistId)" status="primary">Start heist</button>

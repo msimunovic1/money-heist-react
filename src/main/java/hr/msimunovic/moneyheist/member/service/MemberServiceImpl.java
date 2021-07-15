@@ -185,7 +185,7 @@ public class MemberServiceImpl implements MemberService {
                         }
                     });
 
-            if (!mainSkillReferencesSkills.get()) {
+            if (!mainSkill.isEmpty() && !mainSkillReferencesSkills.get()) {
                 throw new BadRequestException(Constants.MSG_MAIN_SKILL_NOT_REFERENCES_SKILLS);
             }
         }

@@ -21,7 +21,7 @@ export class HeistDetailsComponent implements OnInit {
   heist: Heist = new Heist();
   heistId: number = 0;
 
-  updatedHeistSkills: HeistSkill[] = [];
+  heistSkills: HeistSkill[] = [];
   heistMembers: HeistMember[] = [];
   heistStatus: HeistStatus = new HeistStatus();
   heistOutcome: HeistOutcome = new HeistOutcome();
@@ -75,26 +75,14 @@ export class HeistDetailsComponent implements OnInit {
     }
   }
 
-  disableUpdateSkillsBtn(){
-    return this.updatedHeistSkills.length < 1;
-
-  }
-
   // add new skills to list
   addSkill(event: HeistSkill) {
-    this.source.add(event).then(() => this.refreshUpdateSkillList())
+    this.source.add(event).then(() => this.saveUpdatedSkills())
   }
 
   // update skills from list
   updateSkill(event: UpdatedSkill) {
-    this.source.update(event.oldData, event.newData).then(() => this.refreshUpdateSkillList())
-  }
-
-  refreshUpdateSkillList() {
-    this.source.getAll().then(data => {
-      this.source.refresh();
-      this.updatedHeistSkills = data;
-    });
+    this.source.update(event.oldData, event.newData).then(() => this.saveUpdatedSkills())
   }
 
   handleHeistDetails() {
@@ -106,6 +94,10 @@ export class HeistDetailsComponent implements OnInit {
       data => this.heist = data,
       () => {},
       () => {
+
+        if (this.heist.skills) {
+          this.heistSkills = this.heist.skills;
+        }
 
         // add heist skills to LocalDataSource
         this.source = new LocalDataSource(this.heist.skills);
@@ -151,17 +143,18 @@ export class HeistDetailsComponent implements OnInit {
   // save updated skills
   saveUpdatedSkills() {
     // convert skills members from string to number
-    this.updatedHeistSkills.forEach(skill => {
+    this.heistSkills.forEach(skill => {
       skill.members = +skill.members
     });
 
-    this.heistService.updateHeistSkills(this.heistId, new HeistSkills(this.updatedHeistSkills)).subscribe(
+    this.heistService.updateHeistSkills(this.heistId, new HeistSkills(this.heistSkills)).subscribe(
       res => {
         if(res.status === 204) {
           this.toastrService.success('Skills updated', 'Success')
+          this.ngOnInit();
         }
       }, () => {
-        this.ngOnInit()
+        this.ngOnInit();
       }
     );
   }
