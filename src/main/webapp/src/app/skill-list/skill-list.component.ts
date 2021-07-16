@@ -92,7 +92,6 @@ export class SkillListComponent implements OnInit {
       }).onClose.subscribe(() => {
         if (this.isConfirmCreate) {
           this.addedSkill.emit(event.newData);
-          event.confirm.resolve();
           this.dialogService.confirmCreate(false);
         }
       });
