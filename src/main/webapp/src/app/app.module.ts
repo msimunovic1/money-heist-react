@@ -11,7 +11,7 @@ import {
   NbInputModule,
   NbLayoutModule,
   NbRadioModule, NbSelectModule,
-  NbThemeModule, NbListModule, NbCardModule, NbToastrModule, NbTagModule, NbDialogModule, NbDialogRef, NbDialogService
+  NbThemeModule, NbListModule, NbCardModule, NbToastrModule, NbTagModule, NbDialogModule
 } from '@nebular/theme';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NbEvaIconsModule} from '@nebular/eva-icons';
@@ -28,6 +28,7 @@ import {Ng2SmartTableModule} from 'ng2-smart-table';
 import { SkillListComponent } from './skill-list/skill-list.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { MemberListComponent } from './member-list/member-list.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 export const httpInterceptorProviders = [
   {
@@ -48,7 +49,8 @@ export const httpInterceptorProviders = [
     HeistListComponent,
     SkillListComponent,
     NotFoundComponent,
-    MemberListComponent
+    MemberListComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     AppRoutingModule,
@@ -80,6 +82,6 @@ export const httpInterceptorProviders = [
     httpInterceptorProviders,
     { provide: LOCALE_ID, useValue: 'en-HR' }
     ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

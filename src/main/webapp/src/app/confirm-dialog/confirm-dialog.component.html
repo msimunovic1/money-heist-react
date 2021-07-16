@@ -1,0 +1,8 @@
+<nb-card>
+  <nb-card-header>{{header}}</nb-card-header>
+  <nb-card-body>{{body}}</nb-card-body>
+  <nb-card-footer>
+    <button nbButton (click)="confirm()" status="primary">Yes</button>
+    <button class="right" nbButton (click)="close()" status="danger">No</button>
+  </nb-card-footer>
+</nb-card>
