@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {HeistService} from "../services/heist.service";
-import {HeistInfo} from "../models/heist-info";
+import {HeistService} from '../services/heist.service';
+import {HeistInfo} from '../models/heist-info';
 
 @Component({
   selector: 'app-heist-list',
@@ -17,7 +17,7 @@ export class HeistListComponent implements OnInit {
 
     this.heistService.getAll().subscribe(
       data => this.heists = data
-    )
+    );
 
   }
 

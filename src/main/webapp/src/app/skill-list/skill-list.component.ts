@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
-import {NbDialogService} from "@nebular/theme";
-import {UpdatedSkill} from "../models/updated-skill";
+import {NbDialogService} from '@nebular/theme';
+import {UpdatedSkill} from '../models/updated-skill';
 
 @Component({
   selector: 'app-skill-list',
@@ -30,8 +30,8 @@ export class SkillListComponent implements OnInit {
   /*ng2-smart-table settings*/
   settings: any;
 
-  skillName: string = '';
-  isConfirmed: boolean = false;
+  skillName = '';
+  isConfirmed = false;
 
   constructor(private dialogService: NbDialogService) {
   }
@@ -64,8 +64,8 @@ export class SkillListComponent implements OnInit {
   onDeleteConfirm(event: any, dialog: TemplateRef<any>) {
       this.dialogService.open(dialog, {closeOnEsc: true})
         .onClose.subscribe(() => {
-          if(this.isConfirmed) {
-            this.deletedSkill.emit(event.data.name)
+          if (this.isConfirmed) {
+            this.deletedSkill.emit(event.data.name);
             this.isConfirmed = false;
           }
       });

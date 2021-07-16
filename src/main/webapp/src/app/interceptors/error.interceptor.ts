@@ -6,9 +6,9 @@ import {
   HttpInterceptor, HttpErrorResponse
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {tap} from "rxjs/operators";
-import {NbToastrService} from "@nebular/theme";
-import {Router} from "@angular/router";
+import {tap} from 'rxjs/operators';
+import {NbToastrService} from '@nebular/theme';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -22,12 +22,12 @@ export class ErrorInterceptor implements HttpInterceptor {
       .pipe(
         tap(() => {},
           (e: HttpErrorResponse) => {
-          if(e.error.message) {
-            this.toastrService.danger(e.error.message, "Error");
+          if (e.error.message) {
+            this.toastrService.danger(e.error.message, 'Error');
           } else {
-            this.toastrService.danger("Something going wrong. Please contact admin.");
+            this.toastrService.danger('Something going wrong. Please contact admin.');
           }
-          if(e.error.status === 404) {
+          if (e.error.status === 404) {
             this.router.navigateByUrl('/notFound');
           }
           })

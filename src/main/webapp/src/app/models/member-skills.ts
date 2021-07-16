@@ -1,4 +1,4 @@
-import {Skill} from "./skill";
+import {Skill} from './skill';
 
 export class MemberSkills {
 

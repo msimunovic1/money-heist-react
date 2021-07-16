@@ -1,4 +1,4 @@
-import {HeistSkill} from "./heist-skill";
+import {HeistSkill} from './heist-skill';
 
 export class HeistSkills {
 

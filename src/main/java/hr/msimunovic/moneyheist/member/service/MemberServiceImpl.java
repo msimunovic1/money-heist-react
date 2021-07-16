@@ -50,7 +50,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public Member saveMember(MemberDTO memberDTO) {
 
-        Member memberFromDB = memberRepository.findByEmail(memberDTO.getEmail());
+        var memberFromDB = memberRepository.findByEmail(memberDTO.getEmail());
 
         if(memberFromDB != null) {
             throw new BadRequestException(Constants.MSG_MEMBER_EXISTS);
@@ -59,7 +59,7 @@ public class MemberServiceImpl implements MemberService {
         // check is provided multiple skills with same name
         multipleSkillNameValidator(memberDTO.getSkills(), memberDTO.getMainSkill());
 
-        Member member = memberMapper.mapDTOToMember(memberDTO);
+        var member = memberMapper.mapDTOToMember(memberDTO);
 
         addMemberSkills(member, memberDTO.getSkills(), memberDTO.getMainSkill());
 
@@ -73,7 +73,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void updateSkills(Long memberId, MemberSkillDTO memberSkillDTO) {
 
-        Member member = findMemberById(memberId);
+        var member = findMemberById(memberId);
 
         // check is provided multiple skills with same name
         multipleSkillNameValidator(memberSkillDTO.getSkills(), memberSkillDTO.getMainSkill());
@@ -86,7 +86,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void deleteSkill(Long memberId, String skillName) {
 
-        Member member = findMemberById(memberId);
+        var member = findMemberById(memberId);
 
         // check does skill exists in DB
         List<Skill> skills = skillRepository.findByName(skillName);
@@ -129,8 +129,8 @@ public class MemberServiceImpl implements MemberService {
         if((skillDTOList==null || skillDTOList.isEmpty()) && !mainSkill.isEmpty()) {
 
             // check member’s previous skill array
-            Skill existedMemberSkill = member.getSkills().stream()
-                    .map(memberSkill -> memberSkill.getSkill())
+            var existedMemberSkill = member.getSkills().stream()
+                    .map(MemberSkill::getSkill)
                     .filter(skill -> skill.getName().equals(mainSkill))
                     .findAny()
                     .orElse(null);
@@ -139,11 +139,11 @@ public class MemberServiceImpl implements MemberService {
                 member.addSkill(existedMemberSkill, mainSkill);
             } else {
                 // check skill in DB
-                Skill skillFromDB = skillRepository.findByNameIgnoreCaseAndLevel(mainSkill, Constants.DEFAULT_SKILL_LEVEL);
+                var skillFromDB = skillRepository.findByNameIgnoreCaseAndLevel(mainSkill, Constants.DEFAULT_SKILL_LEVEL);
                 if(skillFromDB != null) {
                     member.addSkill(skillFromDB, mainSkill);
                 } else {
-                    Skill skill = new Skill();
+                    var skill = new Skill();
                     skill.setName(mainSkill);
                     skill.setLevel(Constants.DEFAULT_SKILL_LEVEL);
                     member.addSkill(skill, mainSkill);
@@ -156,7 +156,7 @@ public class MemberServiceImpl implements MemberService {
                     skillDTO.setLevel(Constants.DEFAULT_SKILL_LEVEL);
                 }
                 // check skill in DB
-                Skill skillFromDB = skillRepository.findByNameIgnoreCaseAndLevel(skillDTO.getName(), skillDTO.getLevel());
+                var skillFromDB = skillRepository.findByNameIgnoreCaseAndLevel(skillDTO.getName(), skillDTO.getLevel());
                 if(skillFromDB==null) {
                     member.addSkill(modelMapper.map(skillDTO, Skill.class), mainSkill);
                 } else {
@@ -168,13 +168,12 @@ public class MemberServiceImpl implements MemberService {
 
     public void multipleSkillNameValidator(List<SkillDTO> memberSkills, String mainSkill) {
 
-        AtomicBoolean mainSkillReferencesSkills = new AtomicBoolean(false);
+        var mainSkillReferencesSkills = new AtomicBoolean(false);
 
         Set<String> skillNameDuplicates = new HashSet<>();
 
         if (memberSkills != null && !memberSkills.isEmpty()) {
-            memberSkills.stream()
-                    .forEach(skillDTO -> {
+            memberSkills.forEach(skillDTO -> {
                         if (!skillNameDuplicates.add(skillDTO.getName())) {
                             throw new BadRequestException(Constants.MSG_DUPLICATED_SKILLS);
                         }

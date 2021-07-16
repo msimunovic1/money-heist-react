@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {HeistService} from "../services/heist.service";
-import {Heist} from "../models/heist";
-import {HeistSkill} from "../models/heist-skill";
-import {NbDateService, NbToastrService} from "@nebular/theme";
-import {PRIMARY_OUTLET, Router, UrlSegment} from "@angular/router";
-import {DatePipe} from "@angular/common";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {HeistService} from '../services/heist.service';
+import {Heist} from '../models/heist';
+import {HeistSkill} from '../models/heist-skill';
+import {NbDateService, NbToastrService} from '@nebular/theme';
+import {PRIMARY_OUTLET, Router, UrlSegment} from '@angular/router';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-heist-add',
@@ -38,7 +38,7 @@ export class HeistAddComponent implements OnInit {
   }
 
   get skills() {
-    return this.heistFormGroup.controls['skills'] as FormArray;
+    return this.heistFormGroup.controls.skills as FormArray;
   }
 
   get startTime() {
@@ -55,7 +55,7 @@ export class HeistAddComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       level: new FormControl('', [Validators.required, Validators.maxLength(10)]),
       members: new FormControl('', [Validators.required])
-    })
+    });
     this.skills.push(skillForm);
   }
 
@@ -67,21 +67,21 @@ export class HeistAddComponent implements OnInit {
   onSubmit() {
 
     // Touching all fields triggers the display of the error messages
-    if(this.heistFormGroup.invalid) {
-      this.toastrService.warning("Please fill in all required fields.", "Required fields")
+    if (this.heistFormGroup.invalid) {
+      this.toastrService.warning('Please fill in all required fields.', 'Required fields');
       this.heistFormGroup.markAllAsTouched();
       return;
     }
 
-    let heist = new Heist();
+    const heist = new Heist();
 
     heist.name = this.heistFormGroup.value.name;
     heist.location = this.heistFormGroup.value.location;
     heist.startTime = this.datePipe.transform(this.heistFormGroup.value.startTime, 'yyyy-MM-ddTHH:mm:ss.SSS');
     heist.endTime = this.datePipe.transform(this.heistFormGroup.value.endTime, 'yyyy-MM-ddTHH:mm:ss.SSS');
 
-    let skills: HeistSkill[] = [];
-    let heistSkills = this.heistFormGroup.value.skills;
+    const skills: HeistSkill[] = [];
+    const heistSkills = this.heistFormGroup.value.skills;
     heistSkills.map((skill: HeistSkill) => {
       skills.push(skill);
     });
@@ -93,17 +93,18 @@ export class HeistAddComponent implements OnInit {
         this.resetForm();
 
         // get url segments from location response header
-        const urlSegments: UrlSegment[]  = this.router.parseUrl(<string>res.headers.get('location')).root.children[PRIMARY_OUTLET].segments;
+        const urlSegments: UrlSegment[]  = this.router
+          .parseUrl(res.headers.get('location') as string).root.children[PRIMARY_OUTLET].segments;
         // get user id from location response header segment
         const id = urlSegments[1].path;
 
         this.router.navigate(['/heist/', id]);
       }
-    )
+    );
   }
 
   resetForm() {
-    //reset the form
+    // reset the form
     this.heistFormGroup.reset();
   }
 

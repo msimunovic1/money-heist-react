@@ -153,7 +153,7 @@ export class HeistDetailsComponent implements OnInit {
       res => {
         if(res.status === 204) {
           this.toastrService.success('Skills updated', 'Success')
-          this.ngOnInit();
+          this.handleHeistDetails();
         }
       }, () => {
         this.ngOnInit();
@@ -164,7 +164,7 @@ export class HeistDetailsComponent implements OnInit {
   // start heist manually
   startHeistManually(heistId: number) {
     this.heistService.startHeist(heistId).subscribe(
-      () => this.ngOnInit()
+      () => this.handleHeistDetails()
     );
   }
 }

@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {MemberAddComponent} from "./member-add/member-add.component";
-import {HeistAddComponent} from "./heist-add/heist-add.component";
-import {MemberDetailsComponent} from "./member-details/member-details.component";
-import {HeistDetailsComponent} from "./heist-details/heist-details.component";
-import {HeistEligibleMembersComponent} from "./heist-eligible-members/heist-eligible-members.component";
-import {HeistListComponent} from "./heist-list/heist-list.component";
-import {NotFoundComponent} from "./not-found/not-found.component";
-import {MemberListComponent} from "./member-list/member-list.component";
+import {MemberAddComponent} from './member-add/member-add.component';
+import {HeistAddComponent} from './heist-add/heist-add.component';
+import {MemberDetailsComponent} from './member-details/member-details.component';
+import {HeistDetailsComponent} from './heist-details/heist-details.component';
+import {HeistEligibleMembersComponent} from './heist-eligible-members/heist-eligible-members.component';
+import {HeistListComponent} from './heist-list/heist-list.component';
+import {NotFoundComponent} from './not-found/not-found.component';
+import {MemberListComponent} from './member-list/member-list.component';
 
 const routes: Routes = [
   { path: 'heists', component: HeistListComponent },

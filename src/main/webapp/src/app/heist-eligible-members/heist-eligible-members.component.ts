@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {HeistService} from "../services/heist.service";
-import {MembersEligibleForHeist} from "../models/members-eligible-for-heist";
-import {ActivatedRoute, Router} from "@angular/router";
-import {HeistMembers} from "../models/heist-members";
+import {HeistService} from '../services/heist.service';
+import {MembersEligibleForHeist} from '../models/members-eligible-for-heist';
+import {ActivatedRoute, Router} from '@angular/router';
+import {HeistMembers} from '../models/heist-members';
 
 @Component({
   selector: 'app-heist-eligible-members',
@@ -13,7 +13,7 @@ export class HeistEligibleMembersComponent implements OnInit {
 
   membersEligibleForHeist: MembersEligibleForHeist = new MembersEligibleForHeist();
   eligibleMembers: string[] = [];
-  heistId: number = 0;
+  heistId = 0;
 
   heistMembers: string[] = [];
   iHeistMembers: HeistMembers = new HeistMembers();
@@ -33,16 +33,16 @@ export class HeistEligibleMembersComponent implements OnInit {
         () => {
           this.membersEligibleForHeist.members?.map(member => {
             if (member.name != null) {
-              this.eligibleMembers.push(member.name)
+              this.eligibleMembers.push(member.name);
             }
-          })
+          });
         }
       );
     });
   }
 
   disableConfirmBtn(): boolean {
-    if (this.heistMembers.length<1) {
+    if (this.heistMembers.length < 1) {
       return true;
     }
     return false;
@@ -60,7 +60,7 @@ export class HeistEligibleMembersComponent implements OnInit {
   confirmMembers() {
     this.heistService.saveHeistMembers(this.heistId, this.iHeistMembers).subscribe(
       () => {
-        this.router.navigateByUrl(`/heist/${this.heistId}`)
+        this.router.navigateByUrl(`/heist/${this.heistId}`);
       }
     );
   }
@@ -69,7 +69,7 @@ export class HeistEligibleMembersComponent implements OnInit {
     // remove member from eligible members array
     this.heistMembers.splice(index, 1);
     // add member to heist
-    this.eligibleMembers.push(member)
+    this.eligibleMembers.push(member);
     // remap heist member array
     this.iHeistMembers.members = this.heistMembers;
   }

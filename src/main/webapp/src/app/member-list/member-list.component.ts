@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {MemberService} from "../services/member.service";
-import {MemberInfo} from "../models/member-info";
+import {MemberService} from '../services/member.service';
+import {MemberInfo} from '../models/member-info';
 
 @Component({
   selector: 'app-member-list',
@@ -17,7 +17,7 @@ export class MemberListComponent implements OnInit {
 
     this.memberService.getAll().subscribe(
       data => this.members = data
-    )
+    );
 
   }
 

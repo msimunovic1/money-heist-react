@@ -19,7 +19,7 @@
 
     <div class="space">
       <nb-icon icon="activity-outline" pack="eva"></nb-icon> MAIN SKILL: {{member.mainSkill}}
-      <button nbButton size="tiny" outline (click)="editMainSkillDialog(editDialog)" disabled="{{memberSkills.length<1}}">edit</button>
+      <button nbButton size="tiny" outline (click)="editMainSkillDialog(editDialog)" [disabled]="memberSkills.length<1">edit</button>
     </div>
 
     <div class="update-skills-table">

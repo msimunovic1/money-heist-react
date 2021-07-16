@@ -1,13 +1,13 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
-import {Member} from "../models/member";
-import {MemberService} from "../services/member.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {LocalDataSource} from "ng2-smart-table";
-import {Skill} from "../models/skill";
-import {NbDialogService, NbToastrService} from "@nebular/theme";
-import {MemberSkills} from "../models/member-skills";
-import {NgForm} from "@angular/forms";
-import {UpdatedSkill} from "../models/updated-skill";
+import {Member} from '../models/member';
+import {MemberService} from '../services/member.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {LocalDataSource} from 'ng2-smart-table';
+import {Skill} from '../models/skill';
+import {NbDialogService, NbToastrService} from '@nebular/theme';
+import {MemberSkills} from '../models/member-skills';
+import {NgForm} from '@angular/forms';
+import {UpdatedSkill} from '../models/updated-skill';
 
 
 @Component({
@@ -18,10 +18,10 @@ import {UpdatedSkill} from "../models/updated-skill";
 export class MemberDetailsComponent implements OnInit {
 
   member: Member = new Member();
-  memberId: number = 0;
-  sex: string = '';
-  tagStatus: string = 'basic';
-  mainSkill: string = '';
+  memberId = 0;
+  sex = '';
+  tagStatus = 'basic';
+  mainSkill = '';
 
   source: LocalDataSource = new LocalDataSource();
 
@@ -36,7 +36,7 @@ export class MemberDetailsComponent implements OnInit {
     level: {
       title: 'LEVEL',
     }
-  }
+  };
 
   constructor(private memberService: MemberService,
               private route: ActivatedRoute,
@@ -93,10 +93,10 @@ export class MemberDetailsComponent implements OnInit {
         // add member skills to LocalDataSource
         this.source = new LocalDataSource(this.member.skills);
 
-        if(this.member.sex === 'M') {
-          this.sex = 'male'
+        if (this.member.sex === 'M') {
+          this.sex = 'male';
         } else {
-          this.sex = 'female'
+          this.sex = 'female';
         }
 
         switch (this.member.status) {
@@ -123,7 +123,7 @@ export class MemberDetailsComponent implements OnInit {
   addSkill(event: MemberSkills) {
     this.source.add(event).then(() => {
       this.saveUpdatedSkills();
-    })
+    });
   }
 
   // update skills from list
@@ -137,12 +137,12 @@ export class MemberDetailsComponent implements OnInit {
   saveUpdatedSkills() {
     this.memberService.updateMemberSkills(this.memberId, new MemberSkills(this.memberSkills, this.mainSkill)).subscribe(
       res => {
-        if(res.status === 204) {
+        if (res.status === 204) {
           this.toastrService.success('Skills updated', 'Success');
-          this.ngOnInit();
+          this.handleMemberDetails();
         }
       }, () => {
-        this.ngOnInit()
+        this.handleMemberDetails();
       }
     );
   }
@@ -151,12 +151,12 @@ export class MemberDetailsComponent implements OnInit {
   deleteSkill(skillName: string) {
     this.memberService.deleteMemberSkill(this.memberId, skillName).subscribe(
       res => {
-        if(res.status === 204) {
+        if (res.status === 204) {
           this.toastrService.success('Skills deleted', 'Success');
-          this.ngOnInit()
+          this.handleMemberDetails();
         }
       }, () => {
-        this.ngOnInit()
+        this.ngOnInit();
       }
     );
   }
