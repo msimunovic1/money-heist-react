@@ -2,6 +2,7 @@ package hr.msimunovic.moneyheist.skill;
 
 import hr.msimunovic.moneyheist.heistSkill.HeistSkill;
 import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

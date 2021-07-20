@@ -5,6 +5,7 @@ import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
 import hr.msimunovic.moneyheist.heistMember.HeistMember;
 import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Member {
 

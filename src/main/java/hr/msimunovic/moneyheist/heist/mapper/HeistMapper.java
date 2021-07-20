@@ -28,20 +28,18 @@ public class HeistMapper {
 
     public HeistDTO mapHeistToDTO(Heist heist) {
 
-        HeistDTO heistDTO = new HeistDTO();
-        heistDTO.setName(heist.getName());
-        heistDTO.setLocation(heist.getLocation());
-        heistDTO.setStartTime(heist.getStartTime());
-        heistDTO.setEndTime(heist.getEndTime());
-
         List<HeistSkillDTO> heistSkillDTOList = heist.getSkills().stream()
-                .map(heistSkill -> skillMapper.mapHeistSkillToDTO(heistSkill))
+                .map(skillMapper::mapHeistSkillToDTO)
                 .collect(Collectors.toList());
 
-        heistDTO.setSkills(heistSkillDTOList);
-        heistDTO.setStatus(heist.getStatus());
-
-        return heistDTO;
+        return HeistDTO.builder()
+                .name(heist.getName())
+                .location(heist.getLocation())
+                .startTime(heist.getStartTime())
+                .endTime(heist.getEndTime())
+                .skills(heistSkillDTOList)
+                .status(heist.getStatus())
+                .build();
 
     }
 

@@ -20,11 +20,18 @@ public class MemberMapper {
 
     public MemberDTO mapMemberToDTO(Member member) {
 
-        MemberDTO memberDTO = new MemberDTO();
+        MemberDTO memberDTO = MemberDTO.builder()
+                .name(member.getName())
+                .sex(member.getSex())
+                .email(member.getEmail())
+                .status(member.getStatus())
+                .build();
+
+        /*MemberDTO memberDTO = new MemberDTO();
         memberDTO.setName(member.getName());
         memberDTO.setSex(member.getSex());
         memberDTO.setEmail(member.getEmail());
-        memberDTO.setStatus(member.getStatus());
+        memberDTO.setStatus(member.getStatus());*/
 
         // TODO: ovo izdvojiti u metodu
         List<SkillDTO> skillDTOList = new ArrayList<>();

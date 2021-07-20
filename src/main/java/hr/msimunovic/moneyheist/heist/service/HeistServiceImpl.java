@@ -234,7 +234,6 @@ public class HeistServiceImpl implements HeistService {
     }
 
     @Override
-    @Transactional
     public void startHeist(Long heistId) {
 
         log.info("Heist with id {} started.", heistId);
@@ -263,7 +262,6 @@ public class HeistServiceImpl implements HeistService {
     }
 
     @Override
-    @Transactional
     public void endHeist(Long heistId) {
 
         scheduledTasks.forEach((k, v) -> {
@@ -437,7 +435,7 @@ public class HeistServiceImpl implements HeistService {
         for (Heist heist : readyHeists) {
 
             Member memberConfirmed = heist.getMembers().stream()
-                    .map(heistMember -> heistMember.getMember())
+                    .map(HeistMember::getMember)
                     .filter(heistMember -> heistMember.getId().equals(member.getId()))
                     .findAny()
                     .orElse(null);
@@ -453,9 +451,10 @@ public class HeistServiceImpl implements HeistService {
         Set<SkillDTO> skillDuplicates = new HashSet<>();
         for(HeistSkillDTO heistSkillDTO : skills) {
 
-            SkillDTO skillDTO = new SkillDTO();
-            skillDTO.setName(heistSkillDTO.getName());
-            skillDTO.setLevel(heistSkillDTO.getLevel());
+            SkillDTO skillDTO = SkillDTO.builder()
+                    .name(heistSkillDTO.getName())
+                    .level(heistSkillDTO.getLevel())
+                    .build();
 
             // check is provided multiple skills with same name and level
             if (!skillDuplicates.add(skillDTO)) {

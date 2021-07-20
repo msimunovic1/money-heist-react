@@ -1,5 +1,6 @@
 package hr.msimunovic.moneyheist.heist.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Size;
  * Data Transformation Object for work with API-s that request or response Heist_Skill data.
  */
 @Data
+@Builder
 public class HeistSkillDTO {
 
     @NotEmpty(message = "Skill name is required")

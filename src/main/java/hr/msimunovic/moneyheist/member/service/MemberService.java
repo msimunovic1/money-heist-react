@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface MemberService {
 
-    Member saveMember(MemberDTO memberDTO);
+    Long saveMember(MemberDTO memberDTO);
 
     void updateSkills(Long memberId, MemberSkillDTO memberSkillDTO);
 

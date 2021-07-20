@@ -48,7 +48,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public Member saveMember(MemberDTO memberDTO) {
+    public Long saveMember(MemberDTO memberDTO) {
 
         Member memberFromDB = memberRepository.findByEmail(memberDTO.getEmail());
 
@@ -66,7 +66,7 @@ public class MemberServiceImpl implements MemberService {
         // send email to member - request waiting response !!!!!!
         /*emailService.sendEmail(member.getEmail(), Constants.MAIL_MEMBER_ADDED_SUBJECT, Constants.MAIL_MEMBER_ADDED_TEXT);*/
 
-        return memberRepository.save(member);
+        return memberRepository.save(member).getId();
     }
 
     @Override
@@ -130,7 +130,7 @@ public class MemberServiceImpl implements MemberService {
 
             // check member’s previous skill array
             Skill existedMemberSkill = member.getSkills().stream()
-                    .map(memberSkill -> memberSkill.getSkill())
+                    .map(MemberSkill::getSkill)
                     .filter(skill -> skill.getName().equals(mainSkill))
                     .findAny()
                     .orElse(null);

@@ -1,7 +1,6 @@
 package hr.msimunovic.moneyheist.api.controller;
 
 import hr.msimunovic.moneyheist.common.Constants;
-import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.dto.MemberDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberInfoDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
@@ -24,17 +23,17 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<MemberInfoDTO>> getAllHeists() {
+    public ResponseEntity<List<MemberInfoDTO>> getAllMembers() {
         return new ResponseEntity(memberService.getAllMembers(), HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity saveMember(HttpServletRequest request, @Valid @RequestBody MemberDTO memberDTO) {
 
-        Member createdMember = memberService.saveMember(memberDTO);
+        Long memberId = memberService.saveMember(memberDTO);
 
         // Indicates the URL to redirect a page to.
-        String locationHeader = request.getRequestURI() + "/" + createdMember.getId();
+        String locationHeader = request.getRequestURI() + "/" + memberId;
 
         return new ResponseEntity<>(HttpUtil.generateHttpHeaders(Constants.HTTP_HEADER_LOCATION, locationHeader), HttpStatus.CREATED);
     }
