@@ -40,6 +40,7 @@ public class Member {
     @OneToMany(mappedBy = "member",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
+    @OrderBy("skill desc")
     private Set<MemberSkill> skills = new HashSet<>();
 
     @OneToMany(mappedBy = "member")
@@ -55,9 +56,9 @@ public class Member {
         skills.removeIf(memberSkill -> memberSkill.getSkill().getName().equals(skill.getName()) &&
                 !memberSkill.getSkill().getLevel().equals(skill.getLevel()));
 
-        MemberSkill existedMemberSkill = findExistedMemberSkill(skill.getMembers());
+        var existedMemberSkill = findExistedMemberSkill(skill.getMembers());
 
-        MemberSkill memberSkill = new MemberSkill();
+        var memberSkill = new MemberSkill();
 
         if(existedMemberSkill==null) {
             memberSkill.setMember(this);
@@ -90,7 +91,7 @@ public class Member {
 
         for (Iterator<MemberSkill> iterator = skills.iterator(); iterator.hasNext(); ) {
 
-            MemberSkill memberSkill = iterator.next();
+            var memberSkill = iterator.next();
 
             if(memberSkill.getMember().equals(this) && memberSkill.getSkill().equals(skill)) {
                 iterator.remove();

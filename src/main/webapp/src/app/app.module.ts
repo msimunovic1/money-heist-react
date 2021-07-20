@@ -12,21 +12,23 @@ import {
   NbLayoutModule,
   NbRadioModule, NbSelectModule,
   NbThemeModule, NbListModule, NbCardModule, NbToastrModule, NbTagModule, NbDialogModule
-} from "@nebular/theme";
+} from '@nebular/theme';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NbEvaIconsModule} from '@nebular/eva-icons';
 import {MemberAddComponent} from './member-add/member-add.component';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { MemberDetailsComponent } from './member-details/member-details.component';
 import { HeistAddComponent } from './heist-add/heist-add.component';
 import { HeistDetailsComponent } from './heist-details/heist-details.component';
-import {ErrorInterceptor} from "./interceptors/error.interceptor";
+import {ErrorInterceptor} from './interceptors/error.interceptor';
 import { HeistEligibleMembersComponent } from './heist-eligible-members/heist-eligible-members.component';
 import { HeistListComponent } from './heist-list/heist-list.component';
-import {Ng2SmartTableModule} from "ng2-smart-table";
+import {Ng2SmartTableModule} from 'ng2-smart-table';
 import { SkillListComponent } from './skill-list/skill-list.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { MemberListComponent } from './member-list/member-list.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 export const httpInterceptorProviders = [
   {
@@ -46,7 +48,9 @@ export const httpInterceptorProviders = [
     HeistEligibleMembersComponent,
     HeistListComponent,
     SkillListComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    MemberListComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     AppRoutingModule,
@@ -78,6 +82,6 @@ export const httpInterceptorProviders = [
     httpInterceptorProviders,
     { provide: LOCALE_ID, useValue: 'en-HR' }
     ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

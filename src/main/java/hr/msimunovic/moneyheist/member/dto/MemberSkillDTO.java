@@ -5,7 +5,11 @@ import hr.msimunovic.moneyheist.validator.MemberSkill;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+<<<<<<< HEAD
 import lombok.NoArgsConstructor;
+=======
+import org.springframework.lang.Nullable;
+>>>>>>> front_fixes
 
 import javax.validation.Valid;
 import java.util.List;

@@ -1,17 +1,16 @@
 import {Injectable} from '@angular/core';
-import {SERVER_API_URL} from "../app.constants";
-import {HttpClient, HttpResponse} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {Heist} from "../models/heist";
-import {HeistSkill} from "../models/heist-skill";
-import {HeistMember} from "../models/heist-member";
-import {MembersEligibleForHeist} from "../models/members-eligible-for-heist";
-import {HeistInfo} from "../models/heist-info";
-import {HeistEligibleMembersComponent} from "../heist-eligible-members/heist-eligible-members.component";
-import {HeistMembers} from "../models/heist-members";
-import {HeistOutcome} from "../models/heist-outcome";
-import {HeistStatus} from "../models/heist-status";
-import {HeistSkills} from "../models/heist-skills";
+import {SERVER_API_URL} from '../app.constants';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {Heist} from '../models/heist';
+import {HeistSkill} from '../models/heist-skill';
+import {HeistMember} from '../models/heist-member';
+import {MembersEligibleForHeist} from '../models/members-eligible-for-heist';
+import {HeistInfo} from '../models/heist-info';
+import {HeistMembers} from '../models/heist-members';
+import {HeistOutcome} from '../models/heist-outcome';
+import {HeistStatus} from '../models/heist-status';
+import {HeistSkills} from '../models/heist-skills';
 
 @Injectable({
   providedIn: 'root'

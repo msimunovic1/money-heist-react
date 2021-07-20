@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpResponse} from "@angular/common/http";
-import {SERVER_API_URL} from "../app.constants";
-import {Observable} from "rxjs";
-import {Member} from "../models/member";
-import {MemberSkills} from "../models/member-skills";
-import {MemberInfo} from "../models/member-info";
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {SERVER_API_URL} from '../app.constants';
+import {Observable} from 'rxjs';
+import {Member} from '../models/member';
+import {MemberSkills} from '../models/member-skills';
+import {MemberInfo} from '../models/member-info';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +36,7 @@ export class MemberService {
   }
 
   deleteMemberSkill(memberId: number, skillName: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete<HttpResponse<any>>(this.url + `/${memberId}/skills?skillName=${skillName}`, {observe: 'response'});
+    return this.httpClient.delete<HttpResponse<any>>(this.url + `/${memberId}/skills/${skillName}`, {observe: 'response'});
   }
 
 }

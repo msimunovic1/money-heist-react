@@ -43,6 +43,7 @@ public class Heist {
     @OneToMany(mappedBy = "heist",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
+    @OrderBy("skill desc")
     private Set<HeistSkill> skills = new HashSet<>();
 
     @OneToMany(mappedBy = "heist",
@@ -55,9 +56,9 @@ public class Heist {
      */
     public void addSkill(Skill skill, Integer members) {
 
-        HeistSkill existedHeistSkill = findExistedHeistSkill(skill.getHeists());
+        var existedHeistSkill = findExistedHeistSkill(skill.getHeists());
 
-        HeistSkill heistSkill = new HeistSkill();
+        var heistSkill = new HeistSkill();
 
         if(existedHeistSkill==null) {
             heistSkill.setHeist(this);
@@ -80,7 +81,7 @@ public class Heist {
 
     public void addMember(Member member) {
 
-        HeistMember heistMember = new HeistMember();
+        var heistMember = new HeistMember();
         heistMember.setHeist(this);
         heistMember.setMember(member);
 

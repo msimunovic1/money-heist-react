@@ -1,13 +1,13 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
-import {Member} from "../models/member";
-import {MemberService} from "../services/member.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {LocalDataSource} from "ng2-smart-table";
-import {Skill} from "../models/skill";
-import {NbDialogService, NbToastrService} from "@nebular/theme";
-import {MemberSkills} from "../models/member-skills";
-import {NgForm} from "@angular/forms";
-import {UpdatedSkill} from "../models/updated-skill";
+import {Member} from '../models/member';
+import {MemberService} from '../services/member.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {LocalDataSource} from 'ng2-smart-table';
+import {Skill} from '../models/skill';
+import {NbDialogService, NbToastrService} from '@nebular/theme';
+import {MemberSkills} from '../models/member-skills';
+import {NgForm} from '@angular/forms';
+import {UpdatedSkill} from '../models/updated-skill';
 
 
 @Component({
@@ -18,15 +18,14 @@ import {UpdatedSkill} from "../models/updated-skill";
 export class MemberDetailsComponent implements OnInit {
 
   member: Member = new Member();
-  memberId: number = 0;
-  sex: string = '';
-  tagStatus: string = 'basic';
-  mainSkill: string = '';
+  memberId = 0;
+  sex = '';
+  tagStatus = 'basic';
+  mainSkill = '';
 
   source: LocalDataSource = new LocalDataSource();
 
   memberSkills: Skill[] = [];
-  updatedMemberSkills: Skill[] = [];
 
   /*ng2-smart-table settings*/
   skillTableColumns = {
@@ -37,7 +36,7 @@ export class MemberDetailsComponent implements OnInit {
     level: {
       title: 'LEVEL',
     }
-  }
+  };
 
   constructor(private memberService: MemberService,
               private route: ActivatedRoute,
@@ -52,30 +51,17 @@ export class MemberDetailsComponent implements OnInit {
     });
   }
 
-  disableUpdateSkillsBtn(){
-    return this.updatedMemberSkills.length < 1;
-
-  }
-
-  // add new skills to list
-  addSkill(event: MemberSkills) {
-    this.source.add(event).then(() => this.refreshUpdateSkillList())
-  }
-
-  // update skills from list
-  updateSkill(event: UpdatedSkill) {
-    this.source.update(event.oldData, event.newData).then(() => this.refreshUpdateSkillList())
-  }
-
-  refreshUpdateSkillList() {
-    this.source.getAll().then(data => {
-      this.source.refresh();
-      this.updatedMemberSkills = data;
-    });
-  }
-
   editMainSkillDialog(dialog: TemplateRef<any>) {
     this.dialogService.open(dialog, {closeOnEsc: true});
+/*    this.dialogService.open(
+      EditMainSkillComponent, {
+        closeOnEsc: true,
+        context: {
+          mainSkill: this.mainSkill,
+          memberSkills: this.memberSkills,
+          memberId: this.memberId
+        }
+    });*/
   }
 
   editMainSkill(mainSkillForm: NgForm, ref: any) {
@@ -94,20 +80,25 @@ export class MemberDetailsComponent implements OnInit {
 
         if (this.member.skills) {
           this.memberSkills = this.member.skills;
+        } else {
+          this.memberSkills = [];
         }
 
         if (this.member.mainSkill) {
           this.mainSkill = this.member.mainSkill;
+        } else {
+          this.mainSkill = '';
         }
 
         // add member skills to LocalDataSource
         this.source = new LocalDataSource(this.member.skills);
 
-        if(this.member.sex === 'M') {
-          this.sex = 'male'
+        if (this.member.sex === 'M') {
+          this.sex = 'male';
         } else {
-          this.sex = 'female'
+          this.sex = 'female';
         }
+
         switch (this.member.status) {
           case 'AVAILABLE':
             this.tagStatus = 'success';
@@ -122,34 +113,52 @@ export class MemberDetailsComponent implements OnInit {
             this.tagStatus = 'info';
             break;
         }
+
       }
     );
+
   }
 
-  deleteSkill(skillName: string) {
-    this.memberService.deleteMemberSkill(this.memberId, skillName).subscribe(
-      res => {
-        if(res.status === 204) {
-          this.toastrService.success('Skills deleted', 'Success');
-          this.ngOnInit()
-        }
-      }, () => {
-        this.ngOnInit()
-      }
-    );
+  // add new skills to list
+  addSkill(event: MemberSkills) {
+    this.source.add(event).then(() => {
+      this.saveUpdatedSkills();
+    });
+  }
+
+  // update skills from list
+  updateSkill(event: UpdatedSkill) {
+    this.source.update(event.oldData, event.newData).then(() => {
+      this.saveUpdatedSkills();
+    });
   }
 
   // save updated skills
   saveUpdatedSkills() {
-    this.memberService.updateMemberSkills(this.memberId, new MemberSkills(this.updatedMemberSkills, this.mainSkill)).subscribe(
+    this.memberService.updateMemberSkills(this.memberId, new MemberSkills(this.memberSkills, this.mainSkill)).subscribe(
       res => {
-        if(res.status === 204) {
+        if (res.status === 204) {
           this.toastrService.success('Skills updated', 'Success');
-          this.ngOnInit()
+          this.handleMemberDetails();
         }
       }, () => {
-        this.ngOnInit()
+        this.handleMemberDetails();
+      }
+    );
+  }
+
+  // delete skill
+  deleteSkill(skillName: string) {
+    this.memberService.deleteMemberSkill(this.memberId, skillName).subscribe(
+      res => {
+        if (res.status === 204) {
+          this.toastrService.success('Skills deleted', 'Success');
+          this.handleMemberDetails();
+        }
+      }, () => {
+        this.ngOnInit();
       }
     );
   }
 }
+

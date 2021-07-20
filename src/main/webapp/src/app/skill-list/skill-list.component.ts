@@ -1,6 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
-import {NbDialogService} from "@nebular/theme";
-import {UpdatedSkill} from "../models/updated-skill";
+import {Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {NbDialogService} from '@nebular/theme';
+import {UpdatedSkill} from '../models/updated-skill';
+import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {DialogService} from '../services/dialog.service';
+import {
+  CONFIRMATION_CREATE_BODY,
+  CONFIRMATION_CREATE_HEADER,
+  CONFIRMATION_DELETE_BODY,
+  CONFIRMATION_DELETE_HEADER, CONFIRMATION_UPDATE_BODY, CONFIRMATION_UPDATE_HEADER
+} from '../app.constants';
 
 @Component({
   selector: 'app-skill-list',
@@ -27,20 +35,41 @@ export class SkillListComponent implements OnInit {
   @Output()
   deletedSkill: EventEmitter<any> = new EventEmitter<any>();
 
+  @ViewChild(ConfirmDialogComponent)
+  private confirmDialogComponent!: ConfirmDialogComponent;
+
   /*ng2-smart-table settings*/
   settings: any;
 
-  skillName: string = '';
-  isConfirmed: boolean = false;
+  skillName = '';
 
-  constructor(private dialogService: NbDialogService) {
+  // confirmation dialog flags
+  isConfirmCreate = false;
+  isConfirmUpdate = false;
+  isConfirmDelete = false;
+
+  constructor(private nbDialogService: NbDialogService,
+              private dialogService: DialogService) {
+
+    dialogService.isDeleteConfirmed$.subscribe(
+      confirmation => this.isConfirmDelete = confirmation
+    );
+
+    dialogService.isCreateConfirmed$.subscribe(
+      confirmation => this.isConfirmCreate = confirmation
+    );
+
+    dialogService.isUpdateConfirmed$.subscribe(
+      confirmation => this.isConfirmUpdate = confirmation
+    );
+
   }
 
   ngOnInit(): void {
     this.settings = {
       actions: this.actions,
       add: {
-        confirmCreate: true
+        confirmCreate: true,
       },
       delete: {
         confirmDelete : true,
@@ -53,26 +82,51 @@ export class SkillListComponent implements OnInit {
   }
 
   onCreateConfirm(event: any) {
-    this.addedSkill.emit(event.newData);
-  }
-
-  onUpdateConfirm(event: any) {
-    this.updatedSkill.emit(new UpdatedSkill(event.data, event.newData));
-  }
-
-  onDeleteConfirm(event: any, dialog: TemplateRef<any>) {
-      this.dialogService.open(dialog, {closeOnEsc: true})
-        .onClose.subscribe(() => {
-          if(this.isConfirmed) {
-            this.deletedSkill.emit(event.data.name)
-            this.isConfirmed = false;
-          }
+    this.nbDialogService.open(ConfirmDialogComponent,
+      {
+        context: {
+          header: CONFIRMATION_CREATE_HEADER,
+          body: CONFIRMATION_CREATE_BODY
+        },
+        closeOnEsc: true
+      }).onClose.subscribe(() => {
+        if (this.isConfirmCreate) {
+          this.addedSkill.emit(event.newData);
+          this.dialogService.confirmCreate(false);
+        }
       });
   }
 
-  confirm(ref: any) {
-    this.isConfirmed = true;
-    ref.close();
+  onUpdateConfirm(event: any) {
+    this.nbDialogService.open(ConfirmDialogComponent,
+      {
+        context: {
+          header: CONFIRMATION_UPDATE_HEADER,
+          body: CONFIRMATION_UPDATE_BODY
+        },
+        closeOnEsc: true
+      }).onClose.subscribe(() => {
+      if (this.isConfirmUpdate) {
+        this.updatedSkill.emit(new UpdatedSkill(event.data, event.newData));
+        this.dialogService.confirmUpdate(false);
+      }
+    });
+  }
+
+  onDeleteConfirm(event: any) {
+      this.nbDialogService.open(ConfirmDialogComponent,
+        {
+          context: {
+            header: CONFIRMATION_DELETE_HEADER,
+            body: CONFIRMATION_DELETE_BODY
+          },
+          closeOnEsc: true
+        }).onClose.subscribe(() => {
+          if (this.isConfirmDelete) {
+            this.deletedSkill.emit(event.data.name);
+            this.dialogService.confirmDelete(false);
+          }
+      });
   }
 
 }

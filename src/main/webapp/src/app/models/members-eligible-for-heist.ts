@@ -1,5 +1,5 @@
-import {HeistSkill} from "./heist-skill";
-import {HeistMember} from "./heist-member";
+import {HeistSkill} from './heist-skill';
+import {HeistMember} from './heist-member';
 
 export class MembersEligibleForHeist {
 

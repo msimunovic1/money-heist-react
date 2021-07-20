@@ -19,7 +19,7 @@
 
     <div class="space">
       <nb-icon icon="activity-outline" pack="eva"></nb-icon> MAIN SKILL: {{member.mainSkill}}
-      <button nbButton size="tiny" outline (click)="editMainSkillDialog(editDialog)">edit</button>
+      <button nbButton size="tiny" outline (click)="editMainSkillDialog(editDialog)" [disabled]="memberSkills.length<1">edit</button>
     </div>
 
     <div class="update-skills-table">
@@ -32,11 +32,6 @@
           (updatedSkill)="updateSkill($event)"
         ></app-skill-list>
       </div>
-    </div>
-
-    <!--save heist skills changes-->
-    <div class="space" class="right">
-      <button nbButton (click)="saveUpdatedSkills()" status="primary" size="small" outline [disabled]="disableUpdateSkillsBtn()">Save changes</button>
     </div>
 
   </nb-card-body>
@@ -63,3 +58,4 @@
     </nb-card>
   </form>
 </ng-template>
+
