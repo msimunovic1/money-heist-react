@@ -50,13 +50,7 @@ public class MemberMapper {
 
     public HeistMemberDTO mapMemberToHeistMemberDTO(Member member) {
 
-        HeistMemberDTO heistMemberDTO = new HeistMemberDTO();
-
-        // set member name
-        heistMemberDTO.setName(member.getName());
-
         List<SkillDTO> skillDTOList = new ArrayList<>();
-
         for(MemberSkill ms : member.getSkills()) {
             // map member skill to DTO
             var skillDTO = skillMapper.mapMemberSkillToDTO(ms);
@@ -64,10 +58,10 @@ public class MemberMapper {
             skillDTOList.add(skillDTO);
         }
 
-        // set member skills
-        heistMemberDTO.setSkills(skillDTOList);
-
-        return heistMemberDTO;
+        return HeistMemberDTO.builder()
+                .name(member.getName())
+                .skills(skillDTOList)
+                .build();
 
     }
 

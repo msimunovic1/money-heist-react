@@ -77,17 +77,15 @@ public class HeistMapper {
 
     public HeistMemberDTO mapHeistMemberToDTO(HeistMember heistMember) {
 
-        HeistMemberDTO heistMemberDTO = new HeistMemberDTO();
-        heistMemberDTO.setId(heistMember.getMember().getId());
-        heistMemberDTO.setName(heistMember.getMember().getName());
-
         List<SkillDTO> skillDTOList = heistMember.getMember().getSkills().stream()
-                .map(memberSkill -> skillMapper.mapMemberSkillToDTO(memberSkill))
+                .map(skillMapper::mapMemberSkillToDTO)
                 .collect(Collectors.toList());
 
-        heistMemberDTO.setSkills(skillDTOList);
-
-        return heistMemberDTO;
+        return HeistMemberDTO.builder()
+                .id(heistMember.getMember().getId())
+                .name(heistMember.getMember().getName())
+                .skills(skillDTOList)
+                .build();
     }
 
 

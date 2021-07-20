@@ -10,11 +10,7 @@ public class MemberSkillValidator implements ConstraintValidator<MemberSkill, Me
     @Override
     public boolean isValid(MemberSkillDTO value, ConstraintValidatorContext context) {
 
-        if (value.getSkills() != null &&(value.getSkills().isEmpty() && value.getMainSkill().isEmpty())) {
-            return false;
-        }
-
-        return true;
+        return value.getSkills() == null || (!value.getSkills().isEmpty() || !value.getMainSkill().isEmpty());
     }
 
 }

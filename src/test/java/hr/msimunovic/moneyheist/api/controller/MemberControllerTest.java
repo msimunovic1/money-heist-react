@@ -210,6 +210,23 @@ class MemberControllerTest {
     @Test
     void getSkillsByMemberId_thenReturns200() throws Exception {
 
+        when(memberService.getMemberSkills(1L)).thenReturn(memberSkillDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/member/1/skills")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getSkillsByMemberId_thenReturns404() throws Exception {
+
+        when(memberService.getMemberSkills(1L)).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/member/1/skills")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
 }

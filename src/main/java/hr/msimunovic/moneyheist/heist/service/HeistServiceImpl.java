@@ -117,7 +117,6 @@ public class HeistServiceImpl implements HeistService {
 
         Heist heist = findHeistById(heistId);
 
-        MembersEligibleForHeistDTO membersEligibleForHeistDTO = new MembersEligibleForHeistDTO();
         Set<HeistMemberDTO> heistMemberDTOList = new HashSet<>();
 
         // iterate on heist skills
@@ -153,12 +152,10 @@ public class HeistServiceImpl implements HeistService {
                 .map(skillMapper::mapHeistSkillToDTO)
                 .collect(Collectors.toList());
 
-        // set heist skills
-        membersEligibleForHeistDTO.setSkills(heistSkillDTOList);
-        // set eligible members for heist and their skill
-        membersEligibleForHeistDTO.setMembers(heistMemberDTOList);
-
-        return membersEligibleForHeistDTO;
+        return MembersEligibleForHeistDTO.builder()
+                .skills(heistSkillDTOList)
+                .members(heistMemberDTOList)
+                .build();
     }
 
     @Override

@@ -2,7 +2,6 @@ package hr.msimunovic.moneyheist.skill.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
