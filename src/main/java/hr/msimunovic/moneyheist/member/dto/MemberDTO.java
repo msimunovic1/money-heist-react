@@ -4,6 +4,7 @@ import hr.msimunovic.moneyheist.common.enums.MemberSexEnum;
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.validator.MemberSex;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,8 @@ import java.util.List;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberDTO {
 
     @NotEmpty(message = "Member name is required")

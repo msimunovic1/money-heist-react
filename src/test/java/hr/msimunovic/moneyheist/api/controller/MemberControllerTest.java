@@ -86,7 +86,7 @@ class MemberControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[1].name", is("Denver")));
+                .andExpect(content().string(this.mapper.writeValueAsString(members)));
 
     }
 
@@ -193,7 +193,7 @@ class MemberControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()));
+                .andExpect(content().string(this.mapper.writeValueAsString(memberDTO)));
     }
 
     @Test
@@ -215,7 +215,8 @@ class MemberControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/member/1/skills")
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(this.mapper.writeValueAsString(memberSkillDTO)));
     }
 
     @Test

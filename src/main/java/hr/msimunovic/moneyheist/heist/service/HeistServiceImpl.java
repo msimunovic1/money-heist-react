@@ -124,7 +124,7 @@ public class HeistServiceImpl implements HeistService {
 
             // find skills which level is equal or greater than heist required skill
             List<Skill> skillsLevelEqualsOrGreater =
-                    skillRepository.findByNameAndLevelIsGreaterThanEqual(heistSkill.getSkill().getName(), heistSkill.getSkill().getLevel().length());
+                    skillRepository.findByNameAndLevelIsGreaterOrEqual(heistSkill.getSkill().getName(), heistSkill.getSkill().getLevel().length());
 
             for(Skill skill : skillsLevelEqualsOrGreater) {
 

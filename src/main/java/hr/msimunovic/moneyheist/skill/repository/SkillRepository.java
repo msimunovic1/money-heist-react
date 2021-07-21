@@ -16,6 +16,6 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
 
     @Query(value = "SELECT * FROM Skill s WHERE s.name = :name and LENGTH(s.level) >= :levelLength",
             nativeQuery = true)
-    List<Skill> findByNameAndLevelIsGreaterThanEqual(String name, Integer levelLength);
+    List<Skill> findByNameAndLevelIsGreaterOrEqual(String name, Integer levelLength);
 
 }

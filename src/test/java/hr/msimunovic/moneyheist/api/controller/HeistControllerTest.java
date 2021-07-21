@@ -47,7 +47,7 @@ class HeistControllerTest {
                     .build(),
             HeistInfoDTO.builder()
                     .id(2L)
-                    .name("Fábrica Nacional de Moneda y Timbre")
+                    .name("Fabrica Nacional de Moneda y Timbre")
                     .status(HeistStatusEnum.FINISHED)
                     .build()));
 
@@ -124,9 +124,8 @@ class HeistControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/list")
                 .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(content().string(this.mapper.writeValueAsString(heists)));
 
     }
 
@@ -219,7 +218,8 @@ class HeistControllerTest {
                 .get("/heist/1/eligible_members")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(this.mapper.writeValueAsString(membersEligibleForHeistDTO)));
 
     }
 
@@ -349,7 +349,8 @@ class HeistControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/1")
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(this.mapper.writeValueAsString(heistDTO)));
     }
 
     @Test
@@ -371,7 +372,8 @@ class HeistControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/1/members")
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(this.mapper.writeValueAsString(heistMemberDTOList)));
     }
 
     @Test
@@ -406,7 +408,8 @@ class HeistControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/1/skills")
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(this.mapper.writeValueAsString(skills)));
     }
 
     @Test
@@ -429,7 +432,8 @@ class HeistControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/1/status")
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(this.mapper.writeValueAsString(heistStatusDTO)));
     }
 
     @Test
@@ -452,7 +456,8 @@ class HeistControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/1/outcome")
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(this.mapper.writeValueAsString(heistOutcomeDTO)));
     }
 
     @Test

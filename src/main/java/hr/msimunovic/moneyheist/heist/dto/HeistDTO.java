@@ -1,8 +1,10 @@
 package hr.msimunovic.moneyheist.heist.dto;
 
 import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -14,6 +16,8 @@ import java.util.List;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class HeistDTO {
 
     @NotEmpty(message = "Heist name is required")
