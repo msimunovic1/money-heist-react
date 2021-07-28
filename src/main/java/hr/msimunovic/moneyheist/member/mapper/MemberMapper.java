@@ -3,7 +3,7 @@ package hr.msimunovic.moneyheist.member.mapper;
 import hr.msimunovic.moneyheist.heist.dto.HeistMemberDTO;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.dto.MemberDTO;
-import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
+import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,6 @@ public class MemberMapper {
                 .status(member.getStatus())
                 .build();
 
-        /*MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setName(member.getName());
-        memberDTO.setSex(member.getSex());
-        memberDTO.setEmail(member.getEmail());
-        memberDTO.setStatus(member.getStatus());*/
-
-        // TODO: ovo izdvojiti u metodu
         List<SkillDTO> skillDTOList = new ArrayList<>();
 
         member.getSkills()

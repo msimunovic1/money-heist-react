@@ -2,7 +2,7 @@ package hr.msimunovic.moneyheist.heist.service;
 
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.heist.dto.*;
-import hr.msimunovic.moneyheist.heistMember.dto.MembersEligibleForHeistDTO;
+import hr.msimunovic.moneyheist.heist_member.dto.MembersEligibleForHeistDTO;
 
 import java.util.List;
 

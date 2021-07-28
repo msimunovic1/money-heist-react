@@ -1,4 +1,4 @@
-import {LOCALE_ID, NgModule} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import '@angular/common/locales/global/hr';
 
@@ -17,7 +17,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NbEvaIconsModule} from '@nebular/eva-icons';
 import {MemberAddComponent} from './member-add/member-add.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import { MemberDetailsComponent } from './member-details/member-details.component';
 import { HeistAddComponent } from './heist-add/heist-add.component';
 import { HeistDetailsComponent } from './heist-details/heist-details.component';

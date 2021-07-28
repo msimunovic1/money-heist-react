@@ -10,7 +10,7 @@ import hr.msimunovic.moneyheist.member.dto.MemberInfoDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
 import hr.msimunovic.moneyheist.member.mapper.MemberMapper;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
-import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
+import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import hr.msimunovic.moneyheist.skill.mapper.SkillMapper;
@@ -95,16 +95,17 @@ public class MemberServiceImpl implements MemberService {
             throw new NotFoundException(Constants.MSG_SKILL_NOT_FOUND);
         }
 
-        List<MemberSkill> memberSkills = new ArrayList<>(member.getSkills());
-        for (MemberSkill memberSkill : memberSkills) {
-            // remove skill if skill exists in DB
-            if(memberSkill.getSkill().getName().equals(skillName)) {
-                member.removeSkills(memberSkill.getSkill());
+        if (member.getSkills()!=null) {
+            List<MemberSkill> memberSkills = new ArrayList<>(member.getSkills());
+            for (MemberSkill memberSkill : memberSkills) {
+                // remove skill if skill exists in DB
+                if (memberSkill.getSkill().getName().equals(skillName)) {
+                    member.removeSkills(memberSkill.getSkill());
+                }
             }
         }
 
         memberRepository.save(member);
-
 
     }
 
@@ -140,7 +141,7 @@ public class MemberServiceImpl implements MemberService {
             } else {
                 // check skill in DB
                 var skillFromDB = skillRepository.findByNameIgnoreCaseAndLevel(mainSkill, Constants.DEFAULT_SKILL_LEVEL);
-                if(skillFromDB != null) {
+                if(skillFromDB!=null) {
                     member.addSkill(skillFromDB, mainSkill);
                 } else {
                     var skill = new Skill();

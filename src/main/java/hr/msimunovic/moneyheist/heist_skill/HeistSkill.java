@@ -1,4 +1,4 @@
-package hr.msimunovic.moneyheist.heistSkill;
+package hr.msimunovic.moneyheist.heist_skill;
 
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.skill.Skill;

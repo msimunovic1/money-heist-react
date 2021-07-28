@@ -1,6 +1,5 @@
 package hr.msimunovic.moneyheist.member.service;
 
-import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.dto.MemberDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberInfoDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;

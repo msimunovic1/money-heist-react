@@ -2,7 +2,7 @@ package hr.msimunovic.moneyheist.common;
 
 public class Constants {
 
-    public Constants() {
+    private Constants() {
     }
 
     public static final String DEFAULT_SKILL_LEVEL = "*";

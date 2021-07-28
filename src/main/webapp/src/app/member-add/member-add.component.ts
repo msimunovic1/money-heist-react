@@ -9,7 +9,7 @@ import {PRIMARY_OUTLET, Router, UrlSegment} from '@angular/router';
 @Component({
   selector: 'app-member-add',
   templateUrl: './member-add.component.html',
-  styleUrls: ['./member-add.component.css']
+  styleUrls: ['./member-add.component.css'],
 })
 export class MemberAddComponent implements OnInit {
 
@@ -18,14 +18,7 @@ export class MemberAddComponent implements OnInit {
   genders: Array<{value: string, label: string}> = [];
   statuses: Array<{value: string}> = [];
 
-
-  memberFormGroup: FormGroup = this.formBuilder.group({
-    name: new FormControl('', [Validators.required]),
-    sex: new FormControl('M', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
-    status: new FormControl('', [Validators.required]),
-    skills: this.formBuilder.array([])
-  });
+  memberFormGroup!: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
               private memberService: MemberService,
@@ -46,6 +39,13 @@ export class MemberAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.memberFormGroup = this.formBuilder.group({
+      name: new FormControl('', [Validators.required]),
+      sex: new FormControl('M', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
+      status: new FormControl('', [Validators.required]),
+      skills: this.formBuilder.array([])
+    });
   }
 
   get skills() {
@@ -106,6 +106,7 @@ export class MemberAddComponent implements OnInit {
 
     this.memberService.saveMember(member).subscribe(
       res => {
+        console.log(res);
         // reset form inputs
         this.resetForm();
 

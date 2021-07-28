@@ -1,12 +1,12 @@
-package hr.msimunovic.moneyheist.memberSkill.MemberSkillImprovement;
+package hr.msimunovic.moneyheist.member_skill.member_skill_improvement;
 
 import hr.msimunovic.moneyheist.api.exception.NotFoundException;
 import hr.msimunovic.moneyheist.common.Constants;
 import hr.msimunovic.moneyheist.heist.Heist;
-import hr.msimunovic.moneyheist.heistMember.HeistMember;
+import hr.msimunovic.moneyheist.heist_member.HeistMember;
 import hr.msimunovic.moneyheist.member.Member;
 import hr.msimunovic.moneyheist.member.repository.MemberRepository;
-import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
+import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.repository.SkillRepository;
 import lombok.RequiredArgsConstructor;

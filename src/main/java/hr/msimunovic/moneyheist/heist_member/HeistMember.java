@@ -1,4 +1,4 @@
-package hr.msimunovic.moneyheist.heistMember;
+package hr.msimunovic.moneyheist.heist_member;
 
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.member.Member;

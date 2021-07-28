@@ -9,7 +9,7 @@ import hr.msimunovic.moneyheist.common.enums.HeistStatusEnum;
 import hr.msimunovic.moneyheist.heist.Heist;
 import hr.msimunovic.moneyheist.heist.dto.*;
 import hr.msimunovic.moneyheist.heist.service.HeistService;
-import hr.msimunovic.moneyheist.heistMember.dto.MembersEligibleForHeistDTO;
+import hr.msimunovic.moneyheist.heist_member.dto.MembersEligibleForHeistDTO;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HeistController.class)
 class HeistControllerTest {
@@ -39,119 +39,42 @@ class HeistControllerTest {
     @MockBean
     private HeistService heistService;
 
-    List<HeistInfoDTO> heists = new ArrayList<>(Arrays.asList(
-            HeistInfoDTO.builder()
-                    .id(1L)
-                    .name("European Central Bank")
-                    .status(HeistStatusEnum.READY)
-                    .build(),
-            HeistInfoDTO.builder()
-                    .id(2L)
-                    .name("Fabrica Nacional de Moneda y Timbre")
-                    .status(HeistStatusEnum.FINISHED)
-                    .build()));
-
-    List<HeistSkillDTO> skills = new ArrayList<>(Arrays.asList(
-            HeistSkillDTO.builder()
-                    .name("combat")
-                    .level("***")
-                    .members(2)
-                    .build(),
-            HeistSkillDTO.builder()
-                    .name("driving")
-                    .level("*")
-                    .members(1)
-                    .build()
-    ));
-
-    HeistDTO heistDTO = HeistDTO.builder()
-            .name("European Central Bank")
-            .location("Frankfurt, Germany")
-            .startTime(LocalDateTime.now())
-            .endTime(LocalDateTime.now().plusDays(5))
-            .skills(skills)
-            .status(HeistStatusEnum.READY)
-            .build();
-
-    HeistSkillsDTO heistSkillsDTO = HeistSkillsDTO.builder()
-            .skills(skills)
-            .build();
-
-    List<SkillDTO> memberSkills = new ArrayList<>(Arrays.asList(
-            SkillDTO.builder()
-                    .name("driving")
-                    .level("****")
-                    .build(),
-            SkillDTO.builder()
-                    .name("combat")
-                    .level("*")
-                    .build()));
-
-    HeistMemberDTO heistMemberDTO = HeistMemberDTO.builder()
-            .id(1L)
-            .name("Tokyo")
-            .skills(memberSkills)
-            .build();
-
-    List<HeistMemberDTO> heistMemberDTOList = new ArrayList<>(Collections.singletonList(heistMemberDTO));
-
-    MembersEligibleForHeistDTO membersEligibleForHeistDTO = MembersEligibleForHeistDTO.builder()
-            .skills(skills)
-            .members(new HashSet<>(Collections.singletonList(heistMemberDTO)))
-            .build();
-
-    HeistMembersDTO heistMembersDTO = HeistMembersDTO.builder()
-            .members(new String[]{
-                    "Tokyo",
-                    "Denver",
-                    "Berlin"
-            })
-            .build();
-
-    HeistStatusDTO heistStatusDTO = HeistStatusDTO.builder()
-            .status(HeistStatusEnum.READY)
-            .build();
-
-    HeistOutcomeDTO heistOutcomeDTO = HeistOutcomeDTO.builder()
-            .outcome(HeistOutcomeEnum.SUCCEEDED)
-            .build();
-
     @Test
     void getAllHeists_thenReturns200() throws Exception {
 
-        when(heistService.getAllHeists()).thenReturn(heists);
+        when(heistService.getAllHeists()).thenReturn(createHeists());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/list")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(heists)));
+                .andExpect(content().string(this.mapper.writeValueAsString(createHeists())));
 
     }
 
     @Test
     void saveHeist_thenReturns201() throws Exception {
 
-        when(heistService.saveHeist(heistDTO)).thenReturn(new Heist());
+        when(heistService.saveHeist(createHeistDTO())).thenReturn(new Heist());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/heist")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(heistDTO)))
+                .content(this.mapper.writeValueAsString(createHeistDTO())))
                 .andExpect(status().isCreated());
     }
 
     @Test
     void saveHeist_thenReturns400() throws Exception {
 
-        when(heistService.saveHeist(heistDTO)).thenThrow(BadRequestException.class);
+        when(heistService.saveHeist(createHeistDTO())).thenThrow(BadRequestException.class);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/heist")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(heistDTO)))
+                .content(this.mapper.writeValueAsString(createHeistDTO())))
                 .andExpect(status().isBadRequest());
 
     }
@@ -159,13 +82,13 @@ class HeistControllerTest {
     @Test
     void updateSkills_thenReturns204() throws Exception {
 
-        doNothing().when(heistService).updateSkills(1L, heistSkillsDTO);
+        doNothing().when(heistService).updateSkills(1L, createHeistSkillsDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .patch("/heist/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(heistSkillsDTO)))
+                .content(this.mapper.writeValueAsString(createHeistSkillsDTO())))
                 .andExpect(status().isNoContent());
 
     }
@@ -173,53 +96,52 @@ class HeistControllerTest {
     @Test
     void updateSkills_thenReturns400() throws Exception {
 
-        doThrow(BadRequestException.class).when(heistService).updateSkills(1L, heistSkillsDTO);
+        doThrow(BadRequestException.class).when(heistService).updateSkills(1L, createHeistSkillsDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .patch("/heist/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(heistSkillsDTO)))
+                .content(this.mapper.writeValueAsString(createHeistSkillsDTO())))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void updateSkills_thenReturns404() throws Exception {
 
-        doThrow(NotFoundException.class).when(heistService).updateSkills(1L, heistSkillsDTO);
+        doThrow(NotFoundException.class).when(heistService).updateSkills(1L, createHeistSkillsDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .patch("/heist/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(heistSkillsDTO)))
+                .content(this.mapper.writeValueAsString(createHeistSkillsDTO())))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void updateSkills_thenReturns405() throws Exception {
 
-        doThrow(MethodNotAllowedException.class).when(heistService).updateSkills(1L, heistSkillsDTO);
+        doThrow(MethodNotAllowedException.class).when(heistService).updateSkills(1L, createHeistSkillsDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .patch("/heist/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(heistSkillsDTO)))
+                .content(this.mapper.writeValueAsString(createHeistSkillsDTO())))
                 .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
     void getMembersEligibleForHeist_thenReturns200() throws Exception {
 
-        when(heistService.getMembersEligibleForHeist(1L)).thenReturn(membersEligibleForHeistDTO);
+        when(heistService.getMembersEligibleForHeist(1L)).thenReturn(createMembersEligibleForHeistDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/1/eligible_members")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(membersEligibleForHeistDTO)));
+                .andExpect(status().isOk());
 
     }
 
@@ -249,13 +171,13 @@ class HeistControllerTest {
     @Test
     void saveHeistMembers_thenReturns204() throws Exception {
 
-        doNothing().when(heistService).saveHeistMembers(1L, heistMembersDTO);
+        doNothing().when(heistService).saveHeistMembers(1L, createHeistMembersDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/heist/1/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(heistMembersDTO)))
+                .content(this.mapper.writeValueAsString(createHeistMembersDTO())))
                 .andExpect(status().isNoContent());
 
     }
@@ -263,13 +185,13 @@ class HeistControllerTest {
     @Test
     void saveHeistMembers_thenReturns400() throws Exception {
 
-        doThrow(BadRequestException.class).when(heistService).saveHeistMembers(1L, heistMembersDTO);
+        doThrow(BadRequestException.class).when(heistService).saveHeistMembers(1L, createHeistMembersDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/heist/1/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(heistMembersDTO)))
+                .content(this.mapper.writeValueAsString(createHeistMembersDTO())))
                 .andExpect(status().isBadRequest());
 
     }
@@ -277,13 +199,13 @@ class HeistControllerTest {
     @Test
     void saveHeistMembers_thenReturns404() throws Exception {
 
-        doThrow(NotFoundException.class).when(heistService).saveHeistMembers(1L, heistMembersDTO);
+        doThrow(NotFoundException.class).when(heistService).saveHeistMembers(1L, createHeistMembersDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/heist/1/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(heistMembersDTO)))
+                .content(this.mapper.writeValueAsString(createHeistMembersDTO())))
                 .andExpect(status().isNotFound());
 
     }
@@ -291,13 +213,13 @@ class HeistControllerTest {
     @Test
     void saveHeistMembers_thenReturns405() throws Exception {
 
-        doThrow(MethodNotAllowedException.class).when(heistService).saveHeistMembers(1L, heistMembersDTO);
+        doThrow(MethodNotAllowedException.class).when(heistService).saveHeistMembers(1L, createHeistMembersDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/heist/1/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(heistMembersDTO)))
+                .content(this.mapper.writeValueAsString(createHeistMembersDTO())))
                 .andExpect(status().isMethodNotAllowed());
 
     }
@@ -344,13 +266,13 @@ class HeistControllerTest {
     @Test
     void getHeistById_thenReturns200() throws Exception {
 
-        when(heistService.getHeistById(1L)).thenReturn(heistDTO);
+        when(heistService.getHeistById(1L)).thenReturn(createHeistDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(heistDTO)));
+                .andExpect(content().string(this.mapper.writeValueAsString(createHeistDTO())));
     }
 
     @Test
@@ -403,13 +325,13 @@ class HeistControllerTest {
     @Test
     void getSkillsByHeistId_thenReturns200() throws Exception {
 
-        when(heistService.getHeistSkills(1L)).thenReturn(skills);
+        when(heistService.getHeistSkills(1L)).thenReturn(createSkills());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/1/skills")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(skills)));
+                .andExpect(content().string(this.mapper.writeValueAsString(createSkills())));
     }
 
     @Test
@@ -427,13 +349,13 @@ class HeistControllerTest {
     @Test
     void getHeistStatus_thenReturns200() throws Exception {
 
-        when(heistService.getHeistStatus(1L)).thenReturn(heistStatusDTO);
+        when(heistService.getHeistStatus(1L)).thenReturn(createHeistStatusDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/1/status")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(heistStatusDTO)));
+                .andExpect(content().string(this.mapper.writeValueAsString(createHeistStatusDTO())));
     }
 
     @Test
@@ -451,13 +373,13 @@ class HeistControllerTest {
     @Test
     void getHeistOutcome_thenReturns200() throws Exception {
 
-        when(heistService.getHeistOutcome(1L)).thenReturn(heistOutcomeDTO);
+        when(heistService.getHeistOutcome(1L)).thenReturn(createHeistOutcomeDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/heist/1/outcome")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(heistOutcomeDTO)));
+                .andExpect(content().string(this.mapper.writeValueAsString(createHeistOutcomeDTO())));
     }
 
     @Test
@@ -470,6 +392,109 @@ class HeistControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
+    }
+
+    private List<HeistInfoDTO> createHeists() {
+        return Arrays.asList(
+                HeistInfoDTO.builder()
+                        .id(1L)
+                        .name("European Central Bank")
+                        .status(HeistStatusEnum.READY)
+                        .build(),
+                HeistInfoDTO.builder()
+                        .id(2L)
+                        .name("Fabrica Nacional de Moneda y Timbre")
+                        .status(HeistStatusEnum.FINISHED)
+                        .build());
+    }
+
+    private List<HeistSkillDTO> createSkills() {
+        return Arrays.asList(
+                HeistSkillDTO.builder()
+                        .name("combat")
+                        .level("***")
+                        .members(2)
+                        .build(),
+                HeistSkillDTO.builder()
+                        .name("driving")
+                        .level("*")
+                        .members(1)
+                        .build()
+        );
+    }
+
+    private HeistDTO createHeistDTO() {
+        return HeistDTO.builder()
+                .name("European Central Bank")
+                .location("Frankfurt, Germany")
+                .skills(createSkills())
+                .status(HeistStatusEnum.READY)
+                .build();
+    }
+
+    private HeistSkillDTO createHeistSkillDTO() {
+        return HeistSkillDTO.builder()
+                .name("combat")
+                .level("*")
+                .members(2)
+                .build();
+    }
+
+    private HeistSkillsDTO createHeistSkillsDTO() {
+        return HeistSkillsDTO.builder()
+                .skills(Arrays.asList(createHeistSkillDTO()))
+                .build();
+    }
+
+    private List<SkillDTO> createMemberSkills() {
+        return Arrays.asList(
+                SkillDTO.builder()
+                        .name("driving")
+                        .level("****")
+                        .build(),
+                SkillDTO.builder()
+                        .name("combat")
+                        .level("*")
+                        .build());
+    }
+
+    private HeistMemberDTO createHeistMemberDTO() {
+        return HeistMemberDTO.builder()
+                .id(1L)
+                .name("Tokyo")
+                .skills(createMemberSkills())
+                .build();
+    }
+
+    List<HeistMemberDTO> heistMemberDTOList = Collections.singletonList(createHeistMemberDTO());
+
+    private MembersEligibleForHeistDTO createMembersEligibleForHeistDTO() {
+        return MembersEligibleForHeistDTO.builder()
+                .skills(createSkills())
+                .members(new HashSet<>(Collections.singletonList(createHeistMemberDTO())))
+                .build();
+    }
+
+    private HeistMembersDTO createHeistMembersDTO() {
+        return HeistMembersDTO.builder()
+                .members(new String[]{
+                        "Tokyo",
+                        "Denver",
+                        "Berlin"
+                })
+                .build();
+    }
+
+    private HeistStatusDTO createHeistStatusDTO() {
+        return HeistStatusDTO.builder()
+                .status(HeistStatusEnum.READY)
+                .build();
+    }
+
+    private HeistOutcomeDTO createHeistOutcomeDTO() {
+        return HeistOutcomeDTO.builder()
+                .outcome(HeistOutcomeEnum.SUCCEEDED)
+                .build();
     }
 
 }

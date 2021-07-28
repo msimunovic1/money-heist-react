@@ -17,6 +17,7 @@
 		<java.version>11</java.version>
 		<modelmapper.version>2.4.0</modelmapper.version>
 		<spring-boot-starter-mail.version>2.4.5</spring-boot-starter-mail.version>
+		<jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -67,11 +68,15 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 			<version>${spring-boot-starter-mail.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>${modelmapper.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>${jacoco-maven-plugin.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -88,6 +93,26 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>jacoco-initialize</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-site</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

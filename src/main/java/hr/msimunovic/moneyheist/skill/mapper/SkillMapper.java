@@ -1,10 +1,9 @@
 package hr.msimunovic.moneyheist.skill.mapper;
 
-import hr.msimunovic.moneyheist.heist.dto.HeistDTO;
 import hr.msimunovic.moneyheist.heist.dto.HeistSkillDTO;
-import hr.msimunovic.moneyheist.heistSkill.HeistSkill;
+import hr.msimunovic.moneyheist.heist_skill.HeistSkill;
 import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
-import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
+import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,6 @@ public class SkillMapper {
 
         MemberSkillDTO memberSkillDTO = new MemberSkillDTO();
 
-        // TODO: ovo izdvojiti u metodu
         List<SkillDTO> skillDTOList = new ArrayList<>();
 
         memberSkills
@@ -63,12 +61,6 @@ public class SkillMapper {
     }
 
     public HeistSkillDTO mapHeistSkillToDTO(HeistSkill heistSkill) {
-
-     /*   HeistSkillDTO heistSkillDTO = new HeistSkillDTO();
-        heistSkillDTO.setName(heistSkill.getSkill().getName());
-        heistSkillDTO.setLevel(heistSkill.getSkill().getLevel());
-        heistSkillDTO.setMembers(heistSkill.getMembers());*/
-
         return HeistSkillDTO.builder()
                 .name(heistSkill.getSkill().getName())
                 .level(heistSkill.getSkill().getLevel())

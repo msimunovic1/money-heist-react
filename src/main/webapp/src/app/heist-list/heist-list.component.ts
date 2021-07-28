@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, NgModule, OnInit} from '@angular/core';
 import {HeistService} from '../services/heist.service';
 import {HeistInfo} from '../models/heist-info';
 
 @Component({
   selector: 'app-heist-list',
   templateUrl: './heist-list.component.html',
-  styleUrls: ['./heist-list.component.css']
+  styleUrls: ['./heist-list.component.css'],
 })
 export class HeistListComponent implements OnInit {
 

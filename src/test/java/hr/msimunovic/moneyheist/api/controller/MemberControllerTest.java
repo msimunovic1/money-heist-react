@@ -18,13 +18,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(MemberController.class)
@@ -39,46 +38,10 @@ class MemberControllerTest {
     @MockBean
     private MemberService memberService;
 
-    List<MemberInfoDTO> members = new ArrayList<>(Arrays.asList(
-            MemberInfoDTO.builder()
-                    .id(1L)
-                    .name("Tokyo")
-                    .status(MemberStatusEnum.AVAILABLE)
-                    .build(),
-            MemberInfoDTO.builder()
-                    .id(2L)
-                    .name("Denver")
-                    .status(MemberStatusEnum.RETIRED)
-                    .build()));
-
-    List<SkillDTO> skills = new ArrayList<>(Arrays.asList(
-            SkillDTO.builder()
-                    .name("driving")
-                    .level("****")
-                    .build(),
-            SkillDTO.builder()
-                    .name("combat")
-                    .level("*")
-                    .build()));
-
-    MemberDTO memberDTO = MemberDTO.builder()
-            .name("Nairobi")
-            .sex(MemberSexEnum.F)
-            .email("nairobi@ag04.com")
-            .skills(skills)
-            .mainSkill("combat")
-            .status(MemberStatusEnum.AVAILABLE)
-            .build();
-
-    MemberSkillDTO memberSkillDTO = MemberSkillDTO.builder()
-            .skills(skills)
-            .mainSkill("combat")
-            .build();
-
     @Test
     void getAllMembers_thenReturns200() throws Exception {
 
-        when(memberService.getAllMembers()).thenReturn(members);
+        when(memberService.getAllMembers()).thenReturn(createMembers());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/member/list")
@@ -86,33 +49,33 @@ class MemberControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(content().string(this.mapper.writeValueAsString(members)));
+                .andExpect(content().string(this.mapper.writeValueAsString(createMembers())));
 
     }
 
     @Test
     void saveMember_thenReturns201() throws Exception {
 
-        when(memberService.saveMember(memberDTO)).thenReturn(1L);
+        when(memberService.saveMember(createMemberDTO())).thenReturn(1L);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/member")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(memberDTO)))
+                .content(this.mapper.writeValueAsString(createMemberDTO())))
                 .andExpect(status().isCreated());
     }
 
     @Test
     void saveMember_thenReturns400() throws Exception {
 
-        when(memberService.saveMember(memberDTO)).thenThrow(BadRequestException.class);
+        when(memberService.saveMember(createMemberDTO())).thenThrow(BadRequestException.class);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/member")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(memberDTO)))
+                .content(this.mapper.writeValueAsString(createMemberDTO())))
                 .andExpect(status().isBadRequest());
 
     }
@@ -120,13 +83,13 @@ class MemberControllerTest {
     @Test
     void updateSkills_thenReturns204() throws Exception {
 
-        doNothing().when(memberService).updateSkills(1L, memberSkillDTO);
+        doNothing().when(memberService).updateSkills(1L, createMemberSkillDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/member/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(memberSkillDTO)))
+                .content(this.mapper.writeValueAsString(createMemberSkillDTO())))
                 .andExpect(status().isNoContent());
 
     }
@@ -134,13 +97,13 @@ class MemberControllerTest {
     @Test
     void updateSkills_thenReturns400() throws Exception {
 
-        doThrow(BadRequestException.class).when(memberService).updateSkills(1L, memberSkillDTO);
+        doThrow(BadRequestException.class).when(memberService).updateSkills(1L, createMemberSkillDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/member/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(memberSkillDTO)))
+                .content(this.mapper.writeValueAsString(createMemberSkillDTO())))
                 .andExpect(status().isBadRequest());
 
     }
@@ -148,13 +111,13 @@ class MemberControllerTest {
     @Test
     void updateSkills_thenReturns404() throws Exception {
 
-        doThrow(NotFoundException.class).when(memberService).updateSkills(1L, memberSkillDTO);
+        doThrow(NotFoundException.class).when(memberService).updateSkills(1L, createMemberSkillDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/member/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(memberSkillDTO)))
+                .content(this.mapper.writeValueAsString(createMemberSkillDTO())))
                 .andExpect(status().isNotFound());
 
     }
@@ -186,14 +149,14 @@ class MemberControllerTest {
     @Test
     void getMemberById_thenReturns200() throws Exception {
 
-        when(memberService.getMemberById(1L)).thenReturn(memberDTO);
+        when(memberService.getMemberById(1L)).thenReturn(createMemberDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/member/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(memberDTO)));
+                .andExpect(content().string(this.mapper.writeValueAsString(createMemberDTO())));
     }
 
     @Test
@@ -210,13 +173,13 @@ class MemberControllerTest {
     @Test
     void getSkillsByMemberId_thenReturns200() throws Exception {
 
-        when(memberService.getMemberSkills(1L)).thenReturn(memberSkillDTO);
+        when(memberService.getMemberSkills(1L)).thenReturn(createMemberSkillDTO());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/member/1/skills")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(memberSkillDTO)));
+                .andExpect(content().string(this.mapper.writeValueAsString(createMemberSkillDTO())));
     }
 
     @Test
@@ -228,6 +191,51 @@ class MemberControllerTest {
                 .get("/member/1/skills")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+
+    private List<MemberInfoDTO> createMembers() {
+        return Arrays.asList(
+                MemberInfoDTO.builder()
+                        .id(1L)
+                        .name("Tokyo")
+                        .status(MemberStatusEnum.AVAILABLE)
+                        .build(),
+                MemberInfoDTO.builder()
+                        .id(2L)
+                        .name("Denver")
+                        .status(MemberStatusEnum.RETIRED)
+                        .build());
+    }
+
+    private List<SkillDTO> createSkillDTOList() {
+        return Arrays.asList(
+                SkillDTO.builder()
+                        .name("driving")
+                        .level("****")
+                        .build(),
+                SkillDTO.builder()
+                        .name("combat")
+                        .level("*")
+                        .build());
+    }
+
+    private MemberDTO createMemberDTO() {
+        return MemberDTO.builder()
+                .name("Tokyo")
+                .sex(MemberSexEnum.F)
+                .email("tokyo@ag04.com")
+                .skills(createSkillDTOList())
+                .mainSkill("combat")
+                .status(MemberStatusEnum.AVAILABLE)
+                .build();
+    }
+
+    private MemberSkillDTO createMemberSkillDTO() {
+        return MemberSkillDTO.builder()
+                .skills(createSkillDTOList())
+                .mainSkill("combat")
+                .build();
     }
 
 }

@@ -16,13 +16,7 @@ export class HeistAddComponent implements OnInit {
 
   min: Date;
 
-  heistFormGroup: FormGroup = this.formBuilder.group({
-    name: new FormControl('', [Validators.required]),
-    location: new FormControl('', [Validators.required]),
-    startTime: new FormControl('', [Validators.required]),
-    endTime: new FormControl('', [Validators.required]),
-    skills: this.formBuilder.array([])
-  });
+  heistFormGroup!: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
               private heistService: HeistService,
@@ -35,6 +29,13 @@ export class HeistAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.heistFormGroup = this.formBuilder.group({
+      name: new FormControl('', [Validators.required]),
+      location: new FormControl('', [Validators.required]),
+      startTime: new FormControl('', [Validators.required]),
+      endTime: new FormControl('', [Validators.required]),
+      skills: this.formBuilder.array([])
+    });
   }
 
   get skills() {

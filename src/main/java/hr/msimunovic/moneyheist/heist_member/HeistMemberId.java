@@ -1,5 +1,6 @@
-package hr.msimunovic.moneyheist.memberSkill;
+package hr.msimunovic.moneyheist.heist_member;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,15 +10,15 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
-public class MemberSkillId implements Serializable {
+public class HeistMemberId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(name = "skill_id")
-    private Long skillId;
-
+    @Column(name = "heist_id")
+    private Long heistId;
 }

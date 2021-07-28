@@ -2,8 +2,8 @@ package hr.msimunovic.moneyheist.member;
 
 import hr.msimunovic.moneyheist.common.enums.MemberSexEnum;
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
-import hr.msimunovic.moneyheist.heistMember.HeistMember;
-import hr.msimunovic.moneyheist.memberSkill.MemberSkill;
+import hr.msimunovic.moneyheist.heist_member.HeistMember;
+import hr.msimunovic.moneyheist.member_skill.MemberSkill;
 import hr.msimunovic.moneyheist.skill.Skill;
 import lombok.*;
 
@@ -48,33 +48,36 @@ public class Member {
      */
     public void addSkill(Skill skill, String mainSkill) {
 
-        // check does skill with same name exists
-        // if Member Skill with same name and different level exits remove it from relationship
-        skills.removeIf(memberSkill -> memberSkill.getSkill().getName().equals(skill.getName()) &&
-                !memberSkill.getSkill().getLevel().equals(skill.getLevel()));
+        if (skill!=null) {
 
-        var existedMemberSkill = findExistedMemberSkill(skill.getMembers());
+            // check does skill with same name exists
+            // if Member Skill with same name and different level exits remove it from relationship
+            skills.removeIf(memberSkill -> memberSkill.getSkill().getName().equals(skill.getName()) &&
+                    !memberSkill.getSkill().getLevel().equals(skill.getLevel()));
 
-        var memberSkill = new MemberSkill();
+            var existedMemberSkill = findExistedMemberSkill(skill.getMembers());
 
-        if(existedMemberSkill==null) {
-            memberSkill.setMember(this);
-            memberSkill.setSkill(skill);
-        } else {
-            memberSkill = existedMemberSkill;
+            var memberSkill = new MemberSkill();
+
+            if (existedMemberSkill == null) {
+                memberSkill.setMember(this);
+                memberSkill.setSkill(skill);
+            } else {
+                memberSkill = existedMemberSkill;
+            }
+
+            if (mainSkill == null || mainSkill.isEmpty()) {
+                memberSkill.setMainSkill("N");
+            }
+
+            skills.add(memberSkill);
+            skill.getMembers().add(memberSkill);
+
+            if (mainSkill != null && !mainSkill.isEmpty()) {
+                updateMainSkill(mainSkill);
+            }
+
         }
-
-        if(mainSkill==null || mainSkill.isEmpty()) {
-            memberSkill.setMainSkill("N");
-        }
-
-        skills.add(memberSkill);
-        skill.getMembers().add(memberSkill);
-
-        if(mainSkill!=null && !mainSkill.isEmpty()) {
-            updateMainSkill(mainSkill);
-        }
-
     }
 
     public MemberSkill findExistedMemberSkill(Set<MemberSkill> memberSkills) {

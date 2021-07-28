@@ -1,0 +1,12 @@
+[
+  {
+    "id": 100,
+    "name": "European Central Bank - ECB",
+    "status": "FINISHED"
+  },
+  {
+    "id": 101,
+    "name": "HNB",
+    "status": "FINISHED"
+  }
+]
