@@ -1,0 +1,40 @@
+allowed:
+    origins: http://localhost:4200
+email:
+    notification:
+        sender: no-reply@ag04.io
+member:
+    levelUpTime: 86400
+server:
+    port: 8888
+spring:
+    datasource:
+        driverClassName: org.h2.Driver
+        password: ''
+        url: jdbc:h2:mem:money-heist
+        username: admin
+    h2:
+        console:
+            enabled: true
+            path: /h2
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        hibernate:
+            ddl-auto: none
+        properties:
+            hibernate:
+                enable_lazy_load_no_trans: true
+    mail:
+        host: email-smtp.eu-west-1.amazonaws.com
+        password: BDVKBQLtJH5DFJ3isJMP80afrFXxjyIOKlMNrdyHw7aD
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    port: 25
+                    starttls:
+                        enable: true
+                        required: true
+                transport:
+                    protocol: smtp
+        username: AKIA3QRJDSTT4P7LI2NJ
