@@ -8,7 +8,7 @@ CREATE SEQUENCE member_seq
     MINVALUE 1;
 
 -- table --
-DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS member cascade;
 
 CREATE TABLE member(
     id INT PRIMARY KEY NOT NULL,
@@ -28,7 +28,7 @@ CREATE SEQUENCE skill_seq
     MINVALUE 1;
 
 -- table --
-DROP TABLE IF EXISTS skill;
+DROP TABLE IF EXISTS skill cascade;
 
 CREATE TABLE skill(
     id INT PRIMARY KEY NOT NULL,
@@ -58,7 +58,7 @@ CREATE SEQUENCE heist_seq
     MINVALUE 1;
 
 -- table --
-DROP TABLE IF EXISTS heist;
+DROP TABLE IF EXISTS heist cascade;
 
 CREATE TABLE heist(
     id INT PRIMARY KEY NOT NULL,

@@ -1,6 +1,5 @@
 package hr.msimunovic.moneyheist.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.msimunovic.moneyheist.api.exception.BadRequestException;
 import hr.msimunovic.moneyheist.api.exception.MethodNotAllowedException;
 import hr.msimunovic.moneyheist.api.exception.NotFoundException;
@@ -11,6 +10,7 @@ import hr.msimunovic.moneyheist.heist.dto.*;
 import hr.msimunovic.moneyheist.heist.service.HeistService;
 import hr.msimunovic.moneyheist.heist_member.dto.MembersEligibleForHeistDTO;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
+import hr.msimunovic.moneyheist.util.JsonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,8 +19,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -32,9 +34,6 @@ class HeistControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper mapper;
 
     @MockBean
     private HeistService heistService;
@@ -48,7 +47,7 @@ class HeistControllerTest {
                 .get("/heist/list")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(createHeists())));
+                .andExpect(content().string(JsonUtil.toString(createHeists())));
 
     }
 
@@ -61,7 +60,8 @@ class HeistControllerTest {
                 .post("/heist")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createHeistDTO())))
+                .content(JsonUtil.toJson(createHeistDTO())))
+                .andDo(print())
                 .andExpect(status().isCreated());
     }
 
@@ -74,7 +74,7 @@ class HeistControllerTest {
                 .post("/heist")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createHeistDTO())))
+                .content(JsonUtil.toJson(createHeistDTO())))
                 .andExpect(status().isBadRequest());
 
     }
@@ -88,7 +88,7 @@ class HeistControllerTest {
                 .patch("/heist/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createHeistSkillsDTO())))
+                .content(JsonUtil.toJson(createHeistSkillsDTO())))
                 .andExpect(status().isNoContent());
 
     }
@@ -102,7 +102,7 @@ class HeistControllerTest {
                 .patch("/heist/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createHeistSkillsDTO())))
+                .content(JsonUtil.toJson(createHeistSkillsDTO())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -115,7 +115,7 @@ class HeistControllerTest {
                 .patch("/heist/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createHeistSkillsDTO())))
+                .content(JsonUtil.toJson(createHeistSkillsDTO())))
                 .andExpect(status().isNotFound());
     }
 
@@ -128,7 +128,7 @@ class HeistControllerTest {
                 .patch("/heist/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createHeistSkillsDTO())))
+                .content(JsonUtil.toJson(createHeistSkillsDTO())))
                 .andExpect(status().isMethodNotAllowed());
     }
 
@@ -177,7 +177,7 @@ class HeistControllerTest {
                 .put("/heist/1/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createHeistMembersDTO())))
+                .content(JsonUtil.toJson(createHeistMembersDTO())))
                 .andExpect(status().isNoContent());
 
     }
@@ -191,7 +191,7 @@ class HeistControllerTest {
                 .put("/heist/1/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createHeistMembersDTO())))
+                .content(JsonUtil.toJson(createHeistMembersDTO())))
                 .andExpect(status().isBadRequest());
 
     }
@@ -205,7 +205,7 @@ class HeistControllerTest {
                 .put("/heist/1/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createHeistMembersDTO())))
+                .content(JsonUtil.toJson(createHeistMembersDTO())))
                 .andExpect(status().isNotFound());
 
     }
@@ -219,7 +219,7 @@ class HeistControllerTest {
                 .put("/heist/1/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createHeistMembersDTO())))
+                .content(JsonUtil.toJson(createHeistMembersDTO())))
                 .andExpect(status().isMethodNotAllowed());
 
     }
@@ -272,7 +272,7 @@ class HeistControllerTest {
                 .get("/heist/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(createHeistDTO())));
+                .andExpect(content().string(JsonUtil.toString(createHeistDTO())));
     }
 
     @Test
@@ -295,7 +295,7 @@ class HeistControllerTest {
                 .get("/heist/1/members")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(heistMemberDTOList)));
+                .andExpect(content().string(JsonUtil.toString(heistMemberDTOList)));
     }
 
     @Test
@@ -331,7 +331,7 @@ class HeistControllerTest {
                 .get("/heist/1/skills")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(createSkills())));
+                .andExpect(content().string(JsonUtil.toString(createSkills())));
     }
 
     @Test
@@ -355,7 +355,7 @@ class HeistControllerTest {
                 .get("/heist/1/status")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(createHeistStatusDTO())));
+                .andExpect(content().string(JsonUtil.toString(createHeistStatusDTO())));
     }
 
     @Test
@@ -379,7 +379,7 @@ class HeistControllerTest {
                 .get("/heist/1/outcome")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(createHeistOutcomeDTO())));
+                .andExpect(content().string(JsonUtil.toString(createHeistOutcomeDTO())));
     }
 
     @Test

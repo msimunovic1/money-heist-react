@@ -1,6 +1,5 @@
 package hr.msimunovic.moneyheist.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.msimunovic.moneyheist.api.exception.BadRequestException;
 import hr.msimunovic.moneyheist.api.exception.NotFoundException;
 import hr.msimunovic.moneyheist.common.enums.MemberSexEnum;
@@ -10,6 +9,7 @@ import hr.msimunovic.moneyheist.member.dto.MemberInfoDTO;
 import hr.msimunovic.moneyheist.member.dto.MemberSkillDTO;
 import hr.msimunovic.moneyheist.member.service.MemberService;
 import hr.msimunovic.moneyheist.skill.dto.SkillDTO;
+import hr.msimunovic.moneyheist.util.JsonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -32,9 +32,6 @@ class MemberControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper mapper;
-
     @MockBean
     private MemberService memberService;
 
@@ -49,7 +46,7 @@ class MemberControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(content().string(this.mapper.writeValueAsString(createMembers())));
+                .andExpect(content().string(JsonUtil.toString(createMembers())));
 
     }
 
@@ -62,7 +59,7 @@ class MemberControllerTest {
                 .post("/member")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createMemberDTO())))
+                .content(JsonUtil.toJson(createMemberDTO())))
                 .andExpect(status().isCreated());
     }
 
@@ -75,7 +72,7 @@ class MemberControllerTest {
                 .post("/member")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createMemberDTO())))
+                .content(JsonUtil.toJson(createMemberDTO())))
                 .andExpect(status().isBadRequest());
 
     }
@@ -89,7 +86,7 @@ class MemberControllerTest {
                 .put("/member/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createMemberSkillDTO())))
+                .content(JsonUtil.toJson(createMemberSkillDTO())))
                 .andExpect(status().isNoContent());
 
     }
@@ -103,7 +100,7 @@ class MemberControllerTest {
                 .put("/member/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createMemberSkillDTO())))
+                .content(JsonUtil.toJson(createMemberSkillDTO())))
                 .andExpect(status().isBadRequest());
 
     }
@@ -117,7 +114,7 @@ class MemberControllerTest {
                 .put("/member/1/skills")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(createMemberSkillDTO())))
+                .content(JsonUtil.toJson(createMemberSkillDTO())))
                 .andExpect(status().isNotFound());
 
     }
@@ -156,7 +153,7 @@ class MemberControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(createMemberDTO())));
+                .andExpect(content().string(JsonUtil.toString(createMemberDTO())));
     }
 
     @Test
@@ -179,7 +176,7 @@ class MemberControllerTest {
                 .get("/member/1/skills")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(this.mapper.writeValueAsString(createMemberSkillDTO())));
+                .andExpect(content().string(JsonUtil.toString(createMemberSkillDTO())));
     }
 
     @Test

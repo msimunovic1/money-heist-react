@@ -1,4 +1,4 @@
-package hr.msimunovic.moneyheist.IT;
+package hr.msimunovic.moneyheist.api.controller;
 
 import hr.msimunovic.moneyheist.common.enums.MemberSexEnum;
 import hr.msimunovic.moneyheist.common.enums.MemberStatusEnum;
