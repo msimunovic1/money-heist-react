@@ -20,6 +20,9 @@ describe('MemberListComponent', () => {
     fixture.detectChanges();
   });
 
-
+  it('should list all members', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('nb-list').textContent).toContain(component.members.toString());
+  });
 
 });

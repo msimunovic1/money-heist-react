@@ -12,7 +12,6 @@ import {
 } from '@nebular/theme';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
-import {Component} from '@angular/core';
 
 describe('MemberAddComponent', () => {
   let component: MemberAddComponent;

@@ -4,10 +4,13 @@ import { MemberService } from './member.service';
 import {HttpClient} from '@angular/common/http';
 import {MemberInfo} from '../models/member-info';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {environment} from '../../environments/environment';
 
 describe('MemberService', () => {
   let service: MemberService;
   let http: HttpClient;
+
+  const url = environment.apiUrl;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -38,4 +41,5 @@ describe('MemberService', () => {
     });
     done();
   });
+
 });

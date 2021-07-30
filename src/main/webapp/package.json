@@ -24,6 +24,7 @@
     "@angular/router": "~12.1.1",
     "@nebular/eva-icons": "7.0.0",
     "@nebular/theme": "^7.0.0",
+    "@types/chai-http": "^4.2.0",
     "cypress": "^8.0.0",
     "eva-icons": "^1.1.2",
     "ng2-completer": "^9.0.1",
